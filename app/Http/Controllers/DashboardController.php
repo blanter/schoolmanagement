@@ -11,6 +11,7 @@ class DashboardController extends Controller
     // INDEX DASHBOARD
     public function index()
     {
-        return view('dashboard');
+        $userguru = User::where('role','guru')->get();
+        return view('dashboard',compact('userguru'));
     }    
 }

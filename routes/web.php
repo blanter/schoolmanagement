@@ -20,13 +20,8 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Riwayat
-    Route::get('/riwayat', [PageController::class, 'riwayat'])->name('riwayat');
-
-    // Scan QR
-    Route::get('/scan-code', [PageController::class, 'scanqr'])->name('scanqr');
-    Route::post('/scan-code', [PageController::class, 'searchdata'])->name('searchdata');
-    Route::get('/detail-unit/{zona_id}', [PageController::class, 'detailunit'])->name('detailunit');
+    // Tasks
+    Route::get('/tasks/{id}', [PageController::class, 'tasks'])->name('tasks');
 });
 
 require __DIR__.'/auth.php';
