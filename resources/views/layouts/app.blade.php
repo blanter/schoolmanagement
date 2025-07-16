@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link href="{{asset('/assets/fingerlogo.png')}}" rel='icon' type='image/x-icon'/>
-        <title>@yield('title', 'ZP Scanner App')</title>
+        <title>@yield('title', 'School Management App')</title>
 
         <!-- CSS & jQuery -->
         <link href="{{asset('/css/style.css')}}" rel="stylesheet"/>
