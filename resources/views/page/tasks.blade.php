@@ -31,26 +31,63 @@
 
         <div class="section-divider"></div>
 
-        <!-- Weekly Goals Section -->
-        <div class="weekly-goals-section">
-            <div class="weekly-goals-header">
-                <h2 class="weekly-goals-title">Weekly Goals</h2>
-            </div>
+        <!-- Weekly Tasks Section -->
+        <div class="daily-tasks-header">
+            <a class="back-arrow" href="/dashboard" title="Back">←</a>
+            <h1 class="daily-tasks-title">Weekly Tasks</h1>
+        </div>
 
-            <a href="#" class="goal-item-card">
-                <div class="goal-title-text">Learning a piano</div>
-                <div class="goal-points-display">
-                    <div class="points-number">50</div>
-                    <div class="points-label">Points</div>
-                </div>
+        <div class="task-items-wrapper">
+            <a href="#" class="task-item-card completed-task">
+                <div class="completion-indicator"></div>
+                <div class="task-name-primary">Morning workout</div>
+                <div class="task-status-text">Task completed</div>
+                <div class="task-time-display">08:00</div>
             </a>
 
-            <a href="#" class="goal-item-card">
-                <div class="goal-title-text">Eat healthy breakfast</div>
-                <div class="goal-points-display">
-                    <div class="points-number">70</div>
-                    <div class="points-label">Points</div>
-                </div>
+            <a href="#" class="task-item-card completed-task">
+                <div class="completion-indicator"></div>
+                <div class="task-name-primary">Preparing the breakfast</div>
+                <div class="task-status-text">Task completed</div>
+                <div class="task-time-display">07:00</div>
+            </a>
+
+            <a href="#" class="task-item-card pending-task">
+                <div class="completion-indicator"></div>
+                <div class="task-name-primary">Checking Emails</div>
+                <div class="task-status-text">Task undone</div>
+                <div class="task-time-display">08:00</div>
+            </a>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Monthly Tasks Section -->
+        <div class="daily-tasks-header">
+            <a class="back-arrow" href="/dashboard" title="Back">←</a>
+            <h1 class="daily-tasks-title">Monthly Tasks</h1>
+        </div>
+
+        <div class="task-items-wrapper">
+            <a href="#" class="task-item-card completed-task">
+                <div class="completion-indicator"></div>
+                <div class="task-name-primary">Morning workout</div>
+                <div class="task-status-text">Task completed</div>
+                <div class="task-time-display">08:00</div>
+            </a>
+
+            <a href="#" class="task-item-card completed-task">
+                <div class="completion-indicator"></div>
+                <div class="task-name-primary">Preparing the breakfast</div>
+                <div class="task-status-text">Task completed</div>
+                <div class="task-time-display">07:00</div>
+            </a>
+
+            <a href="#" class="task-item-card pending-task">
+                <div class="completion-indicator"></div>
+                <div class="task-name-primary">Checking Emails</div>
+                <div class="task-status-text">Task undone</div>
+                <div class="task-time-display">08:00</div>
             </a>
         </div>
     </div>

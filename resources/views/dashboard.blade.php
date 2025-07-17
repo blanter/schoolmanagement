@@ -8,8 +8,8 @@
 
         <!-- TABS -->
         <div class="time-filter">
-            <button class="filter-btn active" data-tab="weekly">Weekly</button>
-            <button class="filter-btn" data-tab="alltime">All Time</button>
+            <button class="filter-btn active" data-tab="weekly">Guru</button>
+            <button class="filter-btn" data-tab="alltime">Non-Guru</button>
         </div>
 
         <div class="performance-banner">
