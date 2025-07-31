@@ -22,6 +22,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Tasks
     Route::get('/tasks/{id}', [PageController::class, 'tasks'])->name('tasks');
+    Route::post('/task-check', [PageController::class, 'toggleCheck'])->name('task.check');
 });
 
 require __DIR__.'/auth.php';

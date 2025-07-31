@@ -1,98 +1,129 @@
 <x-app-layout>
     <div class="task-management-container">
-        <!-- Daily Tasks Section -->
         <div class="daily-tasks-header">
             <a class="back-arrow" href="/dashboard" title="Back">←</a>
-            <h1 class="daily-tasks-title">Your Daily Tasks</h1>
-        </div>
-
-        <div class="task-items-wrapper">
-            <a href="#" class="task-item-card completed-task">
-                <div class="completion-indicator"></div>
-                <div class="task-name-primary">Morning workout</div>
-                <div class="task-status-text">Task completed</div>
-                <div class="task-time-display">08:00</div>
-            </a>
-
-            <a href="#" class="task-item-card completed-task">
-                <div class="completion-indicator"></div>
-                <div class="task-name-primary">Preparing the breakfast</div>
-                <div class="task-status-text">Task completed</div>
-                <div class="task-time-display">07:00</div>
-            </a>
-
-            <a href="#" class="task-item-card pending-task">
-                <div class="completion-indicator"></div>
-                <div class="task-name-primary">Checking Emails</div>
-                <div class="task-status-text">Task undone</div>
-                <div class="task-time-display">08:00</div>
-            </a>
+            <h1 class="daily-tasks-title">{{ $userguru->name }}</h1>
         </div>
 
         <div class="section-divider"></div>
 
-        <!-- Weekly Tasks Section -->
+        <!-- Daily Tasks -->
         <div class="daily-tasks-header">
-            <a class="back-arrow" href="/dashboard" title="Back">←</a>
+            <h1 class="daily-tasks-title">Daily Tasks</h1>
+        </div>
+        <div class="task-items-wrapper">
+            @forelse($dailyTasks as $task)
+                @php
+                    $key = $task->jenis . '|' . $task->tipe . '|' . $task->judul_task;
+                    $checked = $taskChecksToday->has($key);
+                @endphp
+                <a href="#" 
+                    class="task-item-card {{ $checked ? 'completed-task' : 'pending-task' }}" 
+                    data-user="{{ $userguru->id }}"
+                    data-jenis="{{ $task->jenis }}"
+                    data-tipe="{{ $task->tipe }}"
+                    data-task="{{ $task->judul_task }}">
+                    <div class="completion-indicator"></div>
+                    <div class="task-name-primary">{{ $task->judul_task }}</div>
+                    <div class="task-status-text">{{ $checked ? 'Task completed' : 'Task undone' }}</div>
+                </a>
+            @empty
+                <p class="task-empty">Belum ada daily task</p>
+            @endforelse
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Weekly Tasks -->
+        <div class="daily-tasks-header">
             <h1 class="daily-tasks-title">Weekly Tasks</h1>
         </div>
-
         <div class="task-items-wrapper">
-            <a href="#" class="task-item-card completed-task">
-                <div class="completion-indicator"></div>
-                <div class="task-name-primary">Morning workout</div>
-                <div class="task-status-text">Task completed</div>
-                <div class="task-time-display">08:00</div>
-            </a>
-
-            <a href="#" class="task-item-card completed-task">
-                <div class="completion-indicator"></div>
-                <div class="task-name-primary">Preparing the breakfast</div>
-                <div class="task-status-text">Task completed</div>
-                <div class="task-time-display">07:00</div>
-            </a>
-
-            <a href="#" class="task-item-card pending-task">
-                <div class="completion-indicator"></div>
-                <div class="task-name-primary">Checking Emails</div>
-                <div class="task-status-text">Task undone</div>
-                <div class="task-time-display">08:00</div>
-            </a>
+            @forelse($weeklyTasks as $task)
+                @php
+                    $key = $task->jenis . '|' . $task->tipe . '|' . $task->judul_task;
+                    $checked = $taskChecksThisWeek->has($key);
+                @endphp
+                <a href="#" 
+                    class="task-item-card {{ $checked ? 'completed-task' : 'pending-task' }}" 
+                    data-user="{{ $userguru->id }}"
+                    data-jenis="{{ $task->jenis }}"
+                    data-tipe="{{ $task->tipe }}"
+                    data-task="{{ $task->judul_task }}">
+                    <div class="completion-indicator"></div>
+                    <div class="task-name-primary">{{ $task->judul_task }}</div>
+                    <div class="task-status-text">{{ $checked ? 'Task completed' : 'Task undone' }}</div>
+                </a>
+            @empty
+                <p class="task-empty">Belum ada weekly task</p>
+            @endforelse
         </div>
 
         <div class="section-divider"></div>
 
-        <!-- Monthly Tasks Section -->
+        <!-- Monthly Tasks -->
         <div class="daily-tasks-header">
-            <a class="back-arrow" href="/dashboard" title="Back">←</a>
             <h1 class="daily-tasks-title">Monthly Tasks</h1>
         </div>
-
         <div class="task-items-wrapper">
-            <a href="#" class="task-item-card completed-task">
-                <div class="completion-indicator"></div>
-                <div class="task-name-primary">Morning workout</div>
-                <div class="task-status-text">Task completed</div>
-                <div class="task-time-display">08:00</div>
-            </a>
-
-            <a href="#" class="task-item-card completed-task">
-                <div class="completion-indicator"></div>
-                <div class="task-name-primary">Preparing the breakfast</div>
-                <div class="task-status-text">Task completed</div>
-                <div class="task-time-display">07:00</div>
-            </a>
-
-            <a href="#" class="task-item-card pending-task">
-                <div class="completion-indicator"></div>
-                <div class="task-name-primary">Checking Emails</div>
-                <div class="task-status-text">Task undone</div>
-                <div class="task-time-display">08:00</div>
-            </a>
+            @forelse($monthlyTasks as $task)
+                @php
+                    $key = $task->jenis . '|' . $task->tipe . '|' . $task->judul_task;
+                    $checked = $taskChecksThisMonth->has($key);
+                @endphp
+                <a href="#" 
+                    class="task-item-card {{ $checked ? 'completed-task' : 'pending-task' }}" 
+                    data-user="{{ $userguru->id }}"
+                    data-jenis="{{ $task->jenis }}"
+                    data-tipe="{{ $task->tipe }}"
+                    data-task="{{ $task->judul_task }}">
+                    <div class="completion-indicator"></div>
+                    <div class="task-name-primary">{{ $task->judul_task }}</div>
+                    <div class="task-status-text">{{ $checked ? 'Task completed' : 'Task undone' }}</div>
+                </a>
+            @empty
+                <p class="task-empty">Belum ada monthly task</p>
+            @endforelse
         </div>
     </div>
 
     <script>
+        // Checklist Toggle Script
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.task-item-card').forEach(function(card) {
+                card.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const el = this;
+
+                    fetch('{{ route('task.check') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            user_id: el.dataset.user,
+                            jenis: el.dataset.jenis,
+                            tipe: el.dataset.tipe,
+                            judul_task: el.dataset.task
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === 'done') {
+                            el.classList.remove('pending-task');
+                            el.classList.add('completed-task');
+                            el.querySelector('.task-status-text').innerText = 'Task completed';
+                        } else {
+                            el.classList.remove('completed-task');
+                            el.classList.add('pending-task');
+                            el.querySelector('.task-status-text').innerText = 'Task undone';
+                        }
+                    });
+                });
+            });
+        });
         // Add smooth hover effects and click animations
         document.addEventListener('DOMContentLoaded', function() {
             const taskCards = document.querySelectorAll('.task-item-card, .goal-item-card');

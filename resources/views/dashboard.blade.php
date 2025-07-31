@@ -19,7 +19,7 @@
 
         <div class="time-info">
             <span class="time-icon">🕐</span>
-            <span>16 July 2025</span>
+            <span>{{ today()->format('d M Y') }}</span>
         </div>
 
         <!-- Tab Content 1 -->
@@ -31,7 +31,7 @@
                     <div class="podium-avatar">
                         <img src="https://elearning.lifebookacademy.sch.id/public/small/{{ $userguru[1]['image'] }}"/>
                     </div>
-                    <div class="podium-name"><a href="/tasks/2">{{ $userguru[1]['name'] }}</a></div>
+                    <div class="podium-name"><a href="/tasks/{{ $userguru[1]['id'] }}">{{ $userguru[1]['name'] }}</a></div>
                     <div class="podium-points">{{ number_format($userguru[1]['points']) }} GP</div>
                     <div class="podium-base">2</div>
                 </div>
@@ -44,7 +44,7 @@
                     <div class="podium-avatar">
                         <img src="https://elearning.lifebookacademy.sch.id/public/small/{{ $userguru[0]['image'] }}"/>
                     </div>
-                    <div class="podium-name"><a href="/tasks/1">{{ $userguru[0]['name'] }}</a></div>
+                    <div class="podium-name"><a href="/tasks/{{ $userguru[0]['id'] }}">{{ $userguru[0]['name'] }}</a></div>
                     <div class="podium-points">{{ number_format($userguru[0]['points']) }} GP</div>
                     <div class="podium-base">1</div>
                 </div>
@@ -56,7 +56,7 @@
                     <div class="podium-avatar">
                         <img src="https://elearning.lifebookacademy.sch.id/public/small/{{ $userguru[2]['image'] }}"/>
                     </div>
-                    <div class="podium-name"><a href="/tasks/3">{{ $userguru[2]['name'] }}</a></div>
+                    <div class="podium-name"><a href="/tasks/{{ $userguru[2]['id'] }}">{{ $userguru[2]['name'] }}</a></div>
                     <div class="podium-points">{{ number_format($userguru[2]['points']) }} GP</div>
                     <div class="podium-base">3</div>
                 </div>
