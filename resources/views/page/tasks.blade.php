@@ -1,9 +1,13 @@
+@section('title', 'Tasks List')
 <x-app-layout>
     <div class="task-management-container">
         <div class="daily-tasks-header">
             <a class="back-arrow" href="/dashboard" title="Back">←</a>
             <h1 class="daily-tasks-title">{{ $userguru->name }}
-                <a class="edit-onlabel" href="/user-tasks/{{$userguru->id}}"><i class="ph ph-pen"></i></a>
+                <div class="button-onlabel">
+                    <a class="edit-onlabel" href="/user-tasks/{{$userguru->id}}" title="Edit"><i class="ph ph-pen"></i> <span>Edit</span></a>
+                    <a class="edit-onlabel" href="/statistik/2025/7/{{$userguru->id}}" title="Statistik"><i class="ph ph-chart-pie-slice"></i> <span>Statistik</span></a>
+                </div>
             </h1>
         </div>
 
