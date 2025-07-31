@@ -12,7 +12,7 @@ use App\Models\TaskCheck;
 
 class PageController extends Controller
 {
-    // TASKS
+    // TASKS (GURU)
     public function tasks($id)
     {
         $userguru = User::findOrFail($id);
@@ -52,7 +52,7 @@ class PageController extends Controller
         ));
     }
 
-    // TASK CHECK
+    // TASK CHECK (GURU)
     public function toggleCheck(Request $request)
     {
         $validated = $request->validate([
@@ -93,4 +93,47 @@ class PageController extends Controller
             return response()->json(['status' => 'done']);
         }
     }
+
+    // EDIT USER TASKS (ADMIN)
+    public function editUserTasks($id)
+    {
+        $userguru = User::findOrFail($id);
+        $dailyTasks = Task::where('user_id', $id)->where('jenis', 'days')->get();
+        $weeklyTasks = Task::where('user_id', $id)->where('jenis', 'week')->get();
+        $monthlyTasks = Task::where('user_id', $id)->where('jenis', 'month')->get();
+
+        return view('page.user-tasks', compact('userguru', 'dailyTasks', 'weeklyTasks', 'monthlyTasks'));
+    }
+
+    // SIMPAN TASK BARU (ADMIN)
+    public function storeUserTasks(Request $request, $id)
+    {
+        Task::create([
+            'user_id' => $id,
+            'jenis' => $request->jenis,
+            'tipe' => $request->tipe,
+            'judul_task' => $request->judul_task,
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
+    // UPDATE TASK (ADMIN)
+    public function updateUserTask(Request $request, Task $task)
+    {
+        $task->update([
+            'judul_task' => $request->judul_task,
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
+    // HAPUS TASK (ADMIN)
+    public function deleteUserTask(Task $task)
+    {
+        $task->delete();
+        return response()->json(['success' => true]);
+    }
+
+
 }

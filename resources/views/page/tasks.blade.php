@@ -2,7 +2,9 @@
     <div class="task-management-container">
         <div class="daily-tasks-header">
             <a class="back-arrow" href="/dashboard" title="Back">←</a>
-            <h1 class="daily-tasks-title">{{ $userguru->name }}</h1>
+            <h1 class="daily-tasks-title">{{ $userguru->name }}
+                <a class="edit-onlabel" href="/user-tasks/{{$userguru->id}}"><i class="ph ph-pen"></i></a>
+            </h1>
         </div>
 
         <div class="section-divider"></div>

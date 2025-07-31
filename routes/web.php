@@ -23,6 +23,13 @@ Route::middleware(['auth'])->group(function () {
     // Tasks
     Route::get('/tasks/{id}', [PageController::class, 'tasks'])->name('tasks');
     Route::post('/task-check', [PageController::class, 'toggleCheck'])->name('task.check');
+
+    // Tasks CRUD
+    Route::get('/user-tasks/{id}', [PageController::class, 'editUserTasks'])->name('tasks.edit');
+    Route::post('/user-tasks/{id}/store', [PageController::class, 'storeUserTasks'])->name('tasks.store');
+    Route::delete('/user-tasks/{task}/delete', [PageController::class, 'deleteUserTask'])->name('tasks.delete');
+    Route::put('/user-tasks/{task}/update', [PageController::class, 'updateUserTask'])->name('tasks.update');
+
 });
 
 require __DIR__.'/auth.php';
