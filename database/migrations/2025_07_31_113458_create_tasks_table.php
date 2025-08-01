@@ -17,6 +17,7 @@ return new class extends Migration
             $table->enum('jenis', ['days', 'week', 'month']);
             $table->enum('tipe', ['guru', 'nonguru']);
             $table->string('judul_task');
+            $table->enum('proyek', ['wajib', 'pribadi']);
             $table->timestamps();
         });
     }

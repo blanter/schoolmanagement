@@ -54,6 +54,7 @@ class TaskController extends Controller
             'jenis' => 'required|string',
             'tipe' => 'required|string',
             'judul_task' => 'required|string',
+            'proyek' => 'required',
         ]);
         $today = now();
         $tahun = $today->year;
@@ -66,6 +67,7 @@ class TaskController extends Controller
             'judul_task' => $validated['judul_task'],
             'tahun' => $tahun,
             'bulan' => $bulan,
+            'proyek' => $validated['proyek'],
         ])
         ->whereDate('created_at', $today->toDateString())
         ->first();
@@ -80,6 +82,7 @@ class TaskController extends Controller
                 'judul_task' => $validated['judul_task'],
                 'tahun' => $tahun,
                 'bulan' => $bulan,
+                'proyek' => $validated['proyek'],
             ]);
             return response()->json(['status' => 'done']);
         }
@@ -98,11 +101,17 @@ class TaskController extends Controller
     // SIMPAN TASK BARU (ADMIN)
     public function storeUserTasks(Request $request, $id)
     {
+        if(Auth::user()->role == "admin"){
+            $proyek = "wajib";
+        } else {
+            $proyek = "pribadi";
+        }
         Task::create([
             'user_id' => $id,
             'jenis' => $request->jenis,
             'tipe' => $request->tipe,
             'judul_task' => $request->judul_task,
+            'proyek' => $proyek,
         ]);
         return response()->json(['success' => true]);
     }

@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('judul_task');
             $table->integer('tahun');
             $table->integer('bulan');
+            $table->enum('proyek', ['wajib', 'pribadi']);
+            $table->string('link')->nullable();
             $table->timestamps();
         });
     }

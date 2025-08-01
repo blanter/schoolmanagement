@@ -28,7 +28,8 @@
                     data-user="{{ $userguru->id }}"
                     data-jenis="{{ $task->jenis }}"
                     data-tipe="{{ $task->tipe }}"
-                    data-task="{{ $task->judul_task }}">
+                    data-task="{{ $task->judul_task }}"
+                    data-proyek="{{ $task->proyek }}">
                     <div class="completion-indicator"></div>
                     <div class="task-name-primary">{{ $task->judul_task }}</div>
                     <div class="task-status-text">{{ $checked ? 'Task completed' : 'Task undone' }}</div>
@@ -55,7 +56,8 @@
                     data-user="{{ $userguru->id }}"
                     data-jenis="{{ $task->jenis }}"
                     data-tipe="{{ $task->tipe }}"
-                    data-task="{{ $task->judul_task }}">
+                    data-task="{{ $task->judul_task }}"
+                    data-proyek="{{ $task->proyek }}">
                     <div class="completion-indicator"></div>
                     <div class="task-name-primary">{{ $task->judul_task }}</div>
                     <div class="task-status-text">{{ $checked ? 'Task completed' : 'Task undone' }}</div>
@@ -82,7 +84,8 @@
                     data-user="{{ $userguru->id }}"
                     data-jenis="{{ $task->jenis }}"
                     data-tipe="{{ $task->tipe }}"
-                    data-task="{{ $task->judul_task }}">
+                    data-task="{{ $task->judul_task }}"
+                    data-proyek="{{ $task->proyek }}">
                     <div class="completion-indicator"></div>
                     <div class="task-name-primary">{{ $task->judul_task }}</div>
                     <div class="task-status-text">{{ $checked ? 'Task completed' : 'Task undone' }}</div>
@@ -112,7 +115,8 @@
                             user_id: el.dataset.user,
                             jenis: el.dataset.jenis,
                             tipe: el.dataset.tipe,
-                            judul_task: el.dataset.task
+                            judul_task: el.dataset.task,
+                            proyek: el.dataset.proyek
                         })
                     })
                     .then(res => res.json())
