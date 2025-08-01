@@ -6,7 +6,7 @@
             <h1 class="daily-tasks-title">{{ $userguru->name }}
                 <div class="button-onlabel">
                     <a class="edit-onlabel" href="/user-tasks/{{$userguru->id}}" title="Edit"><i class="ph ph-pen"></i> <span>Edit</span></a>
-                    <a class="edit-onlabel" href="/statistik/2025/7/{{$userguru->id}}" title="Statistik"><i class="ph ph-chart-pie-slice"></i> <span>Statistik</span></a>
+                    <a class="edit-onlabel" href="/statistik/2025/8/{{$userguru->id}}" title="Statistik"><i class="ph ph-chart-pie-slice"></i> <span>Statistik</span></a>
                 </div>
             </h1>
         </div>

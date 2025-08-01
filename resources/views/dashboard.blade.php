@@ -2,7 +2,6 @@
     <div class="leaderboard-container">
         <!-- HEADER -->
         <div class="leaderboard-header">
-            <div class="back-arrow">←</div>
             <h1 class="leaderboard-title">Leaderboard</h1>
         </div>
 

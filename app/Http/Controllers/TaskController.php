@@ -132,8 +132,8 @@ class TaskController extends Controller
         return response()->json(['success' => true]);
     }
 
-    // STATISTIK
-    public function statistik($year, $month, $user_id)
+    // STATISTIK DATA
+    public function statistikdata($year, $month, $user_id)
     {
         $thisuser = User::find($user_id);
         $start = Carbon::create($year, $month, 1)->startOfMonth();
@@ -171,7 +171,9 @@ class TaskController extends Controller
             };
             $done = 0;
             foreach ($jenisTasks as $task) {
-                $filtered = $checks->where('judul_task', $task->judul_task)->where('jenis', $task->jenis);
+                $filtered = $checks->where('judul_task', $task->judul_task)
+                   ->where('jenis', $task->jenis)
+                   ->where('proyek', $task->proyek);
                 $done += match ($jenis) {
                     'daily' => $filtered->count(),
                     'weekly' => $filtered->groupBy(fn($i) => Carbon::parse($i->created_at)->week)->count(),
@@ -185,7 +187,7 @@ class TaskController extends Controller
                 ? round(($done / $summary[$jenis]['total']) * 100, 1)
                 : 0;
         }
-        return view('page.statistik', compact('summary', 'year', 'month', 'user_id', 'thisuser'));
+        return view('page.statistikdata', compact('summary', 'year', 'month', 'user_id', 'thisuser'));
     }
 
 }

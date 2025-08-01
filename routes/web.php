@@ -27,7 +27,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user-tasks/{id}/store', [TaskController::class, 'storeUserTasks'])->name('tasks.store');
     Route::delete('/user-tasks/{task}/delete', [TaskController::class, 'deleteUserTask'])->name('tasks.delete');
     Route::put('/user-tasks/{task}/update', [TaskController::class, 'updateUserTask'])->name('tasks.update');
-    Route::get('/statistik/{year}/{month}/{user_id}', [TaskController::class, 'statistik'])->name('tasks.statistik');
+
+    // Task Statistik
+    Route::get('/statistik/{user_id}', [TaskController::class, 'statistik'])->name('tasks.statistik');
+    Route::get('/statistik/{year}/{month}/{user_id}', [TaskController::class, 'statistikdata'])->name('tasks.statistikdata');
 
 });
 
