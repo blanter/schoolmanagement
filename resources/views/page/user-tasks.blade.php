@@ -24,6 +24,9 @@
                         
                         @forelse ($tasks as $task)
                             <li class="guru-task-item" data-id="{{ $task->id }}">
+                                @if($task->tipe == "nonguru")
+                                <div class="label-type">Non-Guru</div>
+                                @endif
                                 <input type="text" class="guru-task-title-field" value="{{ $task->judul_task }}" />
                                 <button class="guru-task-update-btn">Update</button>
                                 <button class="guru-task-delete-btn">Delete</button>
@@ -55,6 +58,11 @@
             <h3 class="notification-modal-title">Tambah Task Baru</h3>
 
             <div class="notification-modal-form">
+                <select class="custom-input-field" id="taskTipeInput">
+                    <option value="" hidden selected>-Pilih Tipe-</option>
+                    <option value="guru">Guru</option>
+                    <option value="nonguru">Non-Guru</option>
+                </select>
                 <input type="text" class="custom-input-field" id="taskTitleInput" placeholder="Judul Task">
                 <input type="hidden" id="taskJenisInput">
             </div>
@@ -74,6 +82,7 @@
             btn.addEventListener('click', () => {
                 const jenis = btn.dataset.jenis;
                 document.getElementById('taskJenisInput').value = jenis;
+                document.getElementById('taskTipeInput').value = '';
                 document.getElementById('taskTitleInput').value = '';
 
                 // Attach submit event hanya sekali (tidak double listener)
@@ -82,9 +91,14 @@
                     const userId = '{{ $userguru->id }}';
                     const title = document.getElementById('taskTitleInput').value.trim();
                     const jenis = document.getElementById('taskJenisInput').value;
+                    const tipe = document.getElementById('taskTipeInput').value.trim();
 
                     if (!title) {
                         alert('Judul task tidak boleh kosong.');
+                        return;
+                    }
+                    if (!tipe) {
+                        alert('Tipe task tidak boleh kosong.');
                         return;
                     }
 
@@ -99,8 +113,8 @@
                         },
                         body: JSON.stringify({
                             jenis: jenis,
-                            tipe: 'guru',
-                            judul_task: title
+                            tipe: tipe,
+                            judul_task: title,
                         })
                     })
                     .then(res => res.json())

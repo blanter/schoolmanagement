@@ -23,7 +23,7 @@
                     $key = $task->jenis . '|' . $task->tipe . '|' . $task->judul_task;
                     $checked = $taskChecksToday->has($key);
                 @endphp
-                <a href="#" 
+                <a href="javascript:;" 
                     class="task-item-card {{ $checked ? 'completed-task' : 'pending-task' }}" 
                     data-user="{{ $userguru->id }}"
                     data-jenis="{{ $task->jenis }}"
@@ -33,6 +33,9 @@
                     <div class="completion-indicator"></div>
                     <div class="task-name-primary">{{ $task->judul_task }}</div>
                     <div class="task-status-text">{{ $checked ? 'Task completed' : 'Task undone' }}</div>
+                    @if($task->tipe == "nonguru")
+                    <div class="task-tipe">Non-Guru</div>
+                    @endif
                 </a>
             @empty
                 <p class="task-empty">Belum ada daily task</p>
@@ -51,7 +54,7 @@
                     $key = $task->jenis . '|' . $task->tipe . '|' . $task->judul_task;
                     $checked = $taskChecksThisWeek->has($key);
                 @endphp
-                <a href="#" 
+                <a href="javascript:;" 
                     class="task-item-card {{ $checked ? 'completed-task' : 'pending-task' }}" 
                     data-user="{{ $userguru->id }}"
                     data-jenis="{{ $task->jenis }}"

@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 use App\Models\User;
 use App\Models\Task;
 use App\Models\TaskCheck;
+use App\Models\Point;
 
 class TaskController extends Controller
 {
@@ -72,10 +73,12 @@ class TaskController extends Controller
         ->whereDate('created_at', $today->toDateString())
         ->first();
         if ($existing) {
+            $expoints = Point::where('check_id',$existing->id)->first();
+            $expoints->delete();
             $existing->delete(); // Uncheck
             return response()->json(['status' => 'undone']);
         } else {
-            TaskCheck::create([
+            $taskcheck = TaskCheck::create([
                 'user_id' => $validated['user_id'],
                 'jenis' => $validated['jenis'],
                 'tipe' => $validated['tipe'],
@@ -83,6 +86,25 @@ class TaskController extends Controller
                 'tahun' => $tahun,
                 'bulan' => $bulan,
                 'proyek' => $validated['proyek'],
+            ]);
+            $taskcheck->save();
+            // New Point
+            $newpoint = 0;
+            if($validated['jenis'] == "days"){
+                $newpoint = 10;
+            }
+            if($validated['jenis'] == "week"){
+                $newpoint = 50;
+            }
+            if($validated['jenis'] == "month"){
+                $newpoint = 100;
+            }
+            Point::create([
+                'user_id' => $validated['user_id'],
+                'check_id' => $taskcheck->id,
+                'amount' => $newpoint,
+                'tipe' => $validated['tipe'],
+                'source' => $validated['jenis'],
             ]);
             return response()->json(['status' => 'done']);
         }
