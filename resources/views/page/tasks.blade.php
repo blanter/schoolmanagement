@@ -5,8 +5,10 @@
             <a class="back-arrow" href="/dashboard" title="Back">←</a>
             <h1 class="daily-tasks-title">{{ $userguru->name }}
                 <div class="button-onlabel">
+                    @if(Auth::user()->id == "5" || Auth::user()->id == "15" || Auth::user()->id == $userguru->id)
                     <a class="edit-onlabel" href="/user-tasks/{{$userguru->id}}" title="Edit"><i class="ph ph-pen"></i> <span>Edit</span></a>
-                    <a class="edit-onlabel" href="/statistik/2025/8/{{$userguru->id}}" title="Statistik"><i class="ph ph-chart-pie-slice"></i> <span>Statistik</span></a>
+                    <a class="edit-onlabel" href="/statistik/{{$userguru->id}}" title="Statistik"><i class="ph ph-chart-pie-slice"></i> <span>Statistik</span></a>
+                    @endif
                 </div>
             </h1>
         </div>
@@ -99,7 +101,7 @@
         </div>
     </div>
 
-    @if(Auth::user()->id == "1")
+    @if(Auth::user()->id == "5" || Auth::user()->id == "15")
     <script>
         // Checklist Toggle Script
         document.addEventListener('DOMContentLoaded', function() {

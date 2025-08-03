@@ -123,7 +123,7 @@ class TaskController extends Controller
     // SIMPAN TASK BARU (ADMIN)
     public function storeUserTasks(Request $request, $id)
     {
-        if(Auth::user()->role == "admin"){
+        if(Auth::user()->role == "admin" || Auth::user()->id != $id){
             $proyek = "wajib";
         } else {
             $proyek = "pribadi";
@@ -152,6 +152,13 @@ class TaskController extends Controller
     {
         $task->delete();
         return response()->json(['success' => true]);
+    }
+
+    // STATISTIK PAGE (ADMIN & GURU)
+    public function statistik($user_id)
+    {
+        $thisuser = User::find($user_id);
+        return view('page.statistik', compact('thisuser'));
     }
 
     // STATISTIK DATA (ADMIN & GURU)

@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="task-management-container">
         <div class="daily-tasks-header">
-            <a class="back-arrow" href="/tasks/{{$thisuser->id}}" title="Back">←</a>
+            <a class="back-arrow" href="/statistik/{{$thisuser->id}}" title="Back">←</a>
             <h1 class="daily-tasks-title">Statistik {{$thisuser->name}} - {{ \Carbon\Carbon::create($year, $month)->translatedFormat('F Y') }}</h1>
         </div>
 
