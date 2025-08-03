@@ -46,7 +46,7 @@ class TaskController extends Controller
         ));
     }
 
-    // TASK CHECK (GURU)
+    // TASK CHECK (GURU CHECKLIST B.SITO(15), B.VINA(27))
     public function toggleCheck(Request $request)
     {
         $validated = $request->validate([
@@ -132,7 +132,7 @@ class TaskController extends Controller
         return response()->json(['success' => true]);
     }
 
-    // STATISTIK DATA
+    // STATISTIK DATA (ADMIN & GURU)
     public function statistikdata($year, $month, $user_id)
     {
         $thisuser = User::find($user_id);

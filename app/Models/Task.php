@@ -12,7 +12,9 @@ class Task extends Model
         'jenis', // days, week, month
         'tipe',  // guru, nonguru
         'judul_task',
-        'proyek',
+        'proyek', // wajib, pribadi
+        'week_num',
+        'month_num',
     ];
 
     public function user()

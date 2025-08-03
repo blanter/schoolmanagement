@@ -8,7 +8,7 @@ use App\Models\User;
 
 class DashboardController extends Controller
 {
-    // INDEX DASHBOARD
+    // INDEX DASHBOARD (LEADERBOARD)
     public function index()
     {
         $userguru = User::where('role','guru')->get();

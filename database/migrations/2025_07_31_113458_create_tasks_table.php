@@ -18,6 +18,8 @@ return new class extends Migration
             $table->enum('tipe', ['guru', 'nonguru']);
             $table->string('judul_task');
             $table->enum('proyek', ['wajib', 'pribadi']);
+            $table->string('week_num')->nullable();
+            $table->string('month_num')->nullable();
             $table->timestamps();
         });
     }

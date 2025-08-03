@@ -11,10 +11,8 @@ abstract class Controller extends BaseController
     {
         // Ambil hanya 1 data Websetting (asumsi hanya 1 baris config)
         //$websetting = Websetting::first();
-
         // Share ke semua view
         //View::share('websetting', $websetting);
-        
         // Kalau kamu mau simpan sebagai property di controller:
         //$this->websetting = $websetting;
     }

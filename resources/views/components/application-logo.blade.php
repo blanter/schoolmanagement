@@ -1,1 +1,0 @@
-<img src="{{asset('/assets/fingerlogo.png')}}" alt="App"/>

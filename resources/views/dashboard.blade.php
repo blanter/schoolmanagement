@@ -67,7 +67,7 @@
                     <div class="player-item">
                         <div class="player-rank">{{ $index + 1 }}</div>
                         <div class="player-avatar-small">
-                            <img src="https://elearning.lifebookacademy.sch.id/public/small/{{ $user['image'] }}"/>
+                                <img src="https://elearning.lifebookacademy.sch.id/public/small/{{ $user['image'] }}"/>
                         </div>
                         <div class="player-info">
                             <div class="player-name"><a href="/tasks/{{ $user['id'] }}">{{ $user['name'] }}</a></div>

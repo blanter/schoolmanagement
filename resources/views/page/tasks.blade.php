@@ -79,7 +79,7 @@
                     $key = $task->jenis . '|' . $task->tipe . '|' . $task->judul_task;
                     $checked = $taskChecksThisMonth->has($key);
                 @endphp
-                <a href="#" 
+                <a href="javascript:;" 
                     class="task-item-card {{ $checked ? 'completed-task' : 'pending-task' }}" 
                     data-user="{{ $userguru->id }}"
                     data-jenis="{{ $task->jenis }}"
@@ -96,6 +96,7 @@
         </div>
     </div>
 
+    @if(Auth::user()->id == "1")
     <script>
         // Checklist Toggle Script
         document.addEventListener('DOMContentLoaded', function() {
@@ -134,6 +135,15 @@
                 });
             });
         });
+    </script>
+    @else
+    <script>
+        $(".task-item-card").click(function(){
+            alert('Maaf, Anda tidak memiliki akses centang!');
+        });
+    </script>
+    @endif
+    <script>
         // Add smooth hover effects and click animations
         document.addEventListener('DOMContentLoaded', function() {
             const taskCards = document.querySelectorAll('.task-item-card, .goal-item-card');
