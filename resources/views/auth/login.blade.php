@@ -3,6 +3,7 @@
     <div class="login-container">
         <div class="image-section">
             <div class="image-placeholder">
+                <img src="{{asset('/img/classwork.webp')}}"/>
             </div>
         </div>
         
