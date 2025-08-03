@@ -5,13 +5,53 @@
             <a class="back-arrow" href="/dashboard" title="Back">←</a>
             <h1 class="daily-tasks-title">{{ $userguru->name }}
                 <div class="button-onlabel">
-                    @if(Auth::user()->id == "5" || Auth::user()->id == "15" || Auth::user()->id == $userguru->id)
+                    @if(Auth::user()->id == "2" || Auth::user()->id == "15" || Auth::user()->id == "27" || Auth::user()->id == $userguru->id)
                     <a class="edit-onlabel" href="/user-tasks/{{$userguru->id}}" title="Edit"><i class="ph ph-pen"></i> <span>Edit</span></a>
                     <a class="edit-onlabel" href="/statistik/{{$userguru->id}}" title="Statistik"><i class="ph ph-chart-pie-slice"></i> <span>Statistik</span></a>
                     @endif
                 </div>
             </h1>
         </div>
+
+        @if(Auth::user()->id == $userguru->id || Auth::user()->role == "admin")
+        <div class="section-divider"></div>
+        <!-- Laporan Bulanan -->
+        <div class="daily-tasks-header">
+            <h1 class="daily-tasks-title">Laporan Bulanan</h1>
+        </div>
+        <div class="task-items-wrapper">
+            @php
+                $month = \Carbon\Carbon::now()->month;
+                $year = \Carbon\Carbon::now()->year;
+                $laporanBulanIni = \App\Models\Laporan::where('user_id', auth()->id())
+                    ->where('month', $month)
+                    ->where('year', $year)
+                    ->first();
+            @endphp
+
+            <form action="{{ route('laporan.store') }}" method="POST">
+                @csrf
+                <div class="task-laporan">
+                    <div class="task-name-primary">Upload Laporan Bulanan</div>
+                    <div class="task-status-text">
+                        <input 
+                            type="text" 
+                            name="link" 
+                            class="custom-input-field laporan-field" 
+                            value="{{ $laporanBulanIni ? $laporanBulanIni->link : '' }}" 
+                            placeholder="Masukkan Link Google Drive" 
+                            required
+                        />
+                        @if(Auth::user()->role != "admin")
+                        <button type="submit" class="btn btn-primary btn-mini">
+                            {{ $laporanBulanIni ? 'Update Laporan' : 'Kirim Laporan' }}
+                        </button>
+                        @endif
+                    </div>
+                </div>
+            </form>
+        </div>
+        @endif
 
         <div class="section-divider"></div>
 
@@ -101,7 +141,7 @@
         </div>
     </div>
 
-    @if(Auth::user()->id == "5" || Auth::user()->id == "15")
+    @if(Auth::user()->id == "2" || Auth::user()->id == "15" || Auth::user()->id == "27")
     <script>
         // Checklist Toggle Script
         document.addEventListener('DOMContentLoaded', function() {

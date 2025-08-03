@@ -94,10 +94,10 @@ class TaskController extends Controller
                 $newpoint = 10;
             }
             if($validated['jenis'] == "week"){
-                $newpoint = 50;
+                $newpoint = 30;
             }
             if($validated['jenis'] == "month"){
-                $newpoint = 100;
+                $newpoint = 50;
             }
             Point::create([
                 'user_id' => $validated['user_id'],

@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\LaporanController;
 use Illuminate\Support\Facades\Route;
 
 // Route Default
@@ -22,6 +23,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user-tasks/{id}/store', [TaskController::class, 'storeUserTasks'])->name('tasks.store');
     Route::delete('/user-tasks/{task}/delete', [TaskController::class, 'deleteUserTask'])->name('tasks.delete');
     Route::put('/user-tasks/{task}/update', [TaskController::class, 'updateUserTask'])->name('tasks.update');
+
+    // Laporan Bulanan
+    Route::post('/laporan', [LaporanController::class, 'storeOrUpdate'])->name('laporan.store');
 
     // Task Statistik
     Route::get('/statistik/{user_id}', [TaskController::class, 'statistik'])->name('tasks.statistik');

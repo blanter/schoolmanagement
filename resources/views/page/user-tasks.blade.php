@@ -28,8 +28,14 @@
                                 <div class="label-type">Non-Guru</div>
                                 @endif
                                 <input type="text" class="guru-task-title-field" value="{{ $task->judul_task }}" />
+                                @if(Auth::user()->id == "2" || Auth::user()->id == "15" || Auth::user()->id == "27")
                                 <button class="guru-task-update-btn">Update</button>
                                 <button class="guru-task-delete-btn">Delete</button>
+                                @endif
+                                @if($task->user_id == Auth::user()->id && $task->proyek == "pribadi")
+                                <button class="guru-task-update-btn">Update</button>
+                                <button class="guru-task-delete-btn">Delete</button>
+                                @endif
                             </li>
                         @empty
                             <li class="guru-task-empty-state">

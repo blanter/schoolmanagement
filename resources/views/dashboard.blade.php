@@ -11,14 +11,24 @@
             <button class="filter-btn" data-tab="alltime">Non-Guru</button>
         </div>
 
+        @if(Auth::user()->role == "admin")
+        <div class="performance-banner">
+            <div class="performance-text">
+                Hello, Welcome Admin!
+            </div>
+        </div>
+        @endif
+
         <!-- Tab Content 1 -->
         <div id="weekly-content" class="tab-content active">
+            @if(Auth::user()->role == "guru")
             <div class="performance-banner">
                 <div class="performance-rank">#{{ $rankNumberGuru ?? '-' }}</div>
                 <div class="performance-text">
                     You are doing better than<br>{{ $betterThanGuru }}% of other guru players!
                 </div>
             </div>
+            @endif
 
             <div class="time-info">
                 <span class="time-icon">🕐</span>
@@ -33,7 +43,7 @@
                         <img src="https://elearning.lifebookacademy.sch.id/public/small/{{ $userguru[1]['image'] }}"/>
                     </div>
                     <div class="podium-name">
-                        @if(Auth::user()->id == "5" || Auth::user()->id == "15")
+                        @if(Auth::user()->id == "2" || Auth::user()->id == "15" || Auth::user()->id == "27")
                         <a href="/tasks/{{ $userguru[1]['id'] }}">{{ $userguru[1]['name'] }}</a>
                         @else
                         {{ $userguru[1]['name'] }}
@@ -52,7 +62,7 @@
                         <img src="https://elearning.lifebookacademy.sch.id/public/small/{{ $userguru[0]['image'] }}"/>
                     </div>
                     <div class="podium-name">
-                        @if(Auth::user()->id == "5" || Auth::user()->id == "15")
+                        @if(Auth::user()->id == "2" || Auth::user()->id == "15" || Auth::user()->id == "27")
                         <a href="/tasks/{{ $userguru[0]['id'] }}">{{ $userguru[0]['name'] }}</a>
                         @else
                         {{ $userguru[0]['name'] }}
@@ -70,7 +80,7 @@
                         <img src="https://elearning.lifebookacademy.sch.id/public/small/{{ $userguru[2]['image'] }}"/>
                     </div>
                     <div class="podium-name">
-                        @if(Auth::user()->id == "5" || Auth::user()->id == "15")
+                        @if(Auth::user()->id == "2" || Auth::user()->id == "15" || Auth::user()->id == "27")
                         <a href="/tasks/{{ $userguru[2]['id'] }}">{{ $userguru[2]['name'] }}</a>
                         @else
                         {{ $userguru[2]['name'] }}
@@ -91,7 +101,7 @@
                         </div>
                         <div class="player-info">
                             <div class="player-name">
-                                @if(Auth::user()->id == "5" || Auth::user()->id == "15")
+                                @if(Auth::user()->id == "2" || Auth::user()->id == "15" || Auth::user()->id == "27")
                                 <a href="/tasks/{{ $user['id'] }}">{{ $user['name'] }}</a>
                                 @else
                                 {{ $user['name'] }}
@@ -106,12 +116,14 @@
 
         <!-- Tab Content 2 -->
         <div id="alltime-content" class="tab-content">
+            @if(Auth::user()->role == "guru")
             <div class="performance-banner">
                 <div class="performance-rank">#{{ $rankNumberNonguru ?? '-' }}</div>
                 <div class="performance-text">
                     You are doing better than<br>{{ $betterThanNonguru }}% of other nonguru players!
                 </div>
             </div>
+            @endif
 
             <div class="time-info">
                 <span class="time-icon">🕐</span>
@@ -125,7 +137,13 @@
                     <div class="podium-avatar">
                         <img src="https://elearning.lifebookacademy.sch.id/public/small/{{ $usernonguru[1]['image'] }}"/>
                     </div>
-                    <div class="podium-name"><a href="/tasks/{{ $usernonguru[1]['id'] }}">{{ $usernonguru[1]['name'] }}</a></div>
+                    <div class="podium-name">
+                        @if(Auth::user()->id == "2" || Auth::user()->id == "15" || Auth::user()->id == "27")
+                        <a href="/tasks/{{ $usernonguru[1]['id'] }}">{{ $usernonguru[1]['name'] }}</a>
+                        @else
+                        {{ $usernonguru[1]['name'] }}
+                        @endif
+                    </div>
                     <div class="podium-points">{{ number_format($usernonguru[1]['total_amount']) }} GP</div>
                     <div class="podium-base">2</div>
                 </div>
@@ -138,7 +156,13 @@
                     <div class="podium-avatar">
                         <img src="https://elearning.lifebookacademy.sch.id/public/small/{{ $usernonguru[0]['image'] }}"/>
                     </div>
-                    <div class="podium-name"><a href="/tasks/{{ $usernonguru[0]['id'] }}">{{ $usernonguru[0]['name'] }}</a></div>
+                    <div class="podium-name">
+                        @if(Auth::user()->id == "2" || Auth::user()->id == "15" || Auth::user()->id == "27")
+                        <a href="/tasks/{{ $usernonguru[0]['id'] }}">{{ $usernonguru[0]['name'] }}</a>
+                        @else
+                        {{ $usernonguru[0]['name'] }}
+                        @endif
+                    </div>
                     <div class="podium-points">{{ number_format($usernonguru[0]['total_amount']) }} GP</div>
                     <div class="podium-base">1</div>
                 </div>
@@ -150,7 +174,13 @@
                     <div class="podium-avatar">
                         <img src="https://elearning.lifebookacademy.sch.id/public/small/{{ $usernonguru[2]['image'] }}"/>
                     </div>
-                    <div class="podium-name"><a href="/tasks/{{ $usernonguru[2]['id'] }}">{{ $usernonguru[2]['name'] }}</a></div>
+                    <div class="podium-name">
+                        @if(Auth::user()->id == "2" || Auth::user()->id == "15" || Auth::user()->id == "27")
+                        <a href="/tasks/{{ $usernonguru[2]['id'] }}">{{ $usernonguru[2]['name'] }}</a>
+                        @else
+                        {{ $usernonguru[2]['name'] }}
+                        @endif
+                    </div>
                     <div class="podium-points">{{ number_format($usernonguru[2]['total_amount']) }} GP</div>
                     <div class="podium-base">3</div>
                 </div>
@@ -165,7 +195,13 @@
                             <img src="https://elearning.lifebookacademy.sch.id/public/small/{{ $user['image'] }}"/>
                         </div>
                         <div class="player-info">
-                            <div class="player-name"><a href="/tasks/{{ $user['id'] }}">{{ $user['name'] }}</a></div>
+                            <div class="player-name">
+                                @if(Auth::user()->id == "2" || Auth::user()->id == "15" || Auth::user()->id == "27")
+                                <a href="/tasks/{{ $user['id'] }}">{{ $user['name'] }}</a>
+                                @else
+                                {{ $user['name'] }}
+                                @endif
+                            </div>
                             <div class="player-points">{{ number_format($user->total_amount) }} points</div>
                         </div>
                     </div>
@@ -174,11 +210,13 @@
         </div>
     </div>
 
+    @if(Auth::user()->role == "guru")
     <!-- Mobile Button -->
     <a class="nav-mobile-btn" href="/tasks/{{Auth::user()->id}}">
         <i class="ph ph-check-fat"></i>
         <span>My Tasks</span>
     </a>
+    @endif
 
     <!-- SCRIPT -->
     <script>
