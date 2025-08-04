@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Task;
 use App\Models\TaskCheck;
@@ -13,29 +13,48 @@ use App\Models\Point;
 
 class TaskController extends Controller
 {
-    // TASKS (GURU)
-    public function tasks($id)
+    // TASKS (ADMIN & GURU)
+    public function tasks($id, Request $request)
     {
+        // Ambil tanggal dari URL atau default hari ini
+        $day   = $request->input('day', now()->day);
+        $month = $request->input('month', now()->month);
+        $year  = $request->input('year', now()->year);
+        // Carbon date sesuai input
+        $selectedDate = Carbon::createFromDate($year, $month, $day);
         $userguru = User::findOrFail($id);
-        $dailyTasks = Task::where('user_id', $id)->where('jenis', 'days')->get();
-        $weeklyTasks = Task::where('user_id', $id)->where('jenis', 'week')->get();
-        $monthlyTasks = Task::where('user_id', $id)->where('jenis', 'month')->get();
-        // Ambil semua task check hari ini, minggu ini, bulan ini
+        $dailyTasks = Task::where('user_id', $id)
+            ->where('jenis', 'days')
+            ->get();
+        $weeklyTasks = Task::where('user_id', $id)
+            ->where('jenis', 'week')
+            ->get();
+        $monthlyTasks = Task::where('user_id', $id)
+            ->where('jenis', 'month')
+            ->get();
+        // Ambil semua task check sesuai tanggal pilihan
         $taskChecksToday = TaskCheck::where('user_id', $id)
-            ->whereDate('created_at', now()->toDateString())
+            ->whereDate('tanggal', $selectedDate->toDateString())
             ->get()
             ->keyBy(fn ($item) => 'days|' . $item->tipe . '|' . $item->judul_task);
-        $startOfWeek = now()->startOfWeek();
-        $endOfWeek = now()->endOfWeek();
+        // Ambil task check minggu dari tanggal pilihan
+        $startOfWeek = $selectedDate->copy()->startOfWeek();
+        $endOfWeek   = $selectedDate->copy()->endOfWeek();
         $taskChecksThisWeek = TaskCheck::where('user_id', $id)
-            ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+            ->whereBetween('tanggal', [$startOfWeek, $endOfWeek])
             ->get()
             ->keyBy(fn ($item) => 'week|' . $item->tipe . '|' . $item->judul_task);
+        // Ambil task check bulan dari tanggal pilihan
         $taskChecksThisMonth = TaskCheck::where('user_id', $id)
-            ->whereYear('created_at', now()->year)
-            ->whereMonth('created_at', now()->month)
+            ->whereYear('tanggal', $selectedDate->year)
+            ->whereMonth('tanggal', $selectedDate->month)
             ->get()
             ->keyBy(fn ($item) => 'month|' . $item->tipe . '|' . $item->judul_task);
+        // If custom date
+        $day   = $request->input('day', now()->day);
+        $month = $request->input('month', now()->month);
+        $year  = $request->input('year', now()->year);
+        $customDate = \Carbon\Carbon::createFromDate($year, $month, $day)->startOfDay();
         return view('page.tasks', compact(
             'userguru',
             'dailyTasks',
@@ -43,11 +62,13 @@ class TaskController extends Controller
             'monthlyTasks',
             'taskChecksToday',
             'taskChecksThisWeek',
-            'taskChecksThisMonth'
+            'taskChecksThisMonth',
+            'selectedDate',
+            'customDate'
         ));
     }
 
-    // TASK CHECK (GURU CHECKLIST B.SITO(15), B.VINA(27))
+    // TASK CHECK (GURU CHECKLIST ADMIN(2), B.SITO(15), B.VINA(27))
     public function toggleCheck(Request $request)
     {
         $validated = $request->validate([
@@ -56,11 +77,13 @@ class TaskController extends Controller
             'tipe' => 'required|string',
             'judul_task' => 'required|string',
             'proyek' => 'required',
+            'tanggal' => 'required',
         ]);
-        $today = now();
-        $tahun = $today->year;
-        $bulan = $today->month;
-        // Cek apakah data sudah ada
+        // Buat date sesuai input
+        $customDate = Carbon::parse($validated['tanggal']);
+        $tahun = $customDate->year;
+        $bulan = $customDate->month;
+        // Cek apakah data sudah ada di tanggal tersebut
         $existing = TaskCheck::where([
             'user_id' => $validated['user_id'],
             'jenis' => $validated['jenis'],
@@ -70,14 +93,17 @@ class TaskController extends Controller
             'bulan' => $bulan,
             'proyek' => $validated['proyek'],
         ])
-        ->whereDate('created_at', $today->toDateString())
+        ->whereDate('tanggal', $customDate->toDateString())
         ->first();
         if ($existing) {
-            $expoints = Point::where('check_id',$existing->id)->first();
-            $expoints->delete();
-            $existing->delete(); // Uncheck
+            $expoints = Point::where('check_id', $existing->id)->first();
+            if ($expoints) {
+                $expoints->delete();
+            }
+            $existing->delete();
             return response()->json(['status' => 'undone']);
         } else {
+            // Save task check dengan tanggal custom
             $taskcheck = TaskCheck::create([
                 'user_id' => $validated['user_id'],
                 'jenis' => $validated['jenis'],
@@ -86,17 +112,17 @@ class TaskController extends Controller
                 'tahun' => $tahun,
                 'bulan' => $bulan,
                 'proyek' => $validated['proyek'],
+                'tanggal' => $customDate,
             ]);
-            $taskcheck->save();
             // New Point
             $newpoint = 0;
-            if($validated['jenis'] == "days"){
+            if ($validated['jenis'] == "days") {
                 $newpoint = 10;
             }
-            if($validated['jenis'] == "week"){
+            if ($validated['jenis'] == "week") {
                 $newpoint = 30;
             }
-            if($validated['jenis'] == "month"){
+            if ($validated['jenis'] == "month") {
                 $newpoint = 50;
             }
             Point::create([
@@ -105,12 +131,13 @@ class TaskController extends Controller
                 'amount' => $newpoint,
                 'tipe' => $validated['tipe'],
                 'source' => $validated['jenis'],
+                'tanggal' => $customDate,
             ]);
             return response()->json(['status' => 'done']);
         }
     }
 
-    // EDIT USER TASKS (ADMIN)
+    // EDIT USER TASKS (ADMIN & GURU)
     public function editUserTasks($id)
     {
         $userguru = User::findOrFail($id);
@@ -120,7 +147,7 @@ class TaskController extends Controller
         return view('page.user-tasks', compact('userguru', 'dailyTasks', 'weeklyTasks', 'monthlyTasks'));
     }
 
-    // SIMPAN TASK BARU (ADMIN)
+    // SIMPAN TASK BARU (ADMIN & GURU)
     public function storeUserTasks(Request $request, $id)
     {
         if(Auth::user()->role == "admin" || Auth::user()->id != $id){
@@ -138,7 +165,7 @@ class TaskController extends Controller
         return response()->json(['success' => true]);
     }
 
-    // UPDATE TASK (ADMIN)
+    // UPDATE TASK (ADMIN & GURU)
     public function updateUserTask(Request $request, Task $task)
     {
         $task->update([
@@ -147,7 +174,7 @@ class TaskController extends Controller
         return response()->json(['success' => true]);
     }
 
-    // HAPUS TASK (ADMIN)
+    // HAPUS TASK (ADMIN & GURU)
     public function deleteUserTask(Task $task)
     {
         $task->delete();
@@ -178,8 +205,8 @@ class TaskController extends Controller
         $tasks = Task::where('user_id', $user_id)->get();
         // Ambil semua checklist pada bulan tersebut
         $checks = TaskCheck::where('user_id', $user_id)
-            ->whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
+            ->whereYear('tanggal', $year)
+            ->whereMonth('tanggal', $month)
             ->get();
         $summary = [
             'daily' => ['total' => 0, 'done' => 0, 'missed' => 0],

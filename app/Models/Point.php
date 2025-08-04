@@ -12,5 +12,6 @@ class Point extends Model
         'amount',
         'tipe',
         'source',
+        'tanggal',
     ];
 }

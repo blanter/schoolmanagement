@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('amount');
             $table->string('tipe');
             $table->string('source');
+            $table->string('tanggal');
             $table->timestamps();
         });
     }

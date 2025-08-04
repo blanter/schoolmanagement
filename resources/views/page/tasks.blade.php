@@ -1,4 +1,4 @@
-@section('title', 'Tasks List')
+@section('title', 'Tasks List - '.$userguru->name)
 <x-app-layout>
     <div class="task-management-container">
         <div class="daily-tasks-header">
@@ -12,6 +12,16 @@
                 </div>
             </h1>
         </div>
+
+        <!-- Input tanggal -->
+        <div class="center">
+        <input 
+            type="date"
+            class="custom-input-field" 
+            id="taskDate" 
+            value="{{ request('year', now()->year) }}-{{ str_pad(request('month', now()->month), 2, '0', STR_PAD_LEFT) }}-{{ str_pad(request('day', now()->day), 2, '0', STR_PAD_LEFT) }}"
+            class="border p-2 rounded"
+        /></div>
 
         @if(Auth::user()->id == $userguru->id || Auth::user()->role == "admin")
         <div class="section-divider"></div>
@@ -28,7 +38,7 @@
                     ->where('year', $year)
                     ->first();
             @endphp
-
+            @if(Auth::user()->role != "admin")
             <form action="{{ route('laporan.store') }}" method="POST">
                 @csrf
                 <div class="task-laporan">
@@ -42,14 +52,34 @@
                             placeholder="Masukkan Link Google Drive" 
                             required
                         />
-                        @if(Auth::user()->role != "admin")
                         <button type="submit" class="btn btn-primary btn-mini">
                             {{ $laporanBulanIni ? 'Update Laporan' : 'Kirim Laporan' }}
                         </button>
-                        @endif
                     </div>
                 </div>
             </form>
+            @else
+            <div class="task-laporan">
+                <div class="task-name-primary">Laporan Bulanan</div>
+                    <div class="task-status-text input-copy-wrapper">
+                        <input 
+                            type="text" 
+                            name="link" 
+                            id="laporanLink" 
+                            class="custom-input-field laporan-field" 
+                            value="{{ $laporanBulanIni ? $laporanBulanIni->link : '' }}" 
+                            placeholder="Link Google Drive" readonly 
+                            required
+                        />
+                        <button type="button" class="copy-btn" onclick="copyLaporanLink()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            @endif
         </div>
         @endif
 
@@ -71,7 +101,8 @@
                     data-jenis="{{ $task->jenis }}"
                     data-tipe="{{ $task->tipe }}"
                     data-task="{{ $task->judul_task }}"
-                    data-proyek="{{ $task->proyek }}">
+                    data-proyek="{{ $task->proyek }}"
+                    data-tanggal="{{ $customDate }}">
                     <div class="completion-indicator"></div>
                     <div class="task-name-primary">{{ $task->judul_task }}</div>
                     <div class="task-status-text">{{ $checked ? 'Task completed' : 'Task undone' }}</div>
@@ -162,7 +193,8 @@
                             jenis: el.dataset.jenis,
                             tipe: el.dataset.tipe,
                             judul_task: el.dataset.task,
-                            proyek: el.dataset.proyek
+                            proyek: el.dataset.proyek,
+                            tanggal: el.dataset.tanggal
                         })
                     })
                     .then(res => res.json())
@@ -245,5 +277,32 @@
             }
         `;
         document.head.appendChild(style);
+
+        // Copy
+        function copyLaporanLink() {
+            const input = document.getElementById("laporanLink");
+            input.select();
+            input.setSelectionRange(0, 99999); // untuk mobile
+            navigator.clipboard.writeText(input.value).then(() => {
+                alert("Link berhasil disalin!");
+            }).catch(err => {
+                alert("Gagal menyalin link.");
+            });
+        }
+
+        // Date
+        document.getElementById('taskDate').addEventListener('change', function() {
+            let date = new Date(this.value);
+            let day = date.getDate();
+            let month = date.getMonth() + 1; // bulan dimulai dari 0
+            let year = date.getFullYear();
+
+            // Ambil ID dari URL sekarang (/tasks/{id})
+            let pathParts = window.location.pathname.split('/');
+            let taskId = pathParts[pathParts.length - 1]; 
+
+            // Redirect ke URL dengan parameter day, month, year
+            window.location.href = `/tasks/${taskId}?day=${day}&month=${month}&year=${year}`;
+        });
     </script>
 </x-app-layout>

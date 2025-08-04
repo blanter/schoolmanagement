@@ -1,3 +1,4 @@
+@section('title', 'Task Management - '.$userguru->name)
 <x-app-layout>
     <div class="task-management-container">
         <div class="daily-tasks-header">

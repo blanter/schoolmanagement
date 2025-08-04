@@ -8,7 +8,7 @@
         <title>@yield('title', 'School Management App')</title>
 
         <!-- CSS & jQuery -->
-        <link href="{{asset('/css/style.css')}}" rel="stylesheet"/>
+        <link href="{{asset('/css/style.css')}}?ver=1" rel="stylesheet"/>
         <script src="{{asset('/js/jquery.js')}}"></script>
     </head>
     <body>

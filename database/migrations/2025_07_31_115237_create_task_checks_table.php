@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('bulan');
             $table->enum('proyek', ['wajib', 'pribadi']);
             $table->string('link')->nullable();
+            $table->string('tanggal');
             $table->timestamps();
         });
     }
