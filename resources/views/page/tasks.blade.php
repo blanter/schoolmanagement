@@ -20,7 +20,7 @@
             class="custom-input-field" 
             id="taskDate" 
             value="{{ request('year', now()->year) }}-{{ str_pad(request('month', now()->month), 2, '0', STR_PAD_LEFT) }}-{{ str_pad(request('day', now()->day), 2, '0', STR_PAD_LEFT) }}"
-            class="border p-2 rounded"
+            class="border p-2 rounded" max="{{ now()->format('Y-m-d') }}"
         /></div>
 
         @if(Auth::user()->id == $userguru->id || Auth::user()->role == "admin")
@@ -33,7 +33,7 @@
             @php
                 $month = \Carbon\Carbon::now()->month;
                 $year = \Carbon\Carbon::now()->year;
-                $laporanBulanIni = \App\Models\Laporan::where('user_id', auth()->id())
+                $laporanBulanIni = \App\Models\Laporan::where('user_id', $userguru->id)
                     ->where('month', $month)
                     ->where('year', $year)
                     ->first();
@@ -91,12 +91,15 @@
         </div>
         <div class="task-items-wrapper">
             @forelse($dailyTasks as $task)
-                @php
-                    $key = $task->jenis . '|' . $task->tipe . '|' . $task->judul_task;
-                    $checked = $taskChecksToday->has($key);
-                @endphp
+            @php
+                $key = $task->jenis . '|' . $task->tipe . '|' . $task->judul_task;
+                $checked = $taskChecksToday->has($key);
+                $skipKey = $task->jenis . '|' . $task->tipe . '|' . $task->judul_task;
+                $isSkipped = $taskSkipsToday->has($skipKey);
+            @endphp
+            <div class="box-tasks">
                 <a href="javascript:;" 
-                    class="task-item-card {{ $checked ? 'completed-task' : 'pending-task' }}" 
+                    class="task-item-card {{ $checked ? 'completed-task' : 'pending-task' }} {{ $isSkipped ? 'skipped-task' : '' }}" 
                     data-user="{{ $userguru->id }}"
                     data-jenis="{{ $task->jenis }}"
                     data-tipe="{{ $task->tipe }}"
@@ -110,6 +113,19 @@
                     <div class="task-tipe">Non-Guru</div>
                     @endif
                 </a>
+                @if(!$checked)
+                <!-- Tombol Skip -->
+                <button class="task-skip-btn {{ $isSkipped ? 'skipped-task' : '' }}"
+                    data-user="{{ $userguru->id }}"
+                    data-jenis="{{ $task->jenis }}"
+                    data-tipe="{{ $task->tipe }}"
+                    data-task="{{ $task->judul_task }}"
+                    data-proyek="{{ $task->proyek }}"
+                    data-tanggal="{{ $customDate }}">
+                    @if($isSkipped) <i class="ph ph-prohibit-inset"></i> @else <i class="ph ph-prohibit"></i>@endif
+                </button>
+                @endif
+            </div>
             @empty
                 <p class="task-empty">Belum ada daily task</p>
             @endforelse
@@ -123,21 +139,42 @@
         </div>
         <div class="task-items-wrapper">
             @forelse($weeklyTasks as $task)
-                @php
-                    $key = $task->jenis . '|' . $task->tipe . '|' . $task->judul_task;
-                    $checked = $taskChecksThisWeek->has($key);
-                @endphp
+            @php
+                $key = $task->jenis . '|' . $task->tipe . '|' . $task->judul_task;
+                $checked = $taskChecksThisWeek->has($key);
+                $skipKey = $task->jenis . '|' . $task->tipe . '|' . $task->judul_task;
+                $isSkipped = $taskSkipsThisWeek->has($skipKey);
+                $weeklyDate = $selectedDate->copy()->startOfWeek()->toDateString();
+            @endphp
+            <div class="box-tasks">
                 <a href="javascript:;" 
-                    class="task-item-card {{ $checked ? 'completed-task' : 'pending-task' }}" 
+                    class="task-item-card {{ $checked ? 'completed-task' : 'pending-task' }} {{ $isSkipped ? 'skipped-task' : '' }}" 
                     data-user="{{ $userguru->id }}"
                     data-jenis="{{ $task->jenis }}"
                     data-tipe="{{ $task->tipe }}"
                     data-task="{{ $task->judul_task }}"
-                    data-proyek="{{ $task->proyek }}">
+                    data-proyek="{{ $task->proyek }}"
+                    data-tanggal="{{ $weeklyDate }}">
                     <div class="completion-indicator"></div>
                     <div class="task-name-primary">{{ $task->judul_task }}</div>
                     <div class="task-status-text">{{ $checked ? 'Task completed' : 'Task undone' }}</div>
+                    @if($task->tipe == "nonguru")
+                    <div class="task-tipe">Non-Guru</div>
+                    @endif
                 </a>
+                @if(!$checked)
+                <!-- Tombol Skip -->
+                <button class="task-skip-btn {{ $isSkipped ? 'skipped-task' : '' }}"
+                    data-user="{{ $userguru->id }}"
+                    data-jenis="{{ $task->jenis }}"
+                    data-tipe="{{ $task->tipe }}"
+                    data-task="{{ $task->judul_task }}"
+                    data-proyek="{{ $task->proyek }}"
+                    data-tanggal="{{ $weeklyDate }}">
+                    @if($isSkipped) <i class="ph ph-prohibit-inset"></i> @else <i class="ph ph-prohibit"></i>@endif
+                </button>
+                @endif
+            </div>
             @empty
                 <p class="task-empty">Belum ada weekly task</p>
             @endforelse
@@ -151,21 +188,42 @@
         </div>
         <div class="task-items-wrapper">
             @forelse($monthlyTasks as $task)
-                @php
-                    $key = $task->jenis . '|' . $task->tipe . '|' . $task->judul_task;
-                    $checked = $taskChecksThisMonth->has($key);
-                @endphp
+            @php
+                $key = $task->jenis . '|' . $task->tipe . '|' . $task->judul_task;
+                $checked = $taskChecksThisMonth->has($key);
+                $skipKey = $task->jenis . '|' . $task->tipe . '|' . $task->judul_task;
+                $isSkipped = $taskSkipsThisMonth->has($skipKey);
+                $monthlyDate = $selectedDate->copy()->startOfMonth()->toDateString();
+            @endphp
+            <div class="box-tasks">
                 <a href="javascript:;" 
-                    class="task-item-card {{ $checked ? 'completed-task' : 'pending-task' }}" 
+                    class="task-item-card {{ $checked ? 'completed-task' : 'pending-task' }} {{ $isSkipped ? 'skipped-task' : '' }}" 
                     data-user="{{ $userguru->id }}"
                     data-jenis="{{ $task->jenis }}"
                     data-tipe="{{ $task->tipe }}"
                     data-task="{{ $task->judul_task }}"
-                    data-proyek="{{ $task->proyek }}">
+                    data-proyek="{{ $task->proyek }}"
+                    data-tanggal="{{ $monthlyDate }}">
                     <div class="completion-indicator"></div>
                     <div class="task-name-primary">{{ $task->judul_task }}</div>
                     <div class="task-status-text">{{ $checked ? 'Task completed' : 'Task undone' }}</div>
+                    @if($task->tipe == "nonguru")
+                    <div class="task-tipe">Non-Guru</div>
+                    @endif
                 </a>
+                @if(!$checked)
+                <!-- Tombol Skip -->
+                <button class="task-skip-btn {{ $isSkipped ? 'skipped-task' : '' }}"
+                    data-user="{{ $userguru->id }}"
+                    data-jenis="{{ $task->jenis }}"
+                    data-tipe="{{ $task->tipe }}"
+                    data-task="{{ $task->judul_task }}"
+                    data-proyek="{{ $task->proyek }}"
+                    data-tanggal="{{ $monthlyDate }}">
+                    @if($isSkipped) <i class="ph ph-prohibit-inset"></i> @else <i class="ph ph-prohibit"></i>@endif
+                </button>
+                @endif
+            </div>
             @empty
                 <p class="task-empty">Belum ada monthly task</p>
             @endforelse
@@ -174,14 +232,17 @@
 
     @if(Auth::user()->id == "2" || Auth::user()->id == "15" || Auth::user()->id == "27")
     <script>
-        // Checklist Toggle Script
         document.addEventListener('DOMContentLoaded', function() {
+            // --- Checklist Toggle ---
             document.querySelectorAll('.task-item-card').forEach(function(card) {
                 card.addEventListener('click', function(e) {
                     e.preventDefault();
-
+                    // ✅ Cek kalau task sudah skipped → tidak bisa di-klik checklist
+                    if (this.classList.contains('skipped-task')) {
+                        return; // langsung keluar
+                    }
                     const el = this;
-
+                    const getSkip = el.closest('.box-tasks').querySelector('.task-skip-btn');
                     fetch('{{ route('task.check') }}', {
                         method: 'POST',
                         headers: {
@@ -203,10 +264,49 @@
                             el.classList.remove('pending-task');
                             el.classList.add('completed-task');
                             el.querySelector('.task-status-text').innerText = 'Task completed';
+                            getSkip.style.display = 'none';
                         } else {
                             el.classList.remove('completed-task');
                             el.classList.add('pending-task');
                             el.querySelector('.task-status-text').innerText = 'Task undone';
+                            getSkip.style.display = 'inline-block';
+                        }
+                    });
+                });
+            });
+
+            // --- Skip Toggle ---
+            document.querySelectorAll('.task-skip-btn').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation(); // Jangan trigger checklist
+                    const el = this;
+                    const parentCard = el.closest('.box-tasks').querySelector('.task-item-card');
+                    fetch('{{ route('task.skip') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            user_id: el.dataset.user,
+                            jenis: el.dataset.jenis,
+                            tipe: el.dataset.tipe,
+                            judul_task: el.dataset.task,
+                            proyek: el.dataset.proyek,
+                            tanggal: el.dataset.tanggal
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === 'done') {
+                            el.innerHTML = '<i class="ph ph-prohibit-inset"></i>';
+                            el.classList.add('skipped-task');
+                            parentCard.classList.add('skipped-task'); // ✅ tandai card skip
+                        } else {
+                            el.innerHTML = '<i class="ph ph-prohibit"></i>';
+                            el.classList.remove('skipped-task');
+                            parentCard.classList.remove('skipped-task'); // ✅ hapus tanda skip
                         }
                     });
                 });
@@ -215,6 +315,7 @@
     </script>
     @else
     <script>
+        // No Access
         $(".task-item-card").click(function(){
             alert('Maaf, Anda tidak memiliki akses centang!');
         });
@@ -224,27 +325,21 @@
         // Add smooth hover effects and click animations
         document.addEventListener('DOMContentLoaded', function() {
             const taskCards = document.querySelectorAll('.task-item-card, .goal-item-card');
-            
             taskCards.forEach(card => {
                 card.addEventListener('mouseenter', function() {
                     this.style.transform = 'translateY(-5px)';
                 });
-                
                 card.addEventListener('mouseleave', function() {
                     this.style.transform = 'translateY(0)';
                 });
-                
                 card.addEventListener('mousedown', function() {
                     this.style.transform = 'translateY(-2px) scale(0.98)';
                 });
-                
                 card.addEventListener('mouseup', function() {
                     this.style.transform = 'translateY(-5px)';
                 });
-                
                 card.addEventListener('click', function(e) {
                     e.preventDefault();
-                    
                     // Add ripple effect
                     const ripple = document.createElement('div');
                     ripple.style.position = 'absolute';
@@ -256,9 +351,7 @@
                     ripple.style.top = (e.clientY - this.getBoundingClientRect().top) + 'px';
                     ripple.style.width = ripple.style.height = '20px';
                     ripple.style.marginLeft = ripple.style.marginTop = '-10px';
-                    
                     this.appendChild(ripple);
-                    
                     setTimeout(() => {
                         ripple.remove();
                     }, 600);
@@ -294,14 +387,10 @@
         document.getElementById('taskDate').addEventListener('change', function() {
             let date = new Date(this.value);
             let day = date.getDate();
-            let month = date.getMonth() + 1; // bulan dimulai dari 0
+            let month = date.getMonth() + 1;
             let year = date.getFullYear();
-
-            // Ambil ID dari URL sekarang (/tasks/{id})
             let pathParts = window.location.pathname.split('/');
             let taskId = pathParts[pathParts.length - 1]; 
-
-            // Redirect ke URL dengan parameter day, month, year
             window.location.href = `/tasks/${taskId}?day=${day}&month=${month}&year=${year}`;
         });
     </script>

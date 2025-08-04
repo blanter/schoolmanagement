@@ -23,6 +23,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user-tasks/{id}/store', [TaskController::class, 'storeUserTasks'])->name('tasks.store');
     Route::delete('/user-tasks/{task}/delete', [TaskController::class, 'deleteUserTask'])->name('tasks.delete');
     Route::put('/user-tasks/{task}/update', [TaskController::class, 'updateUserTask'])->name('tasks.update');
+    Route::post('/task-skip', [TaskController::class, 'toggleSkip'])->name('task.skip');
 
     // Laporan Bulanan
     Route::post('/laporan', [LaporanController::class, 'storeOrUpdate'])->name('laporan.store');

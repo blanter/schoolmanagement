@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Task;
 use App\Models\TaskCheck;
+use App\Models\TaskSkip;
 use App\Models\Point;
 
 class TaskController extends Controller
@@ -20,6 +21,9 @@ class TaskController extends Controller
         $day   = $request->input('day', now()->day);
         $month = $request->input('month', now()->month);
         $year  = $request->input('year', now()->year);
+        if (!is_numeric($day)) {
+            return redirect('/tasks/'.$id);
+        }
         // Carbon date sesuai input
         $selectedDate = Carbon::createFromDate($year, $month, $day);
         $userguru = User::findOrFail($id);
@@ -50,10 +54,21 @@ class TaskController extends Controller
             ->whereMonth('tanggal', $selectedDate->month)
             ->get()
             ->keyBy(fn ($item) => 'month|' . $item->tipe . '|' . $item->judul_task);
+        // ✅ Ambil task skip sesuai periode
+        $taskSkipsToday = TaskSkip::where('user_id', $id)
+            ->whereDate('tanggal', $selectedDate->toDateString())
+            ->get()
+            ->keyBy(fn ($item) => 'days|' . $item->tipe . '|' . $item->judul_task);
+        $taskSkipsThisWeek = TaskSkip::where('user_id', $id)
+            ->whereBetween('tanggal', [$startOfWeek, $endOfWeek])
+            ->get()
+            ->keyBy(fn ($item) => 'week|' . $item->tipe . '|' . $item->judul_task);
+        $taskSkipsThisMonth = TaskSkip::where('user_id', $id)
+            ->whereYear('tanggal', $selectedDate->year)
+            ->whereMonth('tanggal', $selectedDate->month)
+            ->get()
+            ->keyBy(fn ($item) => 'month|' . $item->tipe . '|' . $item->judul_task);
         // If custom date
-        $day   = $request->input('day', now()->day);
-        $month = $request->input('month', now()->month);
-        $year  = $request->input('year', now()->year);
         $customDate = \Carbon\Carbon::createFromDate($year, $month, $day)->startOfDay();
         return view('page.tasks', compact(
             'userguru',
@@ -63,6 +78,9 @@ class TaskController extends Controller
             'taskChecksToday',
             'taskChecksThisWeek',
             'taskChecksThisMonth',
+            'taskSkipsToday',
+            'taskSkipsThisWeek',
+            'taskSkipsThisMonth',
             'selectedDate',
             'customDate'
         ));
@@ -131,6 +149,48 @@ class TaskController extends Controller
                 'amount' => $newpoint,
                 'tipe' => $validated['tipe'],
                 'source' => $validated['jenis'],
+                'tanggal' => $customDate,
+            ]);
+            return response()->json(['status' => 'done']);
+        }
+    }
+
+    // TASK SKIPPED (GURU CHECKLIST ADMIN(2), B.SITO(15), B.VINA(27))
+    public function toggleSkip(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|integer',
+            'jenis' => 'required|string',
+            'tipe' => 'required|string',
+            'judul_task' => 'required|string',
+            'proyek' => 'required',
+            'tanggal' => 'required',
+        ]);
+        // Buat date sesuai input
+        $customDate = Carbon::parse($validated['tanggal']);
+        $tahun = $customDate->year;
+        $bulan = $customDate->month;
+        // Cek apakah data sudah ada di tanggal tersebut
+        $existing = TaskSkip::where([
+            'user_id' => $validated['user_id'],
+            'jenis' => $validated['jenis'],
+            'tipe' => $validated['tipe'],
+            'judul_task' => $validated['judul_task'],
+            'proyek' => $validated['proyek'],
+        ])
+        ->whereDate('tanggal', $customDate->toDateString())
+        ->first();
+        if ($existing) {
+            $existing->delete();
+            return response()->json(['status' => 'undone']);
+        } else {
+            // Save task skipped
+            $taskskip = TaskSkip::create([
+                'user_id' => $validated['user_id'],
+                'jenis' => $validated['jenis'],
+                'tipe' => $validated['tipe'],
+                'judul_task' => $validated['judul_task'],
+                'proyek' => $validated['proyek'],
                 'tanggal' => $customDate,
             ]);
             return response()->json(['status' => 'done']);
@@ -208,6 +268,11 @@ class TaskController extends Controller
             ->whereYear('tanggal', $year)
             ->whereMonth('tanggal', $month)
             ->get();
+        // ✅ Ambil semua skip pada bulan tersebut
+        $skips = TaskSkip::where('user_id', $user_id)
+            ->whereYear('tanggal', $year)
+            ->whereMonth('tanggal', $month)
+            ->get();
         $summary = [
             'daily' => ['total' => 0, 'done' => 0, 'missed' => 0],
             'weekly' => ['total' => 0, 'done' => 0, 'missed' => 0],
@@ -220,27 +285,44 @@ class TaskController extends Controller
                 'monthly' => 'month'
             };
             $jenisTasks = $tasks->where('jenis', $jenisName);
-            $summary[$jenis]['total'] = match ($jenis) {
+            // Hitung total sebelum skip
+            $total = match ($jenis) {
                 'daily' => $workingDays->count() * $jenisTasks->count(),
-                'weekly' => ceil($workingDays->count() / 5) * $jenisTasks->count(), // asumsi 1 minggu kerja = 5 hari
+                'weekly' => ceil($workingDays->count() / 5) * $jenisTasks->count(),
                 'monthly' => 1 * $jenisTasks->count(),
             };
-            $done = 0;
+            // ✅ Hitung skip untuk jenis ini
+            $skipCount = 0;
             foreach ($jenisTasks as $task) {
-                $filtered = $checks->where('judul_task', $task->judul_task)
-                   ->where('jenis', $task->jenis)
-                   ->where('proyek', $task->proyek);
-                $done += match ($jenis) {
-                    'daily' => $filtered->count(),
-                    'weekly' => $filtered->groupBy(fn($i) => Carbon::parse($i->created_at)->week)->count(),
-                    'monthly' => $filtered->groupBy(fn($i) => Carbon::parse($i->created_at)->month)->count(),
+                $filteredSkip = $skips->where('judul_task', $task->judul_task)
+                    ->where('jenis', $task->jenis)
+                    ->where('proyek', $task->proyek);
+                $skipCount += match ($jenis) {
+                    'daily' => $filteredSkip->count(),
+                    'weekly' => $filteredSkip->groupBy(fn($i) => Carbon::parse($i->tanggal)->week)->count(),
+                    'monthly' => $filteredSkip->groupBy(fn($i) => Carbon::parse($i->tanggal)->month)->count(),
                 };
             }
+            // Kurangi total dengan skip
+            $totalAfterSkip = max($total - $skipCount, 0);
+            // Hitung done
+            $done = 0;
+            foreach ($jenisTasks as $task) {
+                $filteredCheck = $checks->where('judul_task', $task->judul_task)
+                ->where('jenis', $task->jenis)
+                ->where('proyek', $task->proyek);
+                $done += match ($jenis) {
+                    'daily' => $filteredCheck->count(),
+                    'weekly' => $filteredCheck->groupBy(fn($i) => Carbon::parse($i->tanggal)->week)->count(),
+                    'monthly' => $filteredCheck->groupBy(fn($i) => Carbon::parse($i->tanggal)->month)->count(),
+                };
+            }
+            $summary[$jenis]['total'] = $totalAfterSkip;
             $summary[$jenis]['done'] = $done;
-            $summary[$jenis]['missed'] = $summary[$jenis]['total'] - $done;
+            $summary[$jenis]['missed'] = $totalAfterSkip - $done;
             $summary[$jenis]['score'] = $done; // poin
-            $summary[$jenis]['percentage'] = $summary[$jenis]['total'] > 0
-                ? round(($done / $summary[$jenis]['total']) * 100, 1)
+            $summary[$jenis]['percentage'] = $totalAfterSkip > 0
+                ? round(($done / $totalAfterSkip) * 100, 1)
                 : 0;
         }
         return view('page.statistikdata', compact('summary', 'year', 'month', 'user_id', 'thisuser'));

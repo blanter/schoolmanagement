@@ -1,4 +1,4 @@
-@section('title', 'Login')
+@section('title', 'Login - Management App')
 <x-guest-layout>
     <div class="login-container">
         <div class="image-section">
