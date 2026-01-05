@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="my-tasks-container">
         <!-- Header Profile Section -->
-        <div class="my-tasks-header">
+        <div class="page-header-unified">
             <div class="profile-section">
                 <div class="profile-avatar">
                     @if($user->image)

@@ -35,29 +35,29 @@ class TaskController extends Controller
             [
                 'id' => 1,
                 'name' => 'Checklist Rutinitas',
-                'icon' => 'ph ph-clipboard-text',
-                'color' => '#E07AAD', // Pinkish
+                'icon' => 'ph-bold ph-clipboard-text',
+                'color' => '#FEB2D3', // Light Pink
                 'route' => '/tasks/' . $user->id
             ],
             [
                 'id' => 2,
                 'name' => 'Teacher Planner & Reflection',
-                'icon' => 'ph ph-notebook',
-                'color' => '#EBCB83', // Yellowish
+                'icon' => 'ph-bold ph-notebook',
+                'color' => '#FFE7A0', // Light Yellow
                 'route' => '/teacher-planner/' . $user->id
             ],
             [
                 'id' => 3,
                 'name' => 'Teacher Project',
-                'icon' => 'ph ph-strategy',
-                'color' => '#729ED9', // Blue
-                'route' => '/statistik/' . $user->id
+                'icon' => 'ph-bold ph-strategy',
+                'color' => '#A0C4FF', // Light Blue
+                'route' => '/teacher-project/' . $user->id
             ],
             [
                 'id' => 4,
                 'name' => 'Planner & Reflection Pemakmuran',
-                'icon' => 'ph ph-leaf',
-                'color' => '#98D9A2', // Green
+                'icon' => 'ph-bold ph-leaf',
+                'color' => '#B9FBC0', // Light Green
                 'route' => '/semua-laporan'
             ],
         ];
@@ -415,32 +415,32 @@ class TaskController extends Controller
         $plannerItems = [
             [
                 'name' => 'Calendar',
-                'icon' => 'ph ph-calendar',
-                'color' => '#E07AAD', // Pink
+                'icon' => 'ph-bold ph-calendar',
+                'color' => '#FEB2D3', // Light Pink
                 'route' => '/statistik/' . $userguru->id
             ],
             [
                 'name' => 'Weekly Planner',
-                'icon' => 'ph ph-calendar-check',
-                'color' => '#EBCB83', // Yellow
+                'icon' => 'ph-bold ph-calendar-check',
+                'color' => '#FFE7A0', // Light Yellow
                 'route' => '/tasks/' . $userguru->id . '?type=week'
             ],
             [
                 'name' => 'Daily Details',
-                'icon' => 'ph ph-list-numbers',
-                'color' => '#729ED9', // Blue
+                'icon' => 'ph-bold ph-list-numbers',
+                'color' => '#A0C4FF', // Light Blue
                 'route' => '/tasks/' . $userguru->id
             ],
             [
                 'name' => 'Student Progress',
-                'icon' => 'ph ph-chart-line-up',
-                'color' => '#98D9A2', // Green
+                'icon' => 'ph-bold ph-chart-line-up',
+                'color' => '#B9FBC0', // Light Green
                 'route' => '/statistik/' . $userguru->id
             ],
             [
                 'name' => 'Monthly Evaluation',
-                'icon' => 'ph ph-clipboard-text',
-                'color' => '#7CC1D9', // Light Blue
+                'icon' => 'ph-bold ph-clipboard-text',
+                'color' => '#D4A5FF', // Light Purple
                 'route' => '/semua-laporan'
             ],
         ];
@@ -448,4 +448,10 @@ class TaskController extends Controller
         return view('page.teacher-planner', compact('userguru', 'user', 'completionPercentage', 'plannerItems'));
     }
 
+    // TEACHER PROJECT PAGE (GURU)
+    public function teacherProject($id)
+    {
+        $user = User::findOrFail($id);
+        return view('page.teacher-project', compact('user'));
+    }
 }

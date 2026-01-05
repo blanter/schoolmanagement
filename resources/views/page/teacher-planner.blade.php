@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="planner-container">
         <!-- Header Section -->
-        <div class="planner-header">
+        <div class="page-header-unified center">
             <h1>Teacher Planner & Reflection</h1>
 
             <div class="planner-progress-wrapper">

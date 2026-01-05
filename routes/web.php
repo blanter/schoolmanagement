@@ -25,6 +25,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/user-tasks/{task}/delete', [TaskController::class, 'deleteUserTask'])->name('tasks.delete');
     Route::put('/user-tasks/{task}/update', [TaskController::class, 'updateUserTask'])->name('tasks.update');
     Route::get('/teacher-planner/{id}', [TaskController::class, 'teacherPlanner'])->name('tasks.planner');
+    Route::get('/teacher-project/{id}', [TaskController::class, 'teacherProject'])->name('tasks.project');
     Route::post('/task-skip', [TaskController::class, 'toggleSkip'])->name('task.skip');
 
     // Laporan Bulanan
