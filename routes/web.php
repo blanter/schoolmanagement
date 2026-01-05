@@ -13,7 +13,7 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    // Dashboard
+    // Dashboard Utama
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Tasks
