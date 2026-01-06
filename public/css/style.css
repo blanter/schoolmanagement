@@ -2856,7 +2856,7 @@ a.user-lapor {
     flex: 1;
     padding: 10px 8px;
     border-radius: 14px;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 700;
     border: 1.5px solid transparent;
     background: transparent;
@@ -3242,7 +3242,7 @@ a.user-lapor {
 
     .tab-trigger {
         padding: 12px 2px !important;
-        font-size: 11px !important;
+        font-size: 10px !important;
         font-weight: 600 !important;
         border-radius: 14px !important;
         flex: 1 !important;
@@ -4877,4 +4877,239 @@ a.user-lapor {
     .eval-section-title {
         font-size: 14px;
     }
+}
+
+/* Procurement Features Styles */
+.procurement-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+@media (max-width: 600px) {
+    .procurement-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.procurement-badge {
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.procurement-badge.pemasukan {
+    background: #ECFDF5;
+    color: #065F46;
+    border: 1px solid #10B981;
+}
+
+.procurement-badge.pengeluaran {
+    background: #FEF2F2;
+    color: #991B1B;
+    border: 1px solid #EF4444;
+}
+
+.procurement-item-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #F3F4F6;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.procurement-item-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-color: #7F56D9;
+}
+
+.procurement-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.procurement-date {
+    font-size: 12px;
+    color: #6B7280;
+    font-weight: 600;
+}
+
+.procurement-item-name {
+    font-size: 17px;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 8px;
+}
+
+.procurement-nominal {
+    font-size: 20px;
+    font-weight: 800;
+    color: #7F56D9;
+}
+
+.procurement-proof-container {
+    margin-top: 15px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #F9FAFB;
+    border: 1.5px dashed #E5E7EB;
+}
+
+.procurement-proof-img {
+    width: 100%;
+    max-height: 250px;
+    object-fit: cover;
+    display: block;
+    cursor: pointer;
+}
+
+.procurement-url-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    font-size: 14px;
+    color: #6B46C1;
+    font-weight: 700;
+    text-decoration: none;
+    background: #F5F3FF;
+    padding: 8px 14px;
+    border-radius: 10px;
+    transition: all 0.2s;
+}
+
+.procurement-url-link:hover {
+    background: #EDE9FE;
+    transform: translateX(4px);
+}
+
+.file-input-wrapper {
+    position: relative;
+    margin-top: 10px;
+}
+
+.file-input-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px;
+    background: #F9FAFB;
+    border: 2px dashed #D1D5DB;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    color: #4B5563;
+    transition: all 0.2s;
+}
+
+.file-input-label:hover {
+    background: #F3F4F6;
+    border-color: #9CA3AF;
+    color: #1F2937;
+}
+
+.file-input-hidden {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.preview-container {
+    margin-top: 12px;
+    display: none;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #E5E7EB;
+}
+
+.img-preview {
+    width: 100%;
+    display: block;
+}
+
+.procurement-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 10px;
+}
+
+.procurement-delete-btn {
+    background: #FEF2F2;
+    color: #EF4444;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.procurement-delete-btn:hover {
+    background: #EF4444;
+    color: #fff;
+    transform: scale(1.1);
+}
+
+.period-filter-container {
+    background: #F3F4F6;
+    padding: 6px;
+    border-radius: 22px;
+    display: flex;
+    gap: 6px;
+    margin-bottom: 25px;
+    border: 1.5px solid #E5E7EB;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+a.period-filter-chip {
+    flex: 1;
+    padding: 12px 10px;
+    border-radius: 17px;
+    font-size: 11.5px;
+    font-weight: 800;
+    color: #6B7280;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.period-filter-chip i {
+    font-size: 18px;
+}
+
+.period-filter-chip.active {
+    background: #FFD600;
+    /* Vivid Yellow accent - high contrast with purple */
+    color: #000;
+    box-shadow: 0 8px 15px rgba(255, 214, 0, 0.35);
+    transform: scale(1.02);
+}
+
+.period-filter-chip:not(.active):hover {
+    background: #E5E7EB;
+    color: #374151;
 }

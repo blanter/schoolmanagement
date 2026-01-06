@@ -16,6 +16,7 @@ use App\Models\TeacherWeeklyPlan;
 use App\Models\TeacherDailyDetail;
 use App\Models\TeacherStudentProgress;
 use App\Models\TeacherMonthlyEvaluation;
+use App\Models\TeacherProcurement;
 use App\Models\PemakmuranTeori;
 use App\Models\PemakmuranCase;
 use App\Models\PemakmuranProyek;
@@ -566,21 +567,24 @@ class TaskController extends Controller
     }
 
     // TEACHER PROJECT PAGE (GURU)
-    public function teacherProject($id)
+    public function teacherProject(Request $request, $id)
     {
         $user = User::findOrFail($id);
 
-        $month = now()->month;
         $currentYear = now()->year;
+        $currentMonth = now()->month;
 
-        if ($month <= 6) {
-            $semester = 2; // Semester 2: Jan - Jun
-            $baseYear = $currentYear - 1;
-            $academicYearLabel = ($currentYear - 1) . '/' . $currentYear;
+        // Default semester based on current month
+        $defaultSemester = ($currentMonth <= 6) ? 2 : 1;
+        $defaultBaseYear = ($currentMonth <= 6) ? $currentYear - 1 : $currentYear;
+
+        $semester = (int) $request->input('semester', $defaultSemester);
+        $baseYear = (int) $request->input('year', $defaultBaseYear);
+
+        if ($semester == 1) {
+            $academicYearLabel = $baseYear . '/' . ($baseYear + 1);
         } else {
-            $semester = 1; // Semester 1: Jul - Des
-            $baseYear = $currentYear;
-            $academicYearLabel = $currentYear . '/' . ($currentYear + 1);
+            $academicYearLabel = $baseYear . '/' . ($baseYear + 1);
         }
 
         $project = \App\Models\TeacherResearchProject::firstOrCreate(
@@ -593,7 +597,13 @@ class TaskController extends Controller
             ->where('semester', $semester)
             ->get();
 
-        return view('page.teacher-project', compact('user', 'project', 'videoProjects', 'baseYear', 'semester', 'academicYearLabel'));
+        $procurements = \App\Models\TeacherProcurement::where('user_id', $user->id)
+            ->where('year', $baseYear)
+            ->where('semester', $semester)
+            ->orderBy('tanggal', 'desc')
+            ->get();
+
+        return view('page.teacher-project', compact('user', 'project', 'videoProjects', 'procurements', 'baseYear', 'semester', 'academicYearLabel'));
     }
 
     public function saveResearchProject(Request $request)
@@ -685,6 +695,99 @@ class TaskController extends Controller
 
             $project = \App\Models\TeacherVideoProject::findOrFail($validated['id']);
             $project->delete();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function saveProcurement(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'user_id' => 'required|integer',
+                'tanggal' => 'required|date',
+                'tipe' => 'required|in:pemasukan,pengeluaran',
+                'nominal' => 'required|numeric',
+                'nama_barang' => 'required|string',
+                'url' => 'nullable|string',
+                'bukti_pembayaran' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5000'
+            ]);
+
+            $month = now()->month;
+            $currentYear = now()->year;
+
+            if ($month <= 6) {
+                $semester = 2;
+                $baseYear = $currentYear - 1;
+            } else {
+                $semester = 1;
+                $baseYear = $currentYear;
+            }
+
+            if (Auth::id() != $validated['user_id']) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            }
+
+            $imagePath = null;
+            if ($request->hasFile('bukti_pembayaran')) {
+                $image = $request->file('bukti_pembayaran');
+                $filename = time() . '.jpg'; // Convert to jpg for compression
+                $directory = public_path('storage/procurements');
+                $path = $directory . '/' . $filename;
+
+                if (!file_exists($directory)) {
+                    mkdir($directory, 0777, true);
+                }
+
+                // Compress using Intervention Image v3
+                $manager = new \Intervention\Image\ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
+                $img = $manager->read($image->getRealPath());
+
+                // Compress 50%
+                $img->toJpeg(50)->save($path);
+
+                $imagePath = 'storage/procurements/' . $filename;
+            }
+
+            $procurement = TeacherProcurement::create([
+                'user_id' => $validated['user_id'],
+                'year' => $baseYear,
+                'semester' => $semester,
+                'tanggal' => $validated['tanggal'],
+                'tipe' => $validated['tipe'],
+                'nominal' => $validated['nominal'],
+                'nama_barang' => $validated['nama_barang'],
+                'url' => $validated['url'],
+                'bukti_pembayaran' => $imagePath
+            ]);
+
+            return response()->json(['success' => true, 'data' => $procurement]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function deleteProcurement(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'id' => 'required|integer',
+                'user_id' => 'required|integer'
+            ]);
+
+            if (Auth::id() != $validated['user_id']) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            }
+
+            $procurement = TeacherProcurement::findOrFail($validated['id']);
+
+            if ($procurement->bukti_pembayaran && file_exists(public_path($procurement->bukti_pembayaran))) {
+                unlink(public_path($procurement->bukti_pembayaran));
+            }
+
+            $procurement->delete();
 
             return response()->json(['success' => true]);
         } catch (\Exception $e) {

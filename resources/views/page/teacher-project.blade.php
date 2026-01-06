@@ -14,6 +14,18 @@
         </header>
 
         <main class="project-main-content">
+            <!-- Period Filter -->
+            <div class="period-filter-container">
+                <a href="?semester=1&year={{ $baseYear }}"
+                    class="period-filter-chip {{ $semester == 1 ? 'active' : '' }}">
+                    <i class="ph-fill ph-number-circle-one"></i> Semester 1
+                </a>
+                <a href="?semester=2&year={{ $baseYear }}"
+                    class="period-filter-chip {{ $semester == 2 ? 'active' : '' }}">
+                    <i class="ph-fill ph-number-circle-two"></i> Semester 2
+                </a>
+            </div>
+
             <!-- Tabs -->
             <div class="tabs-wrapper">
                 <button class="tab-trigger active" data-tab="penelitian">Karya Penelitian</button>
@@ -84,9 +96,9 @@
                     </label>
                     <input type="text" id="research_link" class="project-input project-input-premium"
                         placeholder="Masukkan link google drive / dokumen penelitian..."
-                        value="{{ $project->research_link }}"
-                        @if(auth()->id() == $user->id) onchange="saveResearchField('research_link', this.value)" @endif
-                        @if(auth()->id() != $user->id) disabled @endif>
+                        value="{{ $project->research_link }}" @if(auth()->id() == $user->id)
+                        onchange="saveResearchField('research_link', this.value)" @endif @if(auth()->id() != $user->id)
+                        disabled @endif>
                     <p class="project-footer-info">
                         <i class="ph ph-info"></i> Link akan tersimpan secara otomatis setelah Anda selesai mengetik.
                     </p>
@@ -110,14 +122,17 @@
                     <div class="project-form-card project-info-card video-form">
                         <div class="form-field">
                             <label class="project-label-premium">Nama Karya Video / DIY</label>
-                            <input type="text" id="video_name" class="project-input project-input-premium" placeholder="Masukkan nama karya...">
+                            <input type="text" id="video_name" class="project-input project-input-premium"
+                                placeholder="Masukkan nama karya...">
                         </div>
                         <div class="form-field" style="margin-top: 15px;">
                             <label class="project-label-premium">Link Karya (YouTube/Drive)</label>
-                            <input type="text" id="video_link" class="project-input project-input-premium" placeholder="https://youtube.com/...">
+                            <input type="text" id="video_link" class="project-input project-input-premium"
+                                placeholder="https://youtube.com/...">
                         </div>
                         <div class="project-actions" style="margin-top: 20px; justify-content: flex-end;">
-                            <button onclick="saveVideoProject()" class="btn-teacher-project" style="width: auto; padding: 10px 25px;">
+                            <button onclick="saveVideoProject()" class="btn-teacher-project"
+                                style="width: auto; padding: 10px 25px;">
                                 <i class="ph-bold ph-plus"></i> Tambah Karya
                             </button>
                         </div>
@@ -157,9 +172,126 @@
 
             <!-- Tab Content: Barang -->
             <div id="content-barang" class="tab-content-panel" style="display: none;">
-                <div class="project-empty-state-placeholder large">
-                    <i class="ph-bold ph-package project-empty-state-icon"></i>
-                    <p class="project-empty-state-text">Belum ada pengadaan barang.</p>
+                <div class="project-period-banner barang">
+                    <div class="project-banner-title">Periode Pengadaan Barang</div>
+                    <div class="project-banner-subtitle">
+                        @if ($semester == 1)
+                            Juli - Desember {{ $baseYear }} (Semester 1)
+                        @else
+                            Januari - Juni {{ $baseYear + 1 }} (Semester 2)
+                        @endif
+                    </div>
+                </div>
+
+                @if (auth()->id() == $user->id)
+                    <div class="project-form-card project-info-card barang-form">
+                        <form id="procurement-form" enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" name="user_id" value="{{ $user->id }}">
+                            <input type="hidden" name="year" value="{{ $baseYear }}">
+                            <input type="hidden" name="semester" value="{{ $semester }}">
+
+                            <div class="form-field">
+                                <label class="project-label-premium">Nama Barang</label>
+                                <input type="text" name="nama_barang" class="project-input project-input-premium"
+                                    placeholder="Contoh: Laptop, Alat Tulis, dll..." required>
+                            </div>
+
+                            <div class="procurement-form-grid" style="margin-top: 15px;">
+                                <div class="form-field">
+                                    <label class="project-label-premium">Tanggal</label>
+                                    <input type="date" name="tanggal" class="project-input project-input-premium"
+                                        value="{{ date('Y-m-d') }}" required>
+                                </div>
+                                <div class="form-field">
+                                    <label class="project-label-premium">Tipe</label>
+                                    <select name="tipe" class="project-input project-input-premium" required>
+                                        <option value="pengeluaran">Pengeluaran (Belanja)</option>
+                                        <option value="pemasukan">Pemasukan (Dana)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="procurement-form-grid" style="margin-top: 15px;">
+                                <div class="form-field">
+                                    <label class="project-label-premium">Nominal (Rp)</label>
+                                    <input type="text" name="nominal" id="nominal_input"
+                                        class="project-input project-input-premium" placeholder="0" required>
+                                </div>
+                                <div class="form-field">
+                                    <label class="project-label-premium">Link (Drive/YouTube/dll)</label>
+                                    <input type="text" name="url" class="project-input project-input-premium"
+                                        placeholder="https://...">
+                                </div>
+                            </div>
+
+                            <div class="form-field" style="margin-top: 15px;">
+                                <label class="project-label-premium">Bukti Pembayaran (Maks 5MB)</label>
+                                <div class="file-input-wrapper">
+                                    <div class="file-input-label">
+                                        <i class="ph-bold ph-image"></i>
+                                        <span id="file-name-label">Klik untuk Upload Gambar</span>
+                                    </div>
+                                    <input type="file" name="bukti_pembayaran" id="bukti_pembayaran_input"
+                                        class="file-input-hidden" accept="image/*" onchange="previewImage(this)">
+                                </div>
+                                <div id="image-preview-container" class="preview-container">
+                                    <img id="image-preview" src="#" alt="Preview" class="img-preview">
+                                </div>
+                            </div>
+
+                            <div class="project-actions" style="margin-top: 25px; justify-content: flex-end;">
+                                <button type="submit" class="btn-teacher-project" style="width: auto; padding: 12px 30px;">
+                                    <i class="ph-bold ph-plus"></i> Simpan Jurnal
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                @endif
+
+                <div id="procurement-list-container">
+                    @forelse ($procurements as $item)
+                        <div class="procurement-item-card" id="procurement-item-{{ $item->id }}">
+                            <div class="procurement-card-header">
+                                <div class="procurement-date">
+                                    <i class="ph ph-calendar-blank"></i>
+                                    {{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}
+                                </div>
+                                <span class="procurement-badge {{ $item->tipe }}">
+                                    {{ $item->tipe }}
+                                </span>
+                            </div>
+                            <div class="procurement-item-name">{{ $item->nama_barang }}</div>
+                            <div class="procurement-nominal">Rp {{ number_format($item->nominal, 0, ',', '.') }}</div>
+
+                            @if ($item->bukti_pembayaran)
+                                <div class="procurement-proof-container">
+                                    <img src="{{ asset($item->bukti_pembayaran) }}" class="procurement-proof-img"
+                                        onclick="window.open(this.src)">
+                                </div>
+                            @endif
+
+                            <div class="procurement-info-row">
+                                <div>
+                                    @if ($item->url)
+                                        <a href="{{ $item->url }}" target="_blank" class="procurement-url-link">
+                                            <i class="ph ph-link"></i> Lihat Link Terkait
+                                        </a>
+                                    @endif
+                                </div>
+                                @if (auth()->id() == $user->id)
+                                    <button onclick="deleteProcurement({{ $item->id }})" class="procurement-delete-btn">
+                                        <i class="ph ph-trash"></i>
+                                    </button>
+                                @endif
+                            </div>
+                        </div>
+                    @empty
+                        <div id="no-procurement-placeholder" class="project-empty-state-placeholder large">
+                            <i class="ph-bold ph-package project-empty-state-icon"></i>
+                            <p class="project-empty-state-text">Belum ada pengadaan barang.</p>
+                        </div>
+                    @endforelse
                 </div>
             </div>
         </main>
@@ -174,14 +306,36 @@
         });
 
         $(document).ready(function () {
-            // Tab Switching
+            // Tab Switching read from hash or default
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                $('.tab-trigger[data-tab="' + hash + '"]').click();
+            }
+
             $('.tab-trigger').on('click', function () {
                 const target = $(this).data('tab');
+                window.location.hash = target;
                 $('.tab-trigger').removeClass('active');
                 $(this).addClass('active');
                 $('.tab-content-panel').hide();
                 $('#content-' + target).fadeIn(300);
+
+                // Update period filter links to include active tab
+                updatePeriodLinks(target);
             });
+
+            function updatePeriodLinks(tab) {
+                $('.period-filter-chip').each(function () {
+                    let href = $(this).attr('href');
+                    if (href.indexOf('#') !== -1) {
+                        href = href.substring(0, href.indexOf('#'));
+                    }
+                    $(this).attr('href', href + '#' + tab);
+                });
+            }
+
+            // Initial update
+            updatePeriodLinks($('.tab-trigger.active').data('tab'));
         });
 
         // Research Project Functions
@@ -316,6 +470,99 @@
                 </div>
             `);
             setTimeout(() => { $(`#${id}`).fadeOut(300, function () { $(this).remove(); }); }, 2500);
+        }
+
+        // Procurement Functions
+        window.previewImage = function (input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#image-preview').attr('src', e.target.result);
+                    $('#image-preview-container').fadeIn();
+                    $('#file-name-label').text(input.files[0].name);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $('#procurement-form').on('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            // Clean nominal from formatting dots
+            const nominalRaw = $('#nominal_input').val().replace(/\./g, '');
+            formData.set('nominal', nominalRaw);
+
+            $.ajax({
+                url: '{{ route("teacher.procurement.save") }}',
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (res) {
+                    if (res.success) {
+                        showToast('Jurnal berhasil disimpan', 'success');
+                        location.reload(); // Reload to show new item with proper formatting
+                    }
+                },
+                error: function (xhr) {
+                    const msg = xhr.responseJSON ? xhr.responseJSON.message : 'Gagal menyimpan jurnal';
+                    showToast(msg, 'error');
+                }
+            });
+        });
+
+        window.deleteProcurement = function (id) {
+            if (!confirm('Hapus jurnal pengadaan ini?')) return;
+
+            $.ajax({
+                url: '{{ route("teacher.procurement.delete") }}',
+                method: 'POST',
+                data: {
+                    id: id,
+                    user_id: {{ $user->id }}
+                },
+                success: function (res) {
+                    if (res.success) {
+                        showToast('Jurnal dihapus', 'success');
+                        $(`#procurement-item-${id}`).fadeOut(300, function () {
+                            $(this).remove();
+                            if ($('#procurement-list-container').children().length === 0) {
+                                $('#procurement-list-container').html(`
+                                    <div id="no-procurement-placeholder" class="project-empty-state-placeholder large">
+                                        <i class="ph-bold ph-package project-empty-state-icon"></i>
+                                        <p class="project-empty-state-text">Belum ada pengadaan barang.</p>
+                                    </div>
+                                `);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+        // Nominal Rupiah Formatting
+        const nominalInput = document.getElementById('nominal_input');
+        if (nominalInput) {
+            nominalInput.addEventListener('keyup', function (e) {
+                this.value = formatRupiah(this.value);
+            });
+        }
+
+        function formatRupiah(angka, prefix) {
+            var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                split = number_string.split(','),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            if (ribuan) {
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
         }
     </script>
 </x-app-layout>
