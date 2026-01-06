@@ -30,6 +30,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/user-tasks/{task}/delete', [TaskController::class, 'deleteUserTask'])->name('tasks.delete');
     Route::put('/user-tasks/{task}/update', [TaskController::class, 'updateUserTask'])->name('tasks.update');
     Route::get('/teacher-planner/{id}', [TaskController::class, 'teacherPlanner'])->name('tasks.planner');
+    Route::get('/teacher-planner-pemakmuran/{id}', [TaskController::class, 'teacherPlannerPemakmuran'])->name('tasks.planner.pemakmuran');
     Route::get('/teacher-project/{id}', [TaskController::class, 'teacherProject'])->name('tasks.project');
     Route::post('/teacher-research/save', [TaskController::class, 'saveResearchProject'])->name('teacher.research.save');
     Route::post('/teacher-video/save', [TaskController::class, 'saveVideoProject'])->name('teacher.video.save');
@@ -72,6 +73,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/nilai-laporan/{id}', [LaporanController::class, 'nilailapor'])->name('nilailapor');
     Route::post('/nilai-laporan/{id}', [LaporanController::class, 'storenilai'])->name('laporan.nilai');
     Route::delete('/hapus-laporan/{id}', [LaporanController::class, 'hapuslaporan'])->name('laporan.delete');
+
+    // Teacher Pemakmuran Detail Pages
+    Route::get('/teacher-pemakmuran-detail/{id}/{type}', [\App\Http\Controllers\TeacherPemakmuranController::class, 'index'])->name('teacher.pemakmuran.detail');
+    Route::get('/teacher-pemakmuran-detail/get', [\App\Http\Controllers\TeacherPemakmuranController::class, 'getContent'])->name('teacher.pemakmuran.get');
+    Route::post('/teacher-pemakmuran-detail/save', [\App\Http\Controllers\TeacherPemakmuranController::class, 'saveContent'])->name('teacher.pemakmuran.save');
 
     // Task Statistik
     Route::get('/statistik/{user_id}', [TaskController::class, 'statistik'])->name('tasks.statistik');

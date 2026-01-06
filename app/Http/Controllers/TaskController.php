@@ -16,6 +16,11 @@ use App\Models\TeacherWeeklyPlan;
 use App\Models\TeacherDailyDetail;
 use App\Models\TeacherStudentProgress;
 use App\Models\TeacherMonthlyEvaluation;
+use App\Models\PemakmuranTeori;
+use App\Models\PemakmuranCase;
+use App\Models\PemakmuranProyek;
+use App\Models\PemakmuranProblem;
+use App\Models\PemakmuranCreative;
 
 class TaskController extends Controller
 {
@@ -59,10 +64,10 @@ class TaskController extends Controller
             ],
             [
                 'id' => 4,
-                'name' => 'Planner & Reflection Pemakmuran',
+                'name' => 'Teacher Planner Pemakmuran',
                 'icon' => 'ph-bold ph-leaf',
                 'color' => '#B9FBC0', // Light Green
-                'route' => '/semua-laporan'
+                'route' => '/teacher-planner-pemakmuran/' . $user->id
             ],
         ];
 
@@ -482,6 +487,75 @@ class TaskController extends Controller
         ];
 
         return view('page.teacher-planner', compact('userguru', 'user', 'completionPercentage', 'plannerItems', 'month', 'year'));
+    }
+
+    // TEACHER PLANNER PEMAKMURAN PAGE (GURU)
+    public function teacherPlannerPemakmuran(Request $request, $id)
+    {
+        $userguru = User::findOrFail($id);
+        $user = Auth::user();
+
+        $month = (int) $request->input('month', now()->month);
+        $year = (int) $request->input('year', now()->year);
+
+        // --- Calculation for Pemakmuran Progress ---
+        $models = [
+            PemakmuranTeori::class,
+            PemakmuranCase::class,
+            PemakmuranProyek::class,
+            PemakmuranProblem::class,
+            PemakmuranCreative::class
+        ];
+
+        $filledCount = 0;
+        foreach ($models as $model) {
+            $exists = $model::where('user_id', $userguru->id)
+                ->where('year', $year)
+                ->where('month', $month)
+                ->whereNotNull('content')
+                ->where('content', '!=', '')
+                ->exists();
+            if ($exists)
+                $filledCount++;
+        }
+
+        $completionPercentage = round(($filledCount / count($models)) * 100);
+
+        $params = "?month=$month&year=$year";
+        $plannerItems = [
+            [
+                'name' => 'Teori Dipelajari',
+                'icon' => 'ph-bold ph-books',
+                'color' => '#FEB2D3', // Light Pink
+                'route' => '/teacher-pemakmuran-detail/' . $userguru->id . '/teori'
+            ],
+            [
+                'name' => 'Teori by Case',
+                'icon' => 'ph-bold ph-briefcase-metal',
+                'color' => '#FFE7A0', // Light Yellow
+                'route' => '/teacher-pemakmuran-detail/' . $userguru->id . '/case'
+            ],
+            [
+                'name' => 'Proyek',
+                'icon' => 'ph-bold ph-strategy',
+                'color' => '#A0C4FF', // Light Blue
+                'route' => '/teacher-pemakmuran-detail/' . $userguru->id . '/proyek'
+            ],
+            [
+                'name' => 'Problem Solving',
+                'icon' => 'ph-bold ph-puzzle-piece',
+                'color' => '#B9FBC0', // Light Green
+                'route' => '/teacher-pemakmuran-detail/' . $userguru->id . '/problem'
+            ],
+            [
+                'name' => 'Creativity & Critical Thinking',
+                'icon' => 'ph-bold ph-lightbulb',
+                'color' => '#D4A5FF', // Light Purple
+                'route' => '/teacher-pemakmuran-detail/' . $userguru->id . '/creative'
+            ],
+        ];
+
+        return view('page.teacher-planner-pemakmuran', compact('userguru', 'user', 'completionPercentage', 'plannerItems', 'month', 'year'));
     }
 
     // TEACHER PROJECT PAGE (GURU)
