@@ -390,16 +390,22 @@ class TaskController extends Controller
     }
 
     // TEACHER PLANNER PAGE (GURU)
-    public function teacherPlanner($id)
+    public function teacherPlanner(Request $request, $id)
     {
         $userguru = User::findOrFail($id);
         $user = Auth::user();
+
+        $month = (int) $request->input('month', now()->month);
+        $year = (int) $request->input('year', now()->year);
+
         // --- Calculation for Teacher Planner Progress ---
         // We calculate each module out of 100%, then average them (total / 4).
 
-        // 1. Weekly Planner (Days filled in current month vs total weekdays in current month)
-        $startOfMonth = now()->startOfMonth();
-        $endOfMonth = now()->endOfMonth();
+        // 1. Weekly Planner (Days filled in target month vs total weekdays in target month)
+        $targetDate = \Carbon\Carbon::createFromDate($year, $month, 1);
+        $startOfMonth = $targetDate->copy()->startOfMonth();
+        $endOfMonth = $targetDate->copy()->endOfMonth();
+
         $totalWeekdays = 0;
         $filledWeekdays = 0;
 
@@ -415,66 +421,67 @@ class TaskController extends Controller
         }
         $weeklyProgress = $totalWeekdays > 0 ? ($filledWeekdays / $totalWeekdays) * 100 : 0;
 
-        // 2. Daily Details (Current Month - Boolean 0 or 100)
+        // 2. Daily Details (Target Month - Boolean 0 or 100)
         $hasDaily = TeacherDailyDetail::where('user_id', $userguru->id)
-            ->where('year', now()->year)
-            ->where('month', now()->month)
+            ->where('year', $year)
+            ->where('month', $month)
             ->whereNotNull('note')
             ->where('note', '!=', '')
             ->exists();
         $dailyProgress = $hasDaily ? 100 : 0;
 
-        // 3. Student Progress (Current Month - Boolean 0 or 100)
+        // 3. Student Progress (Target Month - Boolean 0 or 100)
         $hasStudentProgress = TeacherStudentProgress::where('user_id', $userguru->id)
-            ->where('year', now()->year)
-            ->where('month', now()->month)
+            ->where('year', $year)
+            ->where('month', $month)
             ->exists();
         $studentProgressValue = $hasStudentProgress ? 100 : 0;
 
-        // 4. Monthly Evaluation (Current Month - Boolean 0 or 100)
+        // 4. Monthly Evaluation (Target Month - Boolean 0 or 100)
         $hasEvaluation = TeacherMonthlyEvaluation::where('user_id', $userguru->id)
-            ->where('year', now()->year)
-            ->where('month', now()->month)
+            ->where('year', $year)
+            ->where('month', $month)
             ->exists();
         $evaluationProgress = $hasEvaluation ? 100 : 0;
 
         // Final Average
         $completionPercentage = round(($weeklyProgress + $dailyProgress + $studentProgressValue + $evaluationProgress) / 4);
 
+        $params = "?month=$month&year=$year";
         $plannerItems = [
             [
                 'name' => 'Calendar Note',
                 'icon' => 'ph-bold ph-calendar',
                 'color' => '#FEB2D3', // Light Pink
-                'route' => '/teacher-calendar/' . $userguru->id
+                'route' => '/teacher-calendar/' . $userguru->id . $params
             ],
             [
                 'name' => 'Weekly Planner',
                 'icon' => 'ph-bold ph-calendar-check',
                 'color' => '#FFE7A0', // Light Yellow
-                'route' => '/teacher-weekly-planner/' . $userguru->id
+                'route' => '/teacher-weekly-planner/' . $userguru->id . $params
             ],
             [
                 'name' => 'Daily Details',
                 'icon' => 'ph-bold ph-article',
                 'color' => '#A0C4FF', // Light Blue
-                'route' => '/teacher-daily-detail/' . $userguru->id
+                'route' => '/teacher-daily-detail/' . $userguru->id . $params
             ],
             [
                 'name' => 'Student Progress',
                 'icon' => 'ph-bold ph-chart-line-up',
                 'color' => '#B9FBC0', // Light Green
-                'route' => '/teacher-student-progress/' . $userguru->id
+                'route' => '/teacher-student-progress/' . $userguru->id . $params
             ],
             [
                 'name' => 'Monthly Evaluation',
                 'icon' => 'ph-bold ph-clipboard-text',
                 'color' => '#D4A5FF', // Light Purple
-                'route' => '/teacher-monthly-evaluation/' . $userguru->id
+                'route' => '/teacher-monthly-evaluation/' . $userguru->id . $params
             ],
         ];
 
-        return view('page.teacher-planner', compact('userguru', 'user', 'completionPercentage', 'plannerItems'));
+        return view('page.teacher-planner', compact('userguru', 'user', 'completionPercentage', 'plannerItems', 'month', 'year'));
     }
 
     // TEACHER PROJECT PAGE (GURU)

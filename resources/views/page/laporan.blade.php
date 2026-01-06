@@ -1,131 +1,108 @@
 @section('title', 'Laporan Bulanan')
 <x-app-layout>
-    <style>.app-container{max-width:900px}td.myflex button.btn-remove{background:#fff0;border:none;color:#E91E63;cursor:pointer}td.myflex form{margin:0 5px}td.myflex{display:flex;align-items:center}</style>
-    
-    <div class="task-management-container">
-        <div class="daily-tasks-header">
-            <a class="back-arrow" href="/dashboard" title="Back">←</a>
-            <h1 class="daily-tasks-title tasks-title-mobile">Laporan Bulanan</h1>
-        </div>
-        
-        <div class="content laporan-content">
-            <!-- Filters -->
-            <form method="GET" class="filters">
-                <h3><i class="fas fa-filter"></i> Filter Data</h3>
-                
-                <div class="filter-row">
-                    <div class="form-group">
-                        <label for="user_id">Pilih Guru</label>
-                        <select name="user_id" id="user_id" class="form-control">
-                            <option value="">-- Semua Guru --</option>
-                            @foreach($users as $user)
-                                <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>
-                                    {{ $user->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="month">Bulan</label>
-                        <select name="month" id="month" class="form-control">
-                            <option value="">-- Semua Bulan --</option>
-                            @foreach($months as $num => $name)
-                                <option value="{{ $num }}" {{ request('month') == $num ? 'selected' : '' }}>
-                                    {{ $name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="year">Tahun</label>
-                        <select name="year" id="year" class="form-control">
-                            <option value="">-- Semua Tahun --</option>
-                            @foreach($years as $year)
-                                <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
-                                    {{ $year }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+    <div class="teacher-project-page">
+        <!-- Header Section -->
+        <header class="page-header-unified center">
+            <div class="header-top">
+                <a href="/dashboard" class="nav-header-back">
+                    <i class="ph ph-arrow-left"></i>
+                </a>
+                <div class="header-title-container">
+                    <div class="header-main-title">Laporan Bulanan</div>
+                    <div class="header-subtitle">{{ auth()->user()->role == 'admin' ? 'Admin Panel' : 'Status Evaluasi' }}</div>
                 </div>
-                
-                <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-search"></i> Cari
-                    </button>
-                    <a href="{{ route('laporanall') }}" class="btn btn-secondary">
-                        <i class="fas fa-refresh"></i> Reset
-                    </a>
-                </div>
-            </form>
+            </div>
 
-            <!-- Table -->
-            <div class="table-container">
-                @if($laporans->count() > 0)
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th><i class="fas fa-hashtag"></i> No</th>
-                                <th><i class="fas fa-user"></i> Nama Guru</th>
-                                <th><i class="fas fa-calendar"></i> Periode</th>
-                                <th><i class="fas fa-link"></i> Link Laporan</th>
-                                <th><i class="fas fa-clock"></i> Dibuat</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($laporans as $index => $laporan)
-                                <tr>
-                                    <td>{{ $laporans->firstItem() + $index }}</td>
-                                    <td>
-                                        @if(Auth::user()->role == "admin")
-                                        <a class="user-lapor" href="/nilai-laporan/{{$laporan->id}}"><strong>{{ $laporan->user->name ?? 'User Tidak Ditemukan' }}</strong></a>
-                                        @else
-                                        <strong>{{ $laporan->user->name ?? 'User Tidak Ditemukan' }}</strong>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-purple">
-                                            {{ $laporan->month_name }} {{ $laporan->year }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <a href="{{ $laporan->link }}" 
-                                           target="_blank" 
-                                           class="link-btn">
-                                            <i class="fas fa-external-link-alt"></i> Lihat Laporan
-                                        </a>
-                                    </td>
-                                    <td class="myflex">{{ $laporan->created_at->format('d M Y, H:i') }}
-                                    @if(Auth::user()->role == "admin")
-                                    <form action="/hapus-laporan/{{ $laporan->id }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-remove" onclick="if(confirm('Yakin ingin menghapus?')) commentDelete(1); return false"><i class="fas fa-trash"></i></button>
-                                    </form>
-                                    @endif</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                @else
-                    <div class="no-data">
-                        <i class="fas fa-inbox"></i>
-                        <h3>Tidak ada data laporan</h3>
-                        <p>Belum ada laporan yang sesuai dengan filter yang dipilih.</p>
+            <!-- Month Navigator -->
+            <div class="month-navigator-bar">
+                <a href="{{ route('laporanall', ['month' => $prevMonthObj->month, 'year' => $prevMonthObj->year, 'user_id' => request('user_id')]) }}" 
+                   class="month-nav-btn" style="text-decoration: none;">
+                    <i class="ph-bold ph-caret-left"></i>
+                </a>
+                <div id="current-month-label">{{ $months[(int)$month] }} {{ $year }}</div>
+                <a href="{{ route('laporanall', ['month' => $nextMonthObj->month, 'year' => $nextMonthObj->year, 'user_id' => request('user_id')]) }}" 
+                   class="month-nav-btn" style="text-decoration: none;">
+                    <i class="ph-bold ph-caret-right"></i>
+                </a>
+            </div>
+        </header>
+
+        <main class="project-main-content margin-top-25">
+            <!-- Table/List -->
+            <div class="task-list">
+                <div style="padding: 10px 20px 20px; font-weight: 700; color: #4B5563; font-size: 14px; display: flex; justify-content: space-between; align-items: center;">
+                    <span>Daftar Evaluasi Bulanan</span>
+                    <span>Total: {{ $laporans->total() }}</span>
+                </div>
+
+                @forelse($laporans as $laporan)
+                    <div class="laporan-card-admin">
+                        <div class="laporan-card-top">
+                            <div class="laporan-user-profile">
+                                <div class="laporan-user-avatar-box">
+                                    <i class="ph-bold ph-user-circle"></i>
+                                </div>
+                                <div class="laporan-user-meta">
+                                    <span class="name">{{ $laporan->user_name }}</span>
+                                    <span class="period">Periode: {{ $months[$laporan->month] }} {{ $laporan->year }}</span>
+                                </div>
+                            </div>
+
+                            @if(auth()->user()->role == 'admin')
+                                <div class="laporan-status-badge"
+                                    style="background: {{ $laporan->point ? '#ECFDF5' : '#FEF2F2' }}; color: {{ $laporan->point ? '#059669' : '#EF4444' }};">
+                                    {{ $laporan->point ? 'Skor: ' . $laporan->point : 'Belum Dinilai' }}
+                                </div>
+                            @else
+                                <div class="laporan-status-badge" style="background: #F0F4FF; color: #4F46E5;">
+                                    Terkirim
+                                </div>
+                            @endif
+                        </div>
+
+                        @if(auth()->user()->role == 'admin')
+                            @if($laporan->comment)
+                                <div class="laporan-comment-preview">
+                                    <i class="ph-bold ph-quotes"></i> "{{ Str::limit($laporan->comment, 120) }}"
+                                </div>
+                            @else
+                                <div class="laporan-comment-preview"
+                                    style="border-left-color: #F3F4F6; color: #9CA3AF; font-style: italic;">
+                                    Belum ada komentar atau feedback dari admin.
+                                </div>
+                            @endif
+                        @endif
+
+                        <div class="laporan-card-actions-grid" style="{{ auth()->user()->role != 'admin' ? 'grid-template-columns: 1fr;' : '' }}">
+                            <a href="/teacher-planner/{{ $laporan->user_id }}?month={{ $laporan->month }}&year={{ $laporan->year }}"
+                                class="btn-teacher-project btn-admin-v2 btn-admin-primary">
+                                <i class="ph-bold ph-eye"></i> Lihat Laporan
+                            </a>
+                            @if(auth()->user()->role == 'admin')
+                                <a href="/nilai-laporan/{{ $laporan->user_id }}?month={{ $laporan->month }}&year={{ $laporan->year }}"
+                                    class="btn-teacher-project btn-admin-v2 btn-admin-success">
+                                    <i class="ph-bold ph-star"></i> Beri Nilai
+                                </a>
+                            @endif
+                        </div>
                     </div>
-                @endif
+                @empty
+                    <div class="project-empty-state-placeholder"
+                        style="background: #fff; border-radius: 20px; padding: 60px 20px;">
+                        <i class="ph-bold ph-article project-empty-state-icon"
+                            style="font-size: 64px; color: #E5E7EB; margin-bottom: 20px;"></i>
+                        <p class="project-empty-state-text" style="color: #9CA3AF; font-weight: 600;">Tidak ada data laporan
+                            evaluasi untuk periode ini.</p>
+                    </div>
+                @endforelse
             </div>
 
             <!-- Pagination -->
             @if($laporans->hasPages())
-                <div class="pagination">
+                <div style="margin-top: 30px; margin-bottom: 50px;">
                     {{ $laporans->appends(request()->query())->links() }}
                 </div>
             @endif
-        </div>
+        </main>
     </div>
-    
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </x-app-layout>

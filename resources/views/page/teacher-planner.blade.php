@@ -9,6 +9,9 @@
                 <div class="header-title-container">
                     <div class="header-main-title">Teacher Planner & Reflection</div>
                     <div class="header-subtitle">{{ $userguru->name }}</div>
+                    <div style="font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 5px; font-weight: 600;">
+                        Periode: {{ \Carbon\Carbon::create(null, $month)->translatedFormat('F') }} {{ $year }}
+                    </div>
                 </div>
             </div>
 

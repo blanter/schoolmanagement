@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\TeacherMonthlyEvaluation;
 use Carbon\Carbon;
 
 class LaporanController extends Controller
@@ -19,9 +20,9 @@ class LaporanController extends Controller
         ]);
 
         $userId = auth()->id();
-        
+
         // Date
-        $tanggal = $request->input('tanggal', now()->toDateString()); 
+        $tanggal = $request->input('tanggal', now()->toDateString());
         $selectedDate = Carbon::parse($tanggal);
 
         // Cari laporan bulan ini untuk user ini
@@ -56,96 +57,155 @@ class LaporanController extends Controller
             return back()->with('success', 'Laporan baru berhasil dibuat.');
         }
     }
-    
+
     // ADMIN INDEX LAPORAN
     public function laporanall(Request $request)
     {
-        $query = Laporan::with('user');
-        
-        // Filter berdasarkan bulan
-        if ($request->filled('month')) {
-            $query->where('month', $request->month);
+        $now = now();
+        $defaultMonth = $now->month;
+        $defaultYear = $now->year;
+
+        // Jika tanggal 1-7, tampilkan bulan sebelumnya
+        if ($now->day <= 7) {
+            $prevDate = $now->copy()->subMonth();
+            $defaultMonth = $prevDate->month;
+            $defaultYear = $prevDate->year;
         }
-        
-        // Filter berdasarkan tahun
-        if ($request->filled('year')) {
-            $query->where('year', $request->year);
+
+        $month = (int) $request->input('month', $defaultMonth);
+        $year = (int) $request->input('year', $defaultYear);
+        $userId = $request->input('user_id');
+
+        $userDb = config('database.connections.users_db.database');
+
+        $query = TeacherMonthlyEvaluation::query()
+            ->where('teacher_monthly_evaluations.month', $month)
+            ->where('teacher_monthly_evaluations.year', $year)
+            ->join($userDb . '.users', 'teacher_monthly_evaluations.user_id', '=', $userDb . '.users.id')
+            ->leftJoin('laporans', function ($join) use ($month, $year) {
+                $join->on('teacher_monthly_evaluations.user_id', '=', 'laporans.user_id')
+                    ->where('laporans.month', '=', $month)
+                    ->where('laporans.year', '=', $year);
+            })
+            ->select(
+                'teacher_monthly_evaluations.user_id',
+                'teacher_monthly_evaluations.month',
+                'teacher_monthly_evaluations.year',
+                $userDb . '.users.name as user_name',
+                'laporans.point',
+                'laporans.comment',
+                'laporans.id as laporan_id'
+            );
+
+        if ($userId) {
+            $query->where('teacher_monthly_evaluations.user_id', $userId);
         }
-        
-        // Filter berdasarkan user
-        if ($request->filled('user_id')) {
-            $query->where('user_id', $request->user_id);
+
+        // Jika role guru, hanya bisa lihat laporannya sendiri
+        if (auth()->user()->role == 'guru') {
+            $query->where('teacher_monthly_evaluations.user_id', auth()->id());
         }
-        
-        // Pencarian berdasarkan nama user
+
         if ($request->filled('search')) {
-            $query->whereHas('user', function($q) use ($request) {
-                $q->where('name', 'LIKE', '%' . $request->search . '%');
-            });
+            $query->where($userDb . '.users.name', 'LIKE', '%' . $request->search . '%');
         }
-        
-        $laporans = $query->orderBy('year', 'desc')
-                         ->orderBy('month', 'desc')
-                         ->paginate(10);
-        
+
+        $laporans = $query->orderBy($userDb . '.users.name')
+            ->paginate(15);
+
         // Data untuk dropdown filter
-        $users = User::where('role','guru')->orderBy('name')->get();
-        $years = Laporan::distinct()->orderBy('year', 'desc')->pluck('year');
+        $users = User::where('role', 'guru')->orderBy('name')->get();
+        $years = DB::table('teacher_monthly_evaluations')->distinct()->orderBy('year', 'desc')->pluck('year');
+        if ($years->isEmpty())
+            $years = [now()->year];
+
         $months = [
-            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
-            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
-            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
         ];
-        
-        return view('page.laporan', compact('laporans', 'users', 'years', 'months'));
+
+        // Navigation Data
+        $currentDate = \Carbon\Carbon::create($year, $month, 1);
+        $prevMonthObj = $currentDate->copy()->subMonth();
+        $nextMonthObj = $currentDate->copy()->addMonth();
+
+        return view('page.laporan', compact(
+            'laporans',
+            'users',
+            'years',
+            'months',
+            'month',
+            'year',
+            'prevMonthObj',
+            'nextMonthObj'
+        ));
     }
-    
+
     // ADMIN HALAMAN NILAI LAPORAN
-    public function nilailapor(Request $request,$id)
+    public function nilailapor(Request $request, $user_id)
     {
-        $laporans = Laporan::findOrFail($id);
-        $users = User::findOrFail($laporans->user_id);
-        return view('page.laporan-nilai', compact('laporans', 'users'));
+        $month = $request->query('month');
+        $year = $request->query('year');
+
+        $users = User::findOrFail($user_id);
+        $evaluation = TeacherMonthlyEvaluation::where('user_id', $user_id)
+            ->where('month', $month)
+            ->where('year', $year)
+            ->firstOrFail();
+
+        $laporans = Laporan::where('user_id', $user_id)
+            ->where('month', $month)
+            ->where('year', $year)
+            ->first();
+
+        return view('page.laporan-nilai', compact('laporans', 'users', 'evaluation', 'month', 'year'));
     }
-    
+
     // ADMIN SIMPAN NILAI LAPORAN
-    public function storenilai(Request $request,$id)
+    public function storenilai(Request $request, $user_id)
     {
-        if(Auth::user()->role == "admin"){
+        if (Auth::user()->role == "admin") {
             $request->validate([
                 'point' => 'required|integer|min:1|max:100',
-                'comment' => '',
+                'comment' => 'nullable|string',
+                'month' => 'required|integer',
+                'year' => 'required|integer',
             ]);
-            
-            $laporan = Laporan::findOrFail($id);
-            
-            // UPDATE
-            $laporan->update([
-                'point' => $request->point,
-                'comment' => $request->comment,
-            ]);
-            
-            // ADD SCORE POINT
-            //$customDate = Carbon::now();
-            //Point::create([
-            //    'user_id' => $laporan->user_id,
-            //    'check_id' => $laporan->id,
-            //    'amount' => 50,
-            //    'tipe' => 'guru',
-            //    'source' => 'month',
-            //    'tanggal' => $customDate,
-            //]);
-            
-            return back()->with('success', 'Nilai Berhasil Disimpan.');
+
+            $laporan = Laporan::updateOrCreate(
+                [
+                    'user_id' => $user_id,
+                    'month' => $request->month,
+                    'year' => $request->year,
+                ],
+                [
+                    'point' => $request->point,
+                    'comment' => $request->comment,
+                    'link' => '-' // or some default
+                ]
+            );
+
+            return redirect()->route('laporanall', ['month' => $request->month, 'year' => $request->year])
+                ->with('success', 'Nilai Berhasil Disimpan.');
         } else {
             return back();
         }
     }
-    
+
     // HAPUS LAPORAN
     public function hapuslaporan(Request $request, $id)
     {
-        if(Auth::user()->role == "admin"){
+        if (Auth::user()->role == "admin") {
             $destroy = Laporan::findOrFail($id);
             $destroy->delete();
             return back()->with('success', 'Laporan berhasil dihapus!');
