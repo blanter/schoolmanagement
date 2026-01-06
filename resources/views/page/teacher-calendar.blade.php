@@ -11,7 +11,7 @@
                 <input type="month" id="date-picker" class="date-hidden-input">
             </div>
 
-            <div class="calendar-strip" id="calendar-container">
+            <div class="cal-strip" id="calendar-container">
                 <!-- Populated by JS -->
             </div>
         </header>
@@ -19,17 +19,17 @@
         <main class="project-main-content">
             <div class="calendar-content-wrapper">
                 <!-- Top/Section 1: Notes for selected date -->
-                <div class="notes-list-section">
-                    <div class="section-header">
+                <div class="note-list-section">
+                    <div class="note-section-header">
                         <h3 style="font-size: 16px; font-weight: 700; color: #1F2937; margin: 0;">
                             <i class="ph-bold ph-notebook" style="color: #7F56D9;"></i> Catatan Tanggal Ini
                         </h3>
                         <span id="notes-count" style="font-size: 13px; color: #9CA3AF; font-weight: 600;">0 catatan</span>
                     </div>
                     
-                    <div id="notes-list-container" class="notes-list">
+                    <div id="notes-list-container" class="note-list-scroll">
                         <!-- Populated by JS -->
-                        <div class="empty-state">
+                        <div class="note-empty-state">
                             <i class="ph-bold ph-note-blank" style="font-size: 48px; color: #E5E7EB; margin-bottom: 10px;"></i>
                             <p style="color: #9CA3AF; font-size: 14px;">Pilih tanggal untuk melihat catatan</p>
                         </div>
@@ -38,7 +38,7 @@
 
                 <!-- Bottom/Section 2: Note Input WYSIWYG -->
                 <div class="note-input-section">
-                    <div class="section-header">
+                    <div class="note-section-header">
                         <h3 style="font-size: 16px; font-weight: 700; color: #1F2937; margin: 0;">
                             <i class="ph-bold ph-note-pencil" style="color: #7F56D9;"></i> Tulis Catatan
                         </h3>
@@ -47,27 +47,27 @@
 
                     <div class="note-form-card">
                         <!-- WYSIWYG Toolbar -->
-                        <div class="formatter-toolbar">
-                            <button type="button" class="format-btn" data-cmd="bold" title="Bold (CTRL+B)"><i class="ph-bold ph-text-b"></i></button>
-                            <button type="button" class="format-btn" data-cmd="italic" title="Italic (CTRL+I)"><i class="ph-bold ph-text-italic"></i></button>
-                            <button type="button" class="format-btn" data-cmd="underline" title="Underline (CTRL+U)"><i class="ph-bold ph-text-underline"></i></button>
-                            <div class="toolbar-divider"></div>
-                            <button type="button" class="format-btn" data-cmd="insertUnorderedList" title="Bullet List"><i class="ph-bold ph-list-bullets"></i></button>
-                            <button type="button" class="format-btn" data-cmd="insertOrderedList" title="Numbered List"><i class="ph-bold ph-list-numbers"></i></button>
-                            <div class="toolbar-divider"></div>
-                            <button type="button" class="format-btn" data-cmd="createLink" title="Insert Link"><i class="ph-bold ph-link"></i></button>
-                            <button type="button" class="format-btn" data-cmd="unlink" title="Remove Link"><i class="ph-bold ph-link-break"></i></button>
+                        <div class="note-toolbar">
+                            <button type="button" class="note-format-btn" data-cmd="bold" title="Bold (CTRL+B)"><i class="ph-bold ph-text-b"></i></button>
+                            <button type="button" class="note-format-btn" data-cmd="italic" title="Italic (CTRL+I)"><i class="ph-bold ph-text-italic"></i></button>
+                            <button type="button" class="note-format-btn" data-cmd="underline" title="Underline (CTRL+U)"><i class="ph-bold ph-text-underline"></i></button>
+                            <div class="note-toolbar-divider"></div>
+                            <button type="button" class="note-format-btn" data-cmd="insertUnorderedList" title="Bullet List"><i class="ph-bold ph-list-bullets"></i></button>
+                            <button type="button" class="note-format-btn" data-cmd="insertOrderedList" title="Numbered List"><i class="ph-bold ph-list-numbers"></i></button>
+                            <div class="note-toolbar-divider"></div>
+                            <button type="button" class="note-format-btn" data-cmd="createLink" title="Insert Link"><i class="ph-bold ph-link"></i></button>
+                            <button type="button" class="note-format-btn" data-cmd="unlink" title="Remove Link"><i class="ph-bold ph-link-break"></i></button>
                         </div>
 
                         <!-- Content Editable div instead of textarea -->
                         <div id="teacher-note-editor" class="note-editor" contenteditable="true" 
                             data-placeholder="Tuliskan catatan atau refleksi untuk hari ini..."></div>
                         
-                        <div class="form-actions">
-                            <button id="clear-note-btn" class="btn-secondary">
+                        <div class="cal-form-actions">
+                            <button id="clear-note-btn" class="btn-cal-secondary">
                                 <i class="ph-bold ph-trash"></i> Hapus
                             </button>
-                            <button id="save-note-btn" class="btn-primary">
+                            <button id="save-note-btn" class="btn-cal-primary">
                                 <i class="ph-bold ph-floppy-disk"></i> Simpan
                             </button>
                         </div>
@@ -89,427 +89,24 @@
     <div id="toast-container" style="position: fixed; bottom: 85px; right: 20px; z-index: 9999;"></div>
 
     <!-- Full Calendar Modal -->
-    <div class="modal-overlay" id="full-calendar-modal">
-        <div class="calendar-modal">
-            <div class="modal-header">
+    <div class="cal-modal-overlay" id="full-calendar-modal">
+        <div class="cal-modal">
+            <div class="cal-modal-header">
                 <h3><i class="ph-fill ph-calendar"></i> Kalender Lengkap</h3>
-                <button class="close-modal" id="close-calendar-modal"><i class="ph ph-x"></i></button>
+                <button class="cal-close-modal" id="close-calendar-modal"><i class="ph ph-x"></i></button>
             </div>
-            <div class="modal-body">
-                <div class="modal-month-nav">
-                    <button class="month-nav-btn" id="prev-month-modal"><i class="ph-bold ph-caret-left"></i></button>
-                    <div class="current-month-display" id="modal-month-title">Januari 2026</div>
-                    <button class="month-nav-btn" id="next-month-modal"><i class="ph-bold ph-caret-right"></i></button>
+            <div class="cal-modal-body">
+                <div class="cal-month-nav">
+                    <button class="cal-nav-btn" id="prev-month-modal"><i class="ph-bold ph-caret-left"></i></button>
+                    <div class="cal-month-display" id="modal-month-title">Januari 2026</div>
+                    <button class="cal-nav-btn" id="next-month-modal"><i class="ph-bold ph-caret-right"></i></button>
                 </div>
-                <div class="calendar-grid" id="modal-calendar-grid">
+                <div class="cal-grid" id="modal-calendar-grid">
                     <!-- Populated by JS -->
                 </div>
             </div>
         </div>
     </div>
-
-    <style>
-        .calendar-strip {
-            display: flex;
-            gap: 15px;
-            padding: 10px 5px 15px !important;
-            overflow-x: auto;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
-        .strip-day {
-            position: relative;
-            padding-top: 18px !important; /* Increased to fix week-marker cut off */
-        }
-
-        .week-marker {
-            position: absolute;
-            top: -2px; /* Adjusted position */
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 8px;
-            font-weight: 800;
-            color: #7F56D9;
-            background: #F3E8FF;
-            padding: 2px 5px;
-            border-radius: 8px;
-            white-space: nowrap;
-            letter-spacing: 0.5px;
-            z-index: 2;
-        }
-
-        .has-note-dot {
-            position: absolute;
-            bottom: -4px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 6px;
-            height: 6px;
-            background: #10B981;
-            border-radius: 50%;
-            box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
-            animation: pulse-dot 2s infinite;
-        }
-
-        .strip-day.week-start {
-            margin-left: 10px;
-            border-left: 1.5px dashed rgba(127, 86, 217, 0.2);
-            padding-left: 10px !important;
-        }
-
-        @keyframes pulse-dot {
-            0%, 100% { transform: translateX(-50%) scale(1); opacity: 1; }
-            50% { transform: translateX(-50%) scale(1.5); opacity: 0.5; }
-        }
-
-        /* Full Calendar Modal Styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(5px);
-            z-index: 10000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .calendar-modal {
-            background: #fff;
-            width: 100%;
-            max-width: 450px;
-            border-radius: 28px;
-            overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-            animation: modalFadeIn 0.3s ease-out;
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(20px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .modal-header {
-            padding: 20px 25px;
-            background: linear-gradient(135deg, #7F56D9 0%, #9E77ED 100%);
-            color: #fff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-header h3 {
-            margin: 0;
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .close-modal {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: #fff;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .close-modal:hover { background: rgba(255, 255, 255, 0.3); }
-
-        .modal-body {
-            padding: 20px;
-        }
-
-        .modal-month-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 0 10px;
-        }
-
-        .month-nav-btn {
-            background: #F3F4F6;
-            border: none;
-            color: #4B5563;
-            width: 36px;
-            height: 36px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .month-nav-btn:hover { background: #E5E7EB; color: #7F56D9; }
-
-        .current-month-display {
-            font-size: 16px;
-            font-weight: 700;
-            color: #1F2937;
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
-        }
-
-        .grid-day-name {
-            text-align: center;
-            font-size: 11px;
-            font-weight: 800;
-            color: #9CA3AF;
-            padding-bottom: 5px;
-            text-transform: uppercase;
-        }
-
-        .grid-day {
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 14px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #4B5563;
-            cursor: pointer;
-            position: relative;
-            transition: all 0.2s;
-            border: 1.5px solid transparent;
-        }
-
-        .grid-day:hover { background: #F3F4F6; }
-
-        .grid-day.other-month { opacity: 0.3; cursor: default; }
-
-        .grid-day.today-highlight {
-            border-color: #7F56D9;
-            color: #7F56D9;
-            background: #F5F3FF;
-        }
-
-        .grid-day.selected-day {
-            background: #7F56D9;
-            color: #fff !important;
-            box-shadow: 0 4px 12px rgba(127, 86, 217, 0.3);
-        }
-
-        .grid-day.has-note-marker::after {
-            content: '';
-            position: absolute;
-            bottom: 6px;
-            width: 4px;
-            height: 4px;
-            background: #10B981;
-            border-radius: 50%;
-        }
-
-        .grid-day.selected-day.has-note-marker::after { background: #fff; }
-
-        .calendar-content-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            margin-bottom: 120px;
-            width: 100%;
-        }
-
-        .notes-list-section, .note-input-section {
-            background: #fff;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #F9FAFB;
-        }
-
-        .notes-list {
-            max-height: 400px;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
-
-        .notes-list::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .notes-list::-webkit-scrollbar-track {
-            background: #F3F4F6;
-            border-radius: 10px;
-        }
-
-        .notes-list::-webkit-scrollbar-thumb {
-            background: #D1D5DB;
-            border-radius: 10px;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #9CA3AF;
-        }
-
-        .note-item {
-            background: #F9FAFB;
-            border: 1px solid #F3F4F6;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 15px;
-            transition: all 0.2s;
-        }
-
-        .note-item-date {
-            font-size: 13px;
-            font-weight: 700;
-            color: #7F56D9;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .note-item-content {
-            font-size: 15px;
-            color: #2D3748;
-            line-height: 1.6;
-            word-wrap: break-word;
-        }
-
-        /* Cleaner List Formatting */
-        .note-item-content ul, .note-item-content ol, 
-        .note-editor ul, .note-editor ol { 
-            padding-left: 20px !important; 
-            margin: 8px 0 !important; 
-        }
-        
-        .note-item-content li, 
-        .note-editor li { 
-            margin-bottom: 4px !important; 
-        }
-
-        /* Toolbar styles */
-        .formatter-toolbar {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 10px;
-            background: #F8F9FA;
-            border: 1.5px solid #F3F4F6;
-            border-bottom: none;
-            border-radius: 16px 16px 0 0;
-        }
-
-        .format-btn {
-            width: 34px;
-            height: 34px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: transparent;
-            border: none;
-            border-radius: 8px;
-            color: #4A5568;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .format-btn:hover {
-            background: #EDF2F7;
-            color: #7F56D9;
-        }
-
-        .format-btn.active {
-            background: #EBF4FF;
-            color: #7F56D9;
-        }
-
-        .toolbar-divider {
-            width: 1px;
-            height: 20px;
-            background: #E2E8F0;
-            margin: 0 5px;
-        }
-
-        /* Editor styles */
-        .note-editor {
-            width: 100%;
-            min-height: 200px;
-            max-height: 500px;
-            overflow-y: auto;
-            border: 1.5px solid #F3F4F6;
-            background: #F9FAFB;
-            border-radius: 0 0 16px 16px;
-            padding: 20px;
-            font-size: 15px;
-            font-family: inherit;
-            color: #1F2937;
-            transition: all 0.3s;
-            box-sizing: border-box;
-            outline: none;
-        }
-
-        .note-editor:focus {
-            background: #fff;
-            border-color: #7F56D9;
-            box-shadow: 0 0 0 4px rgba(127, 86, 217, 0.05);
-        }
-
-        /* Placeholder logic for contenteditable */
-        .note-editor:empty:before {
-            content: attr(data-placeholder);
-            color: #9CA3AF;
-            font-style: italic;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-            margin-top: 15px;
-        }
-
-        .btn-primary, .btn-secondary {
-            padding: 12px 24px;
-            border-radius: 14px;
-            font-size: 14px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary { background: #7F56D9; color: #fff; }
-        .btn-secondary { background: #F3F4F6; color: #6B7280; }
-
-        /* WYSIWYG element support */
-        .note-editor b, .note-editor strong { font-weight: 700; }
-        .note-editor i, .note-editor em { font-style: italic; }
-        .note-editor u { text-decoration: underline; }
-        .note-editor a { color: #7F56D9; text-decoration: underline; }
-    </style>
 
     <script>
         $.ajaxSetup({
@@ -533,7 +130,7 @@
             loadNote(formatDate(currentSelectedDate));
 
             // WYSIWYG Formatter Logic
-            $('.format-btn').on('click', function(e) {
+            $('.note-format-btn').on('click', function(e) {
                 e.preventDefault();
                 const cmd = $(this).data('cmd');
                 
@@ -550,12 +147,12 @@
 
             // Monitor active states
             $('#teacher-note-editor').on('keyup mouseup focus', function() {
-                $('.format-btn').removeClass('active');
-                if (document.queryCommandState('bold')) $('.format-btn[data-cmd="bold"]').addClass('active');
-                if (document.queryCommandState('italic')) $('.format-btn[data-cmd="italic"]').addClass('active');
-                if (document.queryCommandState('underline')) $('.format-btn[data-cmd="underline"]').addClass('active');
-                if (document.queryCommandState('insertUnorderedList')) $('.format-btn[data-cmd="insertUnorderedList"]').addClass('active');
-                if (document.queryCommandState('insertOrderedList')) $('.format-btn[data-cmd="insertOrderedList"]').addClass('active');
+                $('.note-format-btn').removeClass('active');
+                if (document.queryCommandState('bold')) $('.note-format-btn[data-cmd="bold"]').addClass('active');
+                if (document.queryCommandState('italic')) $('.note-format-btn[data-cmd="italic"]').addClass('active');
+                if (document.queryCommandState('underline')) $('.note-format-btn[data-cmd="underline"]').addClass('active');
+                if (document.queryCommandState('insertUnorderedList')) $('.note-format-btn[data-cmd="insertUnorderedList"]').addClass('active');
+                if (document.queryCommandState('insertOrderedList')) $('.note-format-btn[data-cmd="insertOrderedList"]').addClass('active');
             });
 
             // Events
@@ -563,7 +160,7 @@
                 openCalendarModal(currentSelectedDate);
             });
 
-            $('#close-calendar-modal, .modal-overlay').on('click', function(e) {
+            $('#close-calendar-modal, .cal-modal-overlay').on('click', function(e) {
                 if (e.target === this || e.target.closest('#close-calendar-modal')) {
                     $('#full-calendar-modal').fadeOut(200);
                 }
@@ -618,11 +215,11 @@
                 const sel = formatDate(currentSelectedDate);
 
                 let html = '';
-                dayNames.forEach(d => html += `<div class="grid-day-name">${d}</div>`);
+                dayNames.forEach(d => html += `<div class="cal-day-name">${d}</div>`);
 
                 // Previous month dates
                 for (let i = firstDay; i > 0; i--) {
-                    html += `<div class="grid-day other-month">${prevLastDate - i + 1}</div>`;
+                    html += `<div class="cal-day other-month">${prevLastDate - i + 1}</div>`;
                 }
 
                 // Current month dates
@@ -633,7 +230,7 @@
                     const hasN = datesWithNotes.includes(ds);
                     
                     html += `
-                        <div class="grid-day ${isT} ${isS} ${hasN ? 'has-note-marker' : ''}" 
+                        <div class="cal-day ${isT} ${isS} ${hasN ? 'has-note-marker' : ''}" 
                              onclick="window.navigateFromModal('${ds}')">
                             ${i}
                         </div>
@@ -734,7 +331,7 @@
                 const filtered = allNotes.filter(n => n.tanggal === dateStr && n.note && n.note.trim() !== '');
                 
                 if (filtered.length === 0) {
-                    container.html('<div class="empty-state">Belum ada catatan untuk tanggal ini.</div>');
+                    container.html('<div class="note-empty-state">Belum ada catatan untuk tanggal ini.</div>');
                     $('#notes-count').text('0 catatan');
                     return;
                 }
@@ -774,11 +371,11 @@
                     const wN = Math.ceil((i + new Date(y, m, 1).getDay() - 1) / 7);
 
                     html += `
-                        <div class="strip-day ${d.getDay() === 1 ? 'week-start' : ''}" onclick="window.selectDay(this, '${ds}')">
-                            ${showW ? `<span class="week-marker">W${wN}</span>` : ''}
+                        <div class="cal-strip-day ${d.getDay() === 1 ? 'week-start' : ''}" onclick="window.selectDay(this, '${ds}')">
+                            ${showW ? `<span class="cal-week-marker">W${wN}</span>` : ''}
                             <span class="strip-day-name">${days[d.getDay()]}</span>
                             <div class="strip-day-number ${isA} ${isT}">${i}</div>
-                            ${hasN ? '<div class="has-note-dot"></div>' : ''}
+                            ${hasN ? '<div class="cal-note-dot"></div>' : ''}
                         </div>
                     `;
                 }
