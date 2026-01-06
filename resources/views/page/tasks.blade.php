@@ -1,28 +1,40 @@
 @section('title', 'Tasks List - '.$userguru->name)
 <x-app-layout>
     <div class="task-management-container">
-        <div class="daily-tasks-header">
-            <a class="back-arrow" href="/dashboard" title="Back">←</a>
-            <h1 class="daily-tasks-title">{{ $userguru->name }}
-                <div class="button-onlabel">
+        <!-- Header Section -->
+        <header class="page-header-unified center premium">
+            <div class="header-top">
+                <a href="/my-tasks/{{ $userguru->id }}" class="nav-header-back">
+                    <i class="ph ph-arrow-left"></i>
+                </a>
+                <div class="header-title-container">
+                    <div class="header-main-title">Checklist Rutinitas</div>
+                    <div class="header-subtitle">{{ $userguru->name }}</div>
+                </div>
+                <div class="header-actions-premium">
                     @if(Auth::user()->id == "2" || Auth::user()->id == "15" || Auth::user()->id == "27" || Auth::user()->id == $userguru->id)
-                    <a class="edit-onlabel" href="/user-tasks/{{$userguru->id}}" title="Edit"><i class="ph ph-pen"></i> <span>Edit</span></a>
-                    <a class="edit-onlabel" href="/statistik/{{$userguru->id}}" title="Statistik"><i class="ph ph-chart-pie-slice"></i> <span>Statistik</span></a>
+                        <a href="/user-tasks/{{$userguru->id}}" class="header-action-btn" title="Edit">
+                            <i class="ph-bold ph-pencil-simple"></i>
+                        </a>
+                        <a href="/statistik/{{$userguru->id}}" class="header-action-btn" title="Statistik">
+                            <i class="ph-bold ph-chart-pie-slice"></i>
+                        </a>
                     @endif
                 </div>
-            </h1>
-        </div>
+            </div>
 
-        <!-- Input tanggal -->
-        <div class="center">
-        <input 
-            type="date"
-            class="custom-input-field" 
-            name="tanggal"
-            id="taskDate" 
-            value="{{ request('year', now()->year) }}-{{ str_pad(request('month', now()->month), 2, '0', STR_PAD_LEFT) }}-{{ str_pad(request('day', now()->day), 2, '0', STR_PAD_LEFT) }}"
-            class="border p-2 rounded" max="{{ now()->format('Y-m-d') }}"
-        /></div>
+            <div class="planner-date-selection">
+                <input 
+                    type="date"
+                    id="taskDate" 
+                    value="{{ request('year', now()->year) }}-{{ str_pad(request('month', now()->month), 2, '0', STR_PAD_LEFT) }}-{{ str_pad(request('day', now()->day), 2, '0', STR_PAD_LEFT) }}"
+                    max="{{ now()->format('Y-m-d') }}"
+                    class="planner-date-picker"
+                />
+            </div>
+        </header>
+
+        <div style="margin-top: 30px;"></div>
 
         @if(Auth::user()->id == $userguru->id || Auth::user()->role == "admin")
         <!--<div class="section-divider"></div>

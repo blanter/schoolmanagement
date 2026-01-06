@@ -2,6 +2,11 @@
     <div class="my-tasks-container">
         <!-- Header Profile Section -->
         <div class="page-header-unified">
+            <div class="header-top">
+                <a href="/dashboard" class="nav-header-back">
+                    <i class="ph ph-arrow-left"></i>
+                </a>
+            </div>
             <div class="profile-section">
                 <div class="profile-avatar">
                     @if($user->image)
@@ -39,14 +44,9 @@
         </div>
 
         <!-- Bottom Navigation -->
-        <div class="bottom-navigation">
-            <a href="/dashboard" class="nav-btn nav-btn-back">
-                <i class="ph ph-arrow-left"></i>
-                <span>Back</span>
-            </a>
-            <a href="/teacher-calendar/{{ $user->id }}" class="nav-btn nav-btn-calendar">
+        <div class="bottom-navigation" style="justify-content: flex-end;">
+            <a href="/teacher-calendar/{{ $user->id }}" class="nav-btn-square nav-btn-calendar">
                 <i class="ph ph-calendar-blank"></i>
-                <span>Kalender</span>
             </a>
         </div>
     </div>

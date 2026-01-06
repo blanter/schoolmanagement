@@ -30,7 +30,7 @@
                 <div class="note-input-section" style="width: 100%;">
                     <div class="note-section-header">
                         <h3 style="font-size: 16px; font-weight: 700; color: #1F2937; margin: 0;">
-                            <i class="ph-bold ph-article" style="color: #7F56D9;"></i> Detail Bulanan
+                            <i class="ph-bold ph-article" style="color: #7F56D9;"></i> Detail Harian
                         </h3>
                         <span id="selected-month-label"
                             style="font-size: 13px; font-weight: 600; color: #9CA3AF;">Januari 2026</span>
@@ -63,7 +63,7 @@
                         <div id="daily-detail-editor" class="note-editor"
                             contenteditable="{{ auth()->id() == $userguru->id ? 'true' : 'false' }}"
                             style="min-height: 400px;"
-                            data-placeholder="{{ auth()->id() == $userguru->id ? 'Tuliskan detail atau rencana bulanan di sini...' : 'Belum ada detail untuk bulan ini.' }}">
+                            data-placeholder="{{ auth()->id() == $userguru->id ? 'Tuliskan detail harian terkait aktifitas pembelajaran atau pekerjaan di sini...' : 'Belum ada detail untuk bulan ini.' }}">
                         </div>
 
                         @if(auth()->id() == $userguru->id)
@@ -169,7 +169,7 @@
                     },
                     success: function (res) {
                         const content = res.note || '';
-                        $('#daily-detail-editor').html(content).attr('data-placeholder', 'Tuliskan detail atau rencana bulanan di sini...');
+                        $('#daily-detail-editor').html(content).attr('data-placeholder', 'Tuliskan detail harian terkait aktifitas pembelajaran atau pekerjaan di sini...');
                         lastSavedContent = content;
                     }
                 });
