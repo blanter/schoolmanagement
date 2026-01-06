@@ -1,10 +1,18 @@
 @section('title', 'Statistik - '.$thisuser->name)
 <x-app-layout>
     <div class="task-management-container">
-        <div class="daily-tasks-header">
-            <a class="back-arrow" href="/tasks/{{$thisuser->id}}" title="Back">←</a>
-            <h1 class="daily-tasks-title tasks-title-mobile">Statistik {{$thisuser->name}}</h1>
-        </div>
+        <!-- Header Section -->
+        <header class="page-header-unified center premium">
+            <div class="header-top">
+                <a href="/tasks/{{ $thisuser->id }}" class="nav-header-back">
+                    <i class="ph ph-arrow-left"></i>
+                </a>
+                <div class="header-title-container">
+                    <div class="header-main-title">Statistik</div>
+                    <div class="header-subtitle">{{ $thisuser->name }}</div>
+                </div>
+            </div>
+        </header>
 
         <div class="statistik-calendar">
             <div class="calendar-grid-container">

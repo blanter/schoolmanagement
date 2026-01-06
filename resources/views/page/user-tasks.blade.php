@@ -1,11 +1,19 @@
 @section('title', 'Task Management - '.$userguru->name)
 <x-app-layout>
     <div class="task-management-container">
-        <div class="daily-tasks-header">
-            <a class="back-arrow" href="/tasks/{{$userguru->id}}" title="Back">←</a>
-            <h1 class="daily-tasks-title tasks-title-mobile">Task Management - {{ $userguru->name }}</h1>
-        </div>
-        <div class="guru-task-mgmt-container">
+        <!-- Header Section -->
+        <header class="page-header-unified center premium">
+            <div class="header-top">
+                <a href="/tasks/{{ $userguru->id }}" class="nav-header-back">
+                    <i class="ph ph-arrow-left"></i>
+                </a>
+                <div class="header-title-container">
+                    <div class="header-main-title">Task Management</div>
+                    <div class="header-subtitle">{{ $userguru->name }}</div>
+                </div>
+            </div>
+        </header>
+        <div class="guru-task-mgmt-container margin-top-25">
             @foreach (['days' => 'Daily', 'week' => 'Weekly', 'month' => 'Monthly'] as $jenis => $label)
                 <div class="guru-task-section-wrapper" data-jenis="{{ $jenis }}">
                     <div class="guru-task-section-header">

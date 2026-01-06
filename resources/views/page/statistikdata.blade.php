@@ -1,13 +1,20 @@
 @section('title', 'Statistik Data - ' . $thisuser->name)
 <x-app-layout>
     <div class="task-management-container">
-        <div class="daily-tasks-header">
-            <a class="back-arrow" href="/statistik/{{$thisuser->id}}" title="Back">←</a>
-            <h1 class="daily-tasks-title tasks-title-mobile">Statistik {{$thisuser->name}} -
-                {{ \Carbon\Carbon::create($year, $month)->translatedFormat('F Y') }}</h1>
-        </div>
+        <!-- Header Section -->
+        <header class="page-header-unified center premium">
+            <div class="header-top">
+                <a href="/statistik/{{ $thisuser->id }}" class="nav-header-back">
+                    <i class="ph ph-arrow-left"></i>
+                </a>
+                <div class="header-title-container">
+                    <div class="header-main-title">Statistik - {{ \Carbon\Carbon::create($year, $month)->translatedFormat('F Y') }}</div>
+                    <div class="header-subtitle">{{ $thisuser->name }}</div>
+                </div>
+            </div>
+        </header>
 
-        <div class="task-grid">
+        <div class="task-grid margin-top-25">
             @php
                 $titles = [
                     'daily' => 'Daily Task',
