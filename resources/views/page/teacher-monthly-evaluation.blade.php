@@ -316,6 +316,21 @@ Tujuan: Belajar memperbaiki dan menjadi lebih baik lagi.',
 
             function saveGuru(isAuto = false) {
                 if (isSaving) return;
+
+                // Validation: Ensure at least one field is filled
+                let anyFilled = false;
+                $('.guru-field').each(function () {
+                    const val = $(this).text().trim();
+                    if (val) anyFilled = true;
+                });
+
+                if (!anyFilled) {
+                    if (!isAuto) {
+                        showToast('Harap isi minimal satu kolom evaluasi sebelum menyimpan.', 'error');
+                    }
+                    return;
+                }
+
                 isSaving = true;
 
                 const data = {

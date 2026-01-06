@@ -4093,15 +4093,6 @@ a.user-lapor {
     letter-spacing: 0.5px;
 }
 
-.eval-guru-editor {
-    background: #F9FAFB;
-    border: 1.5px solid #F3F4F6;
-    padding: 15px;
-    transition: all 0.2s;
-    min-height: 120px;
-    border-radius: 16px;
-}
-
 .eval-guru-editor:focus {
     background: #fff;
     border-color: #7F56D9;
