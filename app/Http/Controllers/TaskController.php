@@ -441,7 +441,7 @@ class TaskController extends Controller
                 'name' => 'Monthly Evaluation',
                 'icon' => 'ph-bold ph-clipboard-text',
                 'color' => '#D4A5FF', // Light Purple
-                'route' => '/semua-laporan'
+                'route' => '/teacher-monthly-evaluation/' . $userguru->id
             ],
         ];
 

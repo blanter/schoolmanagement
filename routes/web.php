@@ -9,6 +9,7 @@ use App\Http\Controllers\TeacherWeeklyPlannerController;
 use App\Http\Controllers\TeacherDailyDetailController;
 use App\Http\Controllers\TeacherCalendarController;
 use App\Http\Controllers\TeacherStudentProgressController;
+use App\Http\Controllers\TeacherMonthlyEvaluationController;
 use Illuminate\Support\Facades\Route;
 
 // Route Default
@@ -54,6 +55,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/teacher-student-progress/save', [TeacherStudentProgressController::class, 'saveRecord'])->name('teacher.progress.save');
     Route::post('/teacher-student-progress/delete', [TeacherStudentProgressController::class, 'deleteRecord'])->name('teacher.progress.delete');
     Route::get('/teacher-student-progress/{id}', [TeacherStudentProgressController::class, 'index'])->name('teacher.progress');
+
+    // Teacher Monthly Evaluation
+    Route::get('/teacher-monthly-evaluation/get', [TeacherMonthlyEvaluationController::class, 'getData'])->name('teacher.evaluation.get');
+    Route::post('/teacher-monthly-evaluation/save-guru', [TeacherMonthlyEvaluationController::class, 'saveGuru'])->name('teacher.evaluation.saveGuru');
+    Route::post('/teacher-monthly-evaluation/save-nonguru', [TeacherMonthlyEvaluationController::class, 'saveNonGuru'])->name('teacher.evaluation.saveNonGuru');
+    Route::post('/teacher-monthly-evaluation/delete-nonguru', [TeacherMonthlyEvaluationController::class, 'deleteNonGuru'])->name('teacher.evaluation.deleteNonGuru');
+    Route::get('/teacher-monthly-evaluation/{id}', [TeacherMonthlyEvaluationController::class, 'index'])->name('teacher.evaluation');
 
     // Laporan Bulanan
     Route::get('/semua-laporan', [LaporanController::class, 'laporanall'])->name('laporanall');
