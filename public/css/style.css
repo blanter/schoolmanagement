@@ -2642,7 +2642,7 @@ a.user-lapor {
     grid-template-columns: repeat(2, 1fr);
     gap: 40px 20px;
     justify-items: center;
-    margin-bottom: 120px;
+    margin-bottom: 50px;
 }
 
 .planner-item {

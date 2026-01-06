@@ -25,8 +25,7 @@
         /></div>
 
         @if(Auth::user()->id == $userguru->id || Auth::user()->role == "admin")
-        <div class="section-divider"></div>
-        <!-- Laporan Bulanan -->
+        <!--<div class="section-divider"></div>
         <div class="daily-tasks-header">
             <h1 class="daily-tasks-title">Laporan Bulanan</h1>
         </div>
@@ -78,7 +77,7 @@
                     </div>
                 </div>
             @endif
-        </div>
+        </div>-->
         @endif
 
         <div class="section-divider"></div>
