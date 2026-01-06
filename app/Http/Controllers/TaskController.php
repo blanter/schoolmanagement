@@ -435,7 +435,7 @@ class TaskController extends Controller
                 'name' => 'Student Progress',
                 'icon' => 'ph-bold ph-chart-line-up',
                 'color' => '#B9FBC0', // Light Green
-                'route' => '/statistik/' . $userguru->id
+                'route' => '/teacher-student-progress/' . $userguru->id
             ],
             [
                 'name' => 'Monthly Evaluation',

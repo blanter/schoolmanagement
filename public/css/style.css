@@ -4022,3 +4022,21 @@ a.user-lapor {
     opacity: 0.6;
     background: #F3F4F6;
 }
+
+/* Student Progress Specific Styles */
+.student-pill:hover {
+    background: #E5E7EB !important;
+}
+
+.custom-dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-dropdown::-webkit-scrollbar-thumb {
+    background: #E5E7EB;
+    border-radius: 10px;
+}
+
+.custom-dropdown::-webkit-scrollbar-track {
+    background: transparent;
+}

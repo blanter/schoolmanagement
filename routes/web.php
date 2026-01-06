@@ -8,6 +8,7 @@ use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\TeacherWeeklyPlannerController;
 use App\Http\Controllers\TeacherDailyDetailController;
 use App\Http\Controllers\TeacherCalendarController;
+use App\Http\Controllers\TeacherStudentProgressController;
 use Illuminate\Support\Facades\Route;
 
 // Route Default
@@ -47,6 +48,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/teacher-daily-detail/get', [TeacherDailyDetailController::class, 'getNote'])->name('teacher.daily.get');
     Route::post('/teacher-daily-detail/save', [TeacherDailyDetailController::class, 'saveNote'])->name('teacher.daily.save');
     Route::get('/teacher-daily-detail/{id}', [TeacherDailyDetailController::class, 'index'])->name('teacher.daily');
+
+    // Teacher Student Progress
+    Route::get('/teacher-student-progress/get', [TeacherStudentProgressController::class, 'getRecords'])->name('teacher.progress.get');
+    Route::post('/teacher-student-progress/save', [TeacherStudentProgressController::class, 'saveRecord'])->name('teacher.progress.save');
+    Route::post('/teacher-student-progress/delete', [TeacherStudentProgressController::class, 'deleteRecord'])->name('teacher.progress.delete');
+    Route::get('/teacher-student-progress/{id}', [TeacherStudentProgressController::class, 'index'])->name('teacher.progress');
 
     // Laporan Bulanan
     Route::get('/semua-laporan', [LaporanController::class, 'laporanall'])->name('laporanall');
