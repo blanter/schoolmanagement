@@ -36,8 +36,13 @@
                     <div class="category-icon" style="background-color: {{ $category['color'] }}">
                         <i class="{{ $category['icon'] }}"></i>
                     </div>
-                    <div class="category-name">
-                        {{ $category['name'] }}
+                    <div class="category-info">
+                        <div class="category-name">
+                            {{ $category['name'] }}
+                        </div>
+                        <div class="category-description">
+                            {{ $category['description'] }}
+                        </div>
                     </div>
                 </a>
             @endforeach

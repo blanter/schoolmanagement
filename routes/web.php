@@ -69,6 +69,15 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/teacher-monthly-evaluation/delete-nonguru', [TeacherMonthlyEvaluationController::class, 'deleteNonGuru'])->name('teacher.evaluation.deleteNonGuru');
     Route::get('/teacher-monthly-evaluation/{id}', [TeacherMonthlyEvaluationController::class, 'index'])->name('teacher.evaluation');
 
+    // Non Guru Task Note
+    Route::get('/non-guru-task-note/{id}', [\App\Http\Controllers\NonGuruNoteController::class, 'index'])->name('non-guru.note');
+    Route::get('/non-guru-task-note-get', [\App\Http\Controllers\NonGuruNoteController::class, 'getData'])->name('non-guru.note.get');
+    Route::post('/non-guru-task-note-category-save', [\App\Http\Controllers\NonGuruNoteController::class, 'saveCategory'])->name('non-guru.note.category.save');
+    Route::post('/non-guru-task-note-category-delete', [\App\Http\Controllers\NonGuruNoteController::class, 'deleteCategory'])->name('non-guru.note.category.delete');
+    Route::post('/non-guru-task-note-item-save', [\App\Http\Controllers\NonGuruNoteController::class, 'saveItem'])->name('non-guru.note.item.save');
+    Route::post('/non-guru-task-note-item-check', [\App\Http\Controllers\NonGuruNoteController::class, 'checkItem'])->name('non-guru.note.item.check');
+    Route::post('/non-guru-task-note-item-delete', [\App\Http\Controllers\NonGuruNoteController::class, 'deleteItem'])->name('non-guru.note.item.delete');
+
     // Laporan Bulanan
     Route::get('/semua-laporan', [LaporanController::class, 'laporanall'])->name('laporanall');
     Route::post('/laporan', [LaporanController::class, 'storeOrUpdate'])->name('laporan.store');

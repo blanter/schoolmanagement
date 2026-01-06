@@ -45,6 +45,7 @@ class TaskController extends Controller
             [
                 'id' => 1,
                 'name' => 'Checklist Rutinitas',
+                'description' => 'Daftar tugas harian yang diisi oleh guru terpilih.',
                 'icon' => 'ph-bold ph-clipboard-text',
                 'color' => '#FEB2D3', // Light Pink
                 'route' => '/tasks/' . $user->id
@@ -52,6 +53,7 @@ class TaskController extends Controller
             [
                 'id' => 2,
                 'name' => 'Teacher Planner & Reflection',
+                'description' => 'Evaluasi harian, mingguan, dan bulanan.',
                 'icon' => 'ph-bold ph-notebook',
                 'color' => '#FFE7A0', // Light Yellow
                 'route' => '/teacher-planner/' . $user->id
@@ -59,6 +61,7 @@ class TaskController extends Controller
             [
                 'id' => 3,
                 'name' => 'Teacher Project',
+                'description' => 'Jurnal penelitian, video, dan pengadaan barang.',
                 'icon' => 'ph-bold ph-strategy',
                 'color' => '#A0C4FF', // Light Blue
                 'route' => '/teacher-project/' . $user->id
@@ -66,6 +69,7 @@ class TaskController extends Controller
             [
                 'id' => 4,
                 'name' => 'Teacher Planner Pemakmuran',
+                'description' => 'Perencanaan proyek pemakmuran berbasis laporan.',
                 'icon' => 'ph-bold ph-leaf',
                 'color' => '#B9FBC0', // Light Green
                 'route' => '/teacher-planner-pemakmuran/' . $user->id
@@ -73,9 +77,18 @@ class TaskController extends Controller
             [
                 'id' => 5,
                 'name' => 'Student Controlling My Lifebook',
+                'description' => 'Monitoring progres karakter dan lifebook siswa.',
                 'icon' => 'ph-bold ph-user-focus',
                 'color' => '#FFD6A5', // Light Orange
                 'route' => '/student-lifebook/' . $user->id
+            ],
+            [
+                'id' => 6,
+                'name' => 'Non Guru Task Note',
+                'description' => 'Catatan tugas tambahan dan checklist personal.',
+                'icon' => 'ph-bold ph-note-pencil',
+                'color' => '#D4A5FF', // Light Purple
+                'route' => '/non-guru-task-note/' . $user->id
             ],
         ];
 
