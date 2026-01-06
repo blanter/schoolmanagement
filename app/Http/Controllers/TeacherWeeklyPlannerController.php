@@ -55,6 +55,14 @@ class TeacherWeeklyPlannerController extends Controller
                 'note' => 'nullable|string',
             ]);
 
+            // Security: Only owner can save
+            if (Auth::id() != $validated['user_id']) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda tidak memiliki hak akses untuk mengubah data ini.'
+                ], 403);
+            }
+
             if (isset($validated['id'])) {
                 $plan = TeacherWeeklyPlan::findOrFail($validated['id']);
                 $plan->update([
@@ -97,6 +105,14 @@ class TeacherWeeklyPlannerController extends Controller
                 'id' => 'required|integer',
                 'user_id' => 'required|integer',
             ]);
+
+            // Security: Only owner can delete
+            if (Auth::id() != $validated['user_id']) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda tidak memiliki hak akses untuk menghapus data ini.'
+                ], 403);
+            }
 
             $plan = TeacherWeeklyPlan::where('id', $validated['id'])
                 ->where('user_id', $validated['user_id'])

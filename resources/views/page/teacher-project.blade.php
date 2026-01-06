@@ -35,28 +35,29 @@
                             <i class="ph-bold ph-book-open"></i>
                         </div>
                         <div class="project-task-label">Judul Pendahuluan</div>
-                        <div class="project-check-box" onclick="toggleTaskCheck(this)"></div>
+                        <div class="project-check-box {{ auth()->id() == $user->id ? '' : 'disabled-check' }}"
+                            @if(auth()->id() == $user->id) onclick="toggleTaskCheck(this)" @endif></div>
                     </div>
                     <div class="task-item project-task-item">
                         <div class="project-task-icon" style="background: #FFE7A0;">
                             <i class="ph-bold ph-file-text"></i>
                         </div>
                         <div class="project-task-label">Rumusan Masalah</div>
-                        <div class="project-check-box" onclick="toggleTaskCheck(this)"></div>
+                        <div class="project-check-box {{ auth()->id() == $user->id ? '' : 'disabled-check' }}" @if(auth()->id() == $user->id) onclick="toggleTaskCheck(this)" @endif></div>
                     </div>
                     <div class="task-item project-task-item">
                         <div class="project-task-icon" style="background: #A0C4FF;">
                             <i class="ph-bold ph-microscope"></i>
                         </div>
                         <div class="project-task-label">Penelitian</div>
-                        <div class="project-check-box" onclick="toggleTaskCheck(this)"></div>
+                        <div class="project-check-box {{ auth()->id() == $user->id ? '' : 'disabled-check' }}" @if(auth()->id() == $user->id) onclick="toggleTaskCheck(this)" @endif></div>
                     </div>
                     <div class="task-item project-task-item">
                         <div class="project-task-icon" style="background: #B9FBC0;">
                             <i class="ph-bold ph-check-square"></i>
                         </div>
                         <div class="project-task-label">Kesimpulan</div>
-                        <div class="project-check-box" onclick="toggleTaskCheck(this)"></div>
+                        <div class="project-check-box {{ auth()->id() == $user->id ? '' : 'disabled-check' }}" @if(auth()->id() == $user->id) onclick="toggleTaskCheck(this)" @endif></div>
                     </div>
                 </div>
             </div>
@@ -73,14 +74,16 @@
                         <input type="text" class="project-input" placeholder="https://youtube.com/...">
                     </div>
                 </div>
-                <div class="project-actions">
-                    <button class="btn-teacher-project btn-teacher-project-grey">
-                        <i class="ph-bold ph-plus"></i> Tambah Data
-                    </button>
-                    <button class="btn-teacher-project">
-                        <i class="ph-bold ph-floppy-disk"></i> Simpan Data
-                    </button>
-                </div>
+                @if(auth()->id() == $user->id)
+                    <div class="project-actions">
+                        <button class="btn-teacher-project btn-teacher-project-grey">
+                            <i class="ph-bold ph-plus"></i> Tambah Data
+                        </button>
+                        <button class="btn-teacher-project">
+                            <i class="ph-bold ph-floppy-disk"></i> Simpan Data
+                        </button>
+                    </div>
+                @endif
             </div>
 
             <!-- Tab Content: Barang -->

@@ -427,9 +427,9 @@ class TaskController extends Controller
             ],
             [
                 'name' => 'Daily Details',
-                'icon' => 'ph-bold ph-list-numbers',
+                'icon' => 'ph-bold ph-article',
                 'color' => '#A0C4FF', // Light Blue
-                'route' => '/tasks/' . $userguru->id
+                'route' => '/teacher-daily-detail/' . $userguru->id
             ],
             [
                 'name' => 'Student Progress',

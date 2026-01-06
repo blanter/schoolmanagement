@@ -29,10 +29,12 @@
                         <h3 style="font-size: 16px; font-weight: 700; color: #1F2937; margin: 0;">
                             <i class="ph-bold ph-calendar-check" style="color: #7F56D9;"></i> Agenda Tanggal Ini
                         </h3>
-                        <button id="add-new-plan-btn" class="btn-cal-primary"
-                            style="padding: 8px 16px; font-size: 12px; border-radius: 10px;">
-                            <i class="ph-bold ph-plus"></i> Tambah Agenda
-                        </button>
+                        @if(auth()->id() == $userguru->id)
+                            <button id="add-new-plan-btn" class="btn-cal-primary"
+                                style="padding: 8px 16px; font-size: 12px; border-radius: 10px;">
+                                <i class="ph-bold ph-plus"></i> Tambah Agenda
+                            </button>
+                        @endif
                     </div>
 
                     <div id="plans-list-container" class="note-list-scroll">
@@ -45,54 +47,66 @@
                     </div>
                 </div>
 
-                <!-- Bottom Section: Input Form -->
-                <div id="plan-form-section" class="note-input-section" style="display: none;">
-                    <div class="note-section-header">
-                        <h3 id="form-title" style="font-size: 16px; font-weight: 700; color: #1F2937; margin: 0;">
-                            <i class="ph-bold ph-plus-circle" style="color: #7F56D9;"></i> Tambah Agenda Baru
-                        </h3>
-                        <span id="selected-date-label"
-                            style="font-size: 13px; font-weight: 600; color: #9CA3AF;">-</span>
-                    </div>
+                @if(auth()->id() == $userguru->id)
+                    <!-- Bottom Section: Input Form -->
+                    <div id="plan-form-section" class="note-input-section" style="display: none;">
+                        <div class="note-section-header">
+                            <h3 id="form-title" style="font-size: 16px; font-weight: 700; color: #1F2937; margin: 0;">
+                                <i class="ph-bold ph-plus-circle" style="color: #7F56D9;"></i> Tambah Agenda Baru
+                            </h3>
+                            <span id="selected-date-label"
+                                style="font-size: 13px; font-weight: 600; color: #9CA3AF;">-</span>
+                        </div>
 
-                    <div class="note-form-card">
-                        <!-- Hidden ID for editing -->
-                        <input type="hidden" id="plan-id">
+                        <div class="note-form-card">
+                            <!-- Hidden ID for editing -->
+                            <input type="hidden" id="plan-id">
 
-                        <div style="margin-bottom: 15px;">
+                            <div style="margin-bottom: 15px;">
+                                <label
+                                    style="display: block; font-size: 12px; font-weight: 700; color: #4B5563; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Mata
+                                    Pelajaran / Tema / Topik</label>
+                                <input type="text" id="plan-subject" class="note-editor"
+                                    style="min-height: 45px; border-radius: 16px; margin-bottom: 0;"
+                                    placeholder="Contoh: Matematika - Aljabar">
+                            </div>
+
                             <label
-                                style="display: block; font-size: 12px; font-weight: 700; color: #4B5563; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Mata
-                                Pelajaran / Tema / Topik</label>
-                            <input type="text" id="plan-subject" class="note-editor"
-                                style="min-height: 45px; border-radius: 16px; margin-bottom: 0;"
-                                placeholder="Contoh: Matematika - Aljabar">
-                        </div>
+                                style="display: block; font-size: 12px; font-weight: 700; color: #4B5563; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Detail
+                                Rencana / Catatan</label>
+                            <div class="note-toolbar">
+                                <button type="button" class="note-format-btn" data-cmd="bold" title="Bold"><i
+                                        class="ph-bold ph-text-b"></i></button>
+                                <button type="button" class="note-format-btn" data-cmd="italic" title="Italic"><i
+                                        class="ph-bold ph-text-italic"></i></button>
+                                <div class="note-toolbar-divider"></div>
+                                <button type="button" class="note-format-btn" data-cmd="insertUnorderedList"
+                                    title="Bullet List"><i class="ph-bold ph-list-bullets"></i></button>
+                                <button type="button" class="note-format-btn" data-cmd="insertOrderedList"
+                                    title="Numbered List"><i class="ph-bold ph-list-numbers"></i></button>
+                            </div>
+                            <div id="plan-note-editor" class="note-editor" contenteditable="true"
+                                data-placeholder="Tuliskan detail rencana pembelajaran..."></div>
 
-                        <label
-                            style="display: block; font-size: 12px; font-weight: 700; color: #4B5563; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Detail
-                            Rencana / Catatan</label>
-                        <div class="note-toolbar">
-                            <button type="button" class="note-format-btn" data-cmd="bold" title="Bold"><i
-                                    class="ph-bold ph-text-b"></i></button>
-                            <button type="button" class="note-format-btn" data-cmd="italic" title="Italic"><i
-                                    class="ph-bold ph-text-italic"></i></button>
-                            <div class="note-toolbar-divider"></div>
-                            <button type="button" class="note-format-btn" data-cmd="insertUnorderedList"
-                                title="Bullet List"><i class="ph-bold ph-list-bullets"></i></button>
-                            <button type="button" class="note-format-btn" data-cmd="insertOrderedList"
-                                title="Numbered List"><i class="ph-bold ph-list-numbers"></i></button>
-                        </div>
-                        <div id="plan-note-editor" class="note-editor" contenteditable="true"
-                            data-placeholder="Tuliskan detail rencana pembelajaran..."></div>
-
-                        <div class="cal-form-actions">
-                            <button id="cancel-plan-btn" class="btn-cal-secondary">Batal</button>
-                            <button id="save-plan-btn" class="btn-cal-primary">
-                                <i class="ph-bold ph-floppy-disk"></i> Simpan Agenda
-                            </button>
+                            <div class="cal-form-actions">
+                                <button id="cancel-plan-btn" class="btn-cal-secondary">Batal</button>
+                                <button id="save-plan-btn" class="btn-cal-primary">
+                                    <i class="ph-bold ph-floppy-disk"></i> Simpan Agenda
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @else
+                    <style>
+                        .calendar-content-wrapper {
+                            grid-template-columns: 1fr !important;
+                        }
+
+                        .note-list-section {
+                            max-height: none !important;
+                        }
+                    </style>
+                @endif
             </div>
         </main>
     </div>
@@ -125,6 +139,7 @@
             let datesWithPlans = @json($datesWithPlans);
             let currentPlans = [];
             let isSaving = false;
+            let isOwner = {{ auth()->id() == $userguru->id ? 'true' : 'false' }};
 
             updateCalendarUI(currentSelectedDate);
             loadPlans(formatDate(currentSelectedDate));
@@ -232,10 +247,12 @@
                 plans.forEach(plan => {
                     html += `
                         <div class="note-item" style="position: relative;">
+                            ${isOwner ? `
                             <div style="position: absolute; top: 15px; right: 15px; display: flex; gap: 8px;">
                                 <button onclick="window.prepareEdit(${plan.id})" class="note-format-btn" style="background:#EBF4FF; color:#7F56D9;"><i class="ph-bold ph-pencil"></i></button>
                                 <button onclick="window.confirmDelete(${plan.id})" class="note-format-btn" style="background:#FEE2E2; color:#EF4444;"><i class="ph-bold ph-trash"></i></button>
                             </div>
+                            ` : ''}
                             <div class="note-item-date" style="font-size: 15px; margin-bottom: 5px;">${plan.subject}</div>
                             <div class="note-item-content" style="font-size: 14px; opacity: 0.8;">${plan.note || '<i style="color:#9CA3AF">Tidak ada detail catatan</i>'}</div>
                         </div>

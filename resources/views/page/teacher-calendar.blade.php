@@ -42,6 +42,7 @@
                     </div>
                 </div>
 
+                @if(auth()->id() == $userguru->id)
                 <!-- Bottom/Section 2: Note Input WYSIWYG -->
                 <div class="note-input-section">
                     <div class="note-section-header">
@@ -79,6 +80,12 @@
                         </div>
                     </div>
                 </div>
+                @else
+                <style>
+                    .calendar-content-wrapper { grid-template-columns: 1fr !important; }
+                    .note-list-section { max-height: none !important; }
+                </style>
+                @endif
             </div>
         </main>
     </div>

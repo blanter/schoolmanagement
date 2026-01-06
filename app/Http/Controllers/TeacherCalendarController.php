@@ -86,6 +86,14 @@ class TeacherCalendarController extends Controller
                 'note' => 'nullable|string',
             ]);
 
+            // Security: Only owner can save
+            if (Auth::id() != $validated['user_id']) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda tidak memiliki hak akses untuk mengubah data ini.'
+                ], 403);
+            }
+
             $note = TeacherNote::updateOrCreate(
                 ['user_id' => $validated['user_id'], 'tanggal' => $validated['tanggal']],
                 ['note' => $validated['note']]
