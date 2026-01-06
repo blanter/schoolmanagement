@@ -25,7 +25,7 @@ class TeacherStudentProgressController extends Controller
 
         // Get all students for the dropdown search
         // Assuming role 'murid' exists in the database
-        $students = User::where('role', 'murid')->orderBy('name', 'asc')->get(['id', 'name']);
+        $students = User::where('role', 'murid')->where('lulus', 0)->orderBy('name', 'asc')->get(['id', 'name']);
 
         return view('page.teacher-student-progress', compact('userguru', 'user', 'monthsWithProgress', 'students'));
     }

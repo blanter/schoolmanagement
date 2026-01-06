@@ -30,61 +30,76 @@
                         <h3 style="font-size: 16px; font-weight: 700; color: #1F2937; margin: 0;">
                             <i class="ph-bold ph-notebook" style="color: #7F56D9;"></i> Catatan Tanggal Ini
                         </h3>
-                        <span id="notes-count" style="font-size: 13px; color: #9CA3AF; font-weight: 600;">0 catatan</span>
+                        <span id="notes-count" style="font-size: 13px; color: #9CA3AF; font-weight: 600;">0
+                            catatan</span>
                     </div>
-                    
+
                     <div id="notes-list-container" class="note-list-scroll">
                         <!-- Populated by JS -->
                         <div class="note-empty-state">
-                            <i class="ph-bold ph-note-blank" style="font-size: 48px; color: #E5E7EB; margin-bottom: 10px;"></i>
+                            <i class="ph-bold ph-note-blank"
+                                style="font-size: 48px; color: #E5E7EB; margin-bottom: 10px;"></i>
                             <p style="color: #9CA3AF; font-size: 14px;">Pilih tanggal untuk melihat catatan</p>
                         </div>
                     </div>
                 </div>
 
                 @if(auth()->id() == $userguru->id)
-                <!-- Bottom/Section 2: Note Input WYSIWYG -->
-                <div class="note-input-section">
-                    <div class="note-section-header">
-                        <h3 style="font-size: 16px; font-weight: 700; color: #1F2937; margin: 0;">
-                            <i class="ph-bold ph-note-pencil" style="color: #7F56D9;"></i> Tulis Catatan
-                        </h3>
-                        <span id="selected-date-label" style="font-size: 13px; font-weight: 600; color: #9CA3AF;">-</span>
-                    </div>
-
-                    <div class="note-form-card">
-                        <!-- WYSIWYG Toolbar -->
-                        <div class="note-toolbar">
-                            <button type="button" class="note-format-btn" data-cmd="bold" title="Bold (CTRL+B)"><i class="ph-bold ph-text-b"></i></button>
-                            <button type="button" class="note-format-btn" data-cmd="italic" title="Italic (CTRL+I)"><i class="ph-bold ph-text-italic"></i></button>
-                            <button type="button" class="note-format-btn" data-cmd="underline" title="Underline (CTRL+U)"><i class="ph-bold ph-text-underline"></i></button>
-                            <div class="note-toolbar-divider"></div>
-                            <button type="button" class="note-format-btn" data-cmd="insertUnorderedList" title="Bullet List"><i class="ph-bold ph-list-bullets"></i></button>
-                            <button type="button" class="note-format-btn" data-cmd="insertOrderedList" title="Numbered List"><i class="ph-bold ph-list-numbers"></i></button>
-                            <div class="note-toolbar-divider"></div>
-                            <button type="button" class="note-format-btn" data-cmd="createLink" title="Insert Link"><i class="ph-bold ph-link"></i></button>
-                            <button type="button" class="note-format-btn" data-cmd="unlink" title="Remove Link"><i class="ph-bold ph-link-break"></i></button>
+                    <!-- Bottom/Section 2: Note Input WYSIWYG -->
+                    <div class="note-input-section">
+                        <div class="note-section-header">
+                            <h3 style="font-size: 16px; font-weight: 700; color: #1F2937; margin: 0;">
+                                <i class="ph-bold ph-note-pencil" style="color: #7F56D9;"></i> Tulis Catatan
+                            </h3>
+                            <span id="selected-date-label"
+                                style="font-size: 13px; font-weight: 600; color: #9CA3AF;">-</span>
                         </div>
 
-                        <!-- Content Editable div instead of textarea -->
-                        <div id="teacher-note-editor" class="note-editor" contenteditable="true" 
-                            data-placeholder="Tuliskan catatan atau refleksi untuk hari ini..."></div>
-                        
-                        <div class="cal-form-actions">
-                            <button id="clear-note-btn" class="btn-cal-secondary">
-                                <i class="ph-bold ph-trash"></i> Hapus
-                            </button>
-                            <button id="save-note-btn" class="btn-cal-primary">
-                                <i class="ph-bold ph-floppy-disk"></i> Simpan
-                            </button>
+                        <div class="note-form-card">
+                            <!-- WYSIWYG Toolbar -->
+                            <div class="note-toolbar">
+                                <button type="button" class="note-format-btn" data-cmd="bold" title="Bold (CTRL+B)"><i
+                                        class="ph-bold ph-text-b"></i></button>
+                                <button type="button" class="note-format-btn" data-cmd="italic" title="Italic (CTRL+I)"><i
+                                        class="ph-bold ph-text-italic"></i></button>
+                                <button type="button" class="note-format-btn" data-cmd="underline"
+                                    title="Underline (CTRL+U)"><i class="ph-bold ph-text-underline"></i></button>
+                                <div class="note-toolbar-divider"></div>
+                                <button type="button" class="note-format-btn" data-cmd="insertUnorderedList"
+                                    title="Bullet List"><i class="ph-bold ph-list-bullets"></i></button>
+                                <button type="button" class="note-format-btn" data-cmd="insertOrderedList"
+                                    title="Numbered List"><i class="ph-bold ph-list-numbers"></i></button>
+                                <div class="note-toolbar-divider"></div>
+                                <button type="button" class="note-format-btn" data-cmd="createLink" title="Insert Link"><i
+                                        class="ph-bold ph-link"></i></button>
+                                <button type="button" class="note-format-btn" data-cmd="unlink" title="Remove Link"><i
+                                        class="ph-bold ph-link-break"></i></button>
+                            </div>
+
+                            <!-- Content Editable div instead of textarea -->
+                            <div id="teacher-note-editor" class="note-editor" contenteditable="true"
+                                data-placeholder="Tuliskan catatan atau refleksi untuk hari ini..."></div>
+
+                            <div class="cal-form-actions">
+                                <button id="clear-note-btn" class="btn-cal-secondary">
+                                    <i class="ph-bold ph-trash"></i> Hapus
+                                </button>
+                                <button id="save-note-btn" class="btn-cal-primary">
+                                    <i class="ph-bold ph-floppy-disk"></i> Simpan
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
                 @else
-                <style>
-                    .calendar-content-wrapper { grid-template-columns: 1fr !important; }
-                    .note-list-section { max-height: none !important; }
-                </style>
+                    <style>
+                        .calendar-content-wrapper {
+                            grid-template-columns: 1fr !important;
+                        }
+
+                        .note-list-section {
+                            max-height: none !important;
+                        }
+                    </style>
                 @endif
             </div>
         </main>
@@ -97,7 +112,7 @@
     <div class="cal-modal-overlay" id="full-calendar-modal">
         <div class="cal-modal">
             <div class="cal-modal-header">
-                <h3><i class="ph-fill ph-calendar"></i> Kalender Lengkap</h3>
+                <h3><i class="ph-fill ph-calendar"></i> Pilih Tanggal</h3>
                 <button class="cal-close-modal" id="close-calendar-modal"><i class="ph ph-x"></i></button>
             </div>
             <div class="cal-modal-body">
@@ -135,10 +150,10 @@
             loadNote(formatDate(currentSelectedDate));
 
             // WYSIWYG Formatter Logic
-            $('.note-format-btn').on('click', function(e) {
+            $('.note-format-btn').on('click', function (e) {
                 e.preventDefault();
                 const cmd = $(this).data('cmd');
-                
+
                 if (cmd === 'createLink') {
                     const url = prompt('Enter URL:', 'https://');
                     if (url) document.execCommand(cmd, false, url);
@@ -151,7 +166,7 @@
             });
 
             // Monitor active states
-            $('#teacher-note-editor').on('keyup mouseup focus', function() {
+            $('#teacher-note-editor').on('keyup mouseup focus', function () {
                 $('.note-format-btn').removeClass('active');
                 if (document.queryCommandState('bold')) $('.note-format-btn[data-cmd="bold"]').addClass('active');
                 if (document.queryCommandState('italic')) $('.note-format-btn[data-cmd="italic"]').addClass('active');
@@ -161,31 +176,31 @@
             });
 
             // Events
-            $('#calendar-trigger').on('click', function() {
+            $('#calendar-trigger').on('click', function () {
                 openCalendarModal(currentSelectedDate);
             });
 
-            $('#close-calendar-modal, .cal-modal-overlay').on('click', function(e) {
+            $('#close-calendar-modal, .cal-modal-overlay').on('click', function (e) {
                 if (e.target === this || e.target.closest('#close-calendar-modal')) {
                     $('#full-calendar-modal').fadeOut(200);
                 }
             });
 
-            $('#prev-month-modal').on('click', function() {
+            $('#prev-month-modal').on('click', function () {
                 const month = parseInt($('#modal-month-title').data('month'));
                 const year = parseInt($('#modal-month-title').data('year'));
                 const newDate = new Date(year, month - 1, 1);
                 renderModalCalendar(newDate);
             });
 
-            $('#next-month-modal').on('click', function() {
+            $('#next-month-modal').on('click', function () {
                 const month = parseInt($('#modal-month-title').data('month'));
                 const year = parseInt($('#modal-month-title').data('year'));
                 const newDate = new Date(year, month + 1, 1);
                 renderModalCalendar(newDate);
             });
 
-            $('#date-picker').on('change', function() {
+            $('#date-picker').on('change', function () {
                 const val = $(this).val();
                 if (val) {
                     const [year, month] = val.split('-');
@@ -208,7 +223,7 @@
                 const dayNames = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
                 const year = date.getFullYear();
                 const month = date.getMonth();
-                
+
                 $('#modal-month-title').text(months[month] + " " + year)
                     .data('month', month)
                     .data('year', year);
@@ -233,7 +248,7 @@
                     const isT = ds === today ? 'today-highlight' : '';
                     const isS = ds === sel ? 'selected-day' : '';
                     const hasN = datesWithNotes.includes(ds);
-                    
+
                     html += `
                         <div class="cal-day ${isT} ${isS} ${hasN ? 'has-note-marker' : ''}" 
                              onclick="window.navigateFromModal('${ds}')">
@@ -245,7 +260,7 @@
                 $('#modal-calendar-grid').html(html);
             }
 
-            window.navigateFromModal = function(ds) {
+            window.navigateFromModal = function (ds) {
                 currentSelectedDate = new Date(ds);
                 updateCalendarUI(currentSelectedDate);
                 loadNote(ds);
@@ -253,14 +268,14 @@
                 $('#full-calendar-modal').fadeOut(200);
             };
 
-            $('#save-note-btn').on('click', function() {
+            $('#save-note-btn').on('click', function () {
                 if (isSaving) return;
                 const htmlContent = $('#teacher-note-editor').html();
                 const cleanContent = ($('#teacher-note-editor').text().trim() === '' && htmlContent.indexOf('<') === -1) ? '' : htmlContent;
                 saveNote(formatDate(currentSelectedDate), cleanContent);
             });
 
-            $('#clear-note-btn').on('click', function() {
+            $('#clear-note-btn').on('click', function () {
                 if (confirm('Hapus catatan?')) {
                     $('#teacher-note-editor').html('');
                     saveNote(formatDate(currentSelectedDate), '');
@@ -284,7 +299,7 @@
                     url: '{{ route("teacher.note.get") }}',
                     method: 'GET',
                     data: { user_id: {{ $userguru->id }}, tanggal: dateStr },
-                    success: function(res) {
+                    success: function (res) {
                         $('#teacher-note-editor').html(res.note || '').attr('data-placeholder', 'Tuliskan catatan atau refleksi untuk hari ini...');
                     }
                 });
@@ -304,7 +319,7 @@
                         tanggal: dateStr,
                         note: content
                     },
-                    success: function(res) {
+                    success: function (res) {
                         if (res.success) {
                             showToast('Disimpan!', 'success');
                             datesWithNotes = res.datesWithNotes;
@@ -312,7 +327,7 @@
                             loadAllNotes(dateStr);
                         }
                     },
-                    complete: function() {
+                    complete: function () {
                         isSaving = false;
                         btn.prop('disabled', false).html('<i class="ph-bold ph-floppy-disk"></i> Simpan');
                     }
@@ -324,7 +339,7 @@
                     url: '{{ route("teacher.note.all") }}',
                     method: 'GET',
                     data: { user_id: {{ $userguru->id }} },
-                    success: function(res) {
+                    success: function (res) {
                         allNotes = res.notes;
                         if (filterDate) filterNotesByDate(filterDate);
                     }
@@ -334,7 +349,7 @@
             function filterNotesByDate(dateStr) {
                 const container = $('#notes-list-container');
                 const filtered = allNotes.filter(n => n.tanggal === dateStr && n.note && n.note.trim() !== '');
-                
+
                 if (filtered.length === 0) {
                     container.html('<div class="note-empty-state">Belum ada catatan untuk tanggal ini.</div>');
                     $('#notes-count').text('0 catatan');
@@ -390,13 +405,13 @@
                     if (active) {
                         const container = document.getElementById('calendar-container');
                         if (container) {
-                            container.scrollTo({ left: active.parentElement.offsetLeft - (container.offsetWidth/2) + 20, behavior: 'smooth' });
+                            container.scrollTo({ left: active.parentElement.offsetLeft - (container.offsetWidth / 2) + 20, behavior: 'smooth' });
                         }
                     }
                 }, 100);
             }
 
-            window.selectDay = function(el, ds) {
+            window.selectDay = function (el, ds) {
                 currentSelectedDate = new Date(ds);
                 $('.strip-day-number').removeClass('active');
                 $(el).find('.strip-day-number').addClass('active');
@@ -409,7 +424,7 @@
                 const bg = type === 'success' ? '#D1FAE5' : '#FEE2E2';
                 const html = `<div id="${id}" style="margin-bottom:10px; background:${bg}; padding:12px 20px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.1); font-weight:600; font-size: 14px; color: #1F2937;">${msg}</div>`;
                 $('#toast-container').append(html);
-                setTimeout(() => { $(`#${id}`).fadeOut(300, function(){ $(this).remove(); }); }, 2000);
+                setTimeout(() => { $(`#${id}`).fadeOut(300, function () { $(this).remove(); }); }, 2000);
             }
         });
     </script>
