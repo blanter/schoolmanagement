@@ -246,7 +246,7 @@
         </a>
     @endif
 
-    <div class="app-version">Management App v1.15</div>
+    <div class="app-version">Management App v2.06</div>
 
     <!-- SCRIPT -->
     <script>
