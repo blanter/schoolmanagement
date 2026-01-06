@@ -423,7 +423,7 @@ class TaskController extends Controller
                 'name' => 'Weekly Planner',
                 'icon' => 'ph-bold ph-calendar-check',
                 'color' => '#FFE7A0', // Light Yellow
-                'route' => '/tasks/' . $userguru->id . '?type=week'
+                'route' => '/teacher-weekly-planner/' . $userguru->id
             ],
             [
                 'name' => 'Daily Details',

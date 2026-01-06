@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\TeacherWeeklyPlannerController;
 use App\Http\Controllers\TeacherCalendarController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +35,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/teacher-note/all', [TeacherCalendarController::class, 'getAllNotes'])->name('teacher.note.all');
     Route::post('/teacher-note/save', [TeacherCalendarController::class, 'saveNote'])->name('teacher.note.save');
     Route::get('/teacher-note/get', [TeacherCalendarController::class, 'getNote'])->name('teacher.note.get');
+
+    // Teacher Weekly Planner
+    Route::get('/teacher-weekly-planner/get', [TeacherWeeklyPlannerController::class, 'getPlans'])->name('teacher.weekly.get');
+    Route::post('/teacher-weekly-planner/save', [TeacherWeeklyPlannerController::class, 'savePlan'])->name('teacher.weekly.save');
+    Route::post('/teacher-weekly-planner/delete', [TeacherWeeklyPlannerController::class, 'deletePlan'])->name('teacher.weekly.delete');
+    Route::get('/teacher-weekly-planner/{id}', [TeacherWeeklyPlannerController::class, 'index'])->name('teacher.weekly');
 
     // Laporan Bulanan
     Route::get('/semua-laporan', [LaporanController::class, 'laporanall'])->name('laporanall');
