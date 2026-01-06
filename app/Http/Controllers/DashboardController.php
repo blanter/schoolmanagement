@@ -107,6 +107,7 @@ class DashboardController extends Controller
          */
         $processRanking = function (string $role, string $tipe) use ($calcScoreForUser, $currentUserId) {
             $users = User::where('role', $role)
+                ->where('lulus', 0)
                 ->get()
                 ->map(function ($user) use ($calcScoreForUser, $tipe) {
                     $score = $calcScoreForUser($user, $tipe);

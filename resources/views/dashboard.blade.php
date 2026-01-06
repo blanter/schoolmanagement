@@ -43,11 +43,7 @@
                             <img src="https://elearning.lifebookacademy.sch.id/public/small/{{ $userguru[1]['image'] }}" />
                         </div>
                         <div class="podium-name">
-                            @if(Auth::user()->id == "2" || Auth::user()->id == "15" || Auth::user()->id == "27")
-                                <a href="/my-tasks/{{ $userguru[1]['id'] }}">{{ $userguru[1]['name'] }}</a>
-                            @else
-                                {{ $userguru[1]['name'] }}
-                            @endif
+                            <a href="/my-tasks/{{ $userguru[1]['id'] }}">{{ $userguru[1]['name'] }}</a>
                         </div>
                         @if(Auth::user()->role != "murid")
                             <div class="podium-points">{{ number_format($userguru[1]['total_amount'], 2, ',', '.') }}%</div>
@@ -64,11 +60,7 @@
                             <img src="https://elearning.lifebookacademy.sch.id/public/small/{{ $userguru[0]['image'] }}" />
                         </div>
                         <div class="podium-name">
-                            @if(Auth::user()->id == "2" || Auth::user()->id == "15" || Auth::user()->id == "27")
-                                <a href="/my-tasks/{{ $userguru[0]['id'] }}">{{ $userguru[0]['name'] }}</a>
-                            @else
-                                {{ $userguru[0]['name'] }}
-                            @endif
+                            <a href="/my-tasks/{{ $userguru[0]['id'] }}">{{ $userguru[0]['name'] }}</a>
                         </div>
                         @if(Auth::user()->role != "murid")
                             <div class="podium-points">{{ number_format($userguru[0]['total_amount'], 2, ',', '.') }}%</div>
@@ -84,11 +76,7 @@
                             <img src="https://elearning.lifebookacademy.sch.id/public/small/{{ $userguru[2]['image'] }}" />
                         </div>
                         <div class="podium-name">
-                            @if(Auth::user()->id == "2" || Auth::user()->id == "15" || Auth::user()->id == "27")
-                                <a href="/my-tasks/{{ $userguru[2]['id'] }}">{{ $userguru[2]['name'] }}</a>
-                            @else
-                                {{ $userguru[2]['name'] }}
-                            @endif
+                            <a href="/my-tasks/{{ $userguru[2]['id'] }}">{{ $userguru[2]['name'] }}</a>
                         </div>
                         @if(Auth::user()->role != "murid")
                             <div class="podium-points">{{ number_format($userguru[2]['total_amount'], 2, ',', '.') }}%</div>
@@ -107,11 +95,7 @@
                         </div>
                         <div class="player-info">
                             <div class="player-name">
-                                @if(Auth::user()->id == "2" || Auth::user()->id == "15" || Auth::user()->id == "27")
-                                    <a href="/my-tasks/{{ $user['id'] }}">{{ $user['name'] }}</a>
-                                @else
-                                    {{ $user['name'] }}
-                                @endif
+                                <a href="/my-tasks/{{ $user['id'] }}">{{ $user['name'] }}</a>
                             </div>
                             @if(Auth::user()->role != "murid")
                                 <div class="player-points">{{ number_format($user->total_amount, 2, ',', '.') }}%</div>
@@ -147,11 +131,7 @@
                                 src="https://elearning.lifebookacademy.sch.id/public/small/{{ $usernonguru[1]['image'] }}" />
                         </div>
                         <div class="podium-name">
-                            @if(Auth::user()->id == "2" || Auth::user()->id == "15" || Auth::user()->id == "27")
-                                <a href="/my-tasks/{{ $usernonguru[1]['id'] }}">{{ $usernonguru[1]['name'] }}</a>
-                            @else
-                                {{ $usernonguru[1]['name'] }}
-                            @endif
+                            <a href="/my-tasks/{{ $usernonguru[1]['id'] }}">{{ $usernonguru[1]['name'] }}</a>
                         </div>
                         @if(Auth::user()->role != "murid")
                             <div class="podium-points">{{ number_format($usernonguru[1]['total_amount'], 2, ',', '.') }}%</div>
@@ -169,11 +149,7 @@
                                 src="https://elearning.lifebookacademy.sch.id/public/small/{{ $usernonguru[0]['image'] }}" />
                         </div>
                         <div class="podium-name">
-                            @if(Auth::user()->id == "2" || Auth::user()->id == "15" || Auth::user()->id == "27")
-                                <a href="/my-tasks/{{ $usernonguru[0]['id'] }}">{{ $usernonguru[0]['name'] }}</a>
-                            @else
-                                {{ $usernonguru[0]['name'] }}
-                            @endif
+                            <a href="/my-tasks/{{ $usernonguru[0]['id'] }}">{{ $usernonguru[0]['name'] }}</a>
                         </div>
                         @if(Auth::user()->role != "murid")
                             <div class="podium-points">{{ number_format($usernonguru[0]['total_amount'], 2, ',', '.') }}%</div>
@@ -214,11 +190,7 @@
                             </div>
                             <div class="player-info">
                                 <div class="player-name">
-                                    @if(Auth::user()->id == "2" || Auth::user()->id == "15" || Auth::user()->id == "27")
-                                        <a href="/my-tasks/{{ $user['id'] }}">{{ $user['name'] }}</a>
-                                    @else
-                                        {{ $user['name'] }}
-                                    @endif
+                                    <a href="/my-tasks/{{ $user['id'] }}">{{ $user['name'] }}</a>
                                 </div>
                                 @if(Auth::user()->role != "murid")
                                     <div class="player-points">{{ number_format($user->total_amount, 2, ',', '.') }}%</div>
