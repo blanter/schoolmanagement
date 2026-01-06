@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\TeacherCalendarController;
 use Illuminate\Support\Facades\Route;
 
 // Route Default
@@ -27,6 +28,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/teacher-planner/{id}', [TaskController::class, 'teacherPlanner'])->name('tasks.planner');
     Route::get('/teacher-project/{id}', [TaskController::class, 'teacherProject'])->name('tasks.project');
     Route::post('/task-skip', [TaskController::class, 'toggleSkip'])->name('task.skip');
+
+    // Teacher Calendar & Notes
+    Route::get('/teacher-calendar/{id}', [TeacherCalendarController::class, 'index'])->name('teacher.calendar');
+    Route::get('/teacher-note/all', [TeacherCalendarController::class, 'getAllNotes'])->name('teacher.note.all');
+    Route::post('/teacher-note/save', [TeacherCalendarController::class, 'saveNote'])->name('teacher.note.save');
+    Route::get('/teacher-note/get', [TeacherCalendarController::class, 'getNote'])->name('teacher.note.get');
 
     // Laporan Bulanan
     Route::get('/semua-laporan', [LaporanController::class, 'laporanall'])->name('laporanall');

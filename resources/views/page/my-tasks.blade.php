@@ -44,7 +44,7 @@
                 <i class="ph ph-arrow-left"></i>
                 <span>Back</span>
             </a>
-            <a href="/statistik/{{ $user->id }}" class="nav-btn nav-btn-calendar">
+            <a href="/teacher-calendar/{{ $user->id }}" class="nav-btn nav-btn-calendar">
                 <i class="ph ph-calendar-blank"></i>
                 <span>Kalender</span>
             </a>
