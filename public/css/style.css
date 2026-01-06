@@ -5336,6 +5336,7 @@ a.period-filter-chip {
     .note-card.expanded {
         min-height: 250px;
         margin-bottom: 20px;
+        padding-bottom: 30px;
     }
 
     .btn-add-note-float {
@@ -5348,6 +5349,19 @@ a.period-filter-chip {
     .note-add-input {
         padding: 12px 15px;
         font-size: 0.85rem;
+        min-width: 0;
+    }
+
+    .note-add-item-bar {
+        gap: 8px;
+    }
+
+    .btn-note-add {
+        padding: 0 15px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }
 
