@@ -2,7 +2,15 @@
     <div class="planner-container">
         <!-- Header Section -->
         <div class="page-header-unified center">
-            <h1>Teacher Planner & Reflection</h1>
+            <div class="header-top">
+                <a href="/my-tasks/{{ $userguru->id }}" class="nav-header-back">
+                    <i class="ph ph-arrow-left"></i>
+                </a>
+                <div class="header-title-container">
+                    <div class="header-main-title">Teacher Planner & Reflection</div>
+                    <div class="header-subtitle">{{ $userguru->name }}</div>
+                </div>
+            </div>
 
             <div class="planner-progress-wrapper">
                 <div class="planner-progress-bar">
@@ -24,12 +32,5 @@
             @endforeach
         </div>
 
-        <!-- Bottom Navigation (Reuse style from my-tasks) -->
-        <div class="bottom-navigation">
-            <a href="/my-tasks/{{ $userguru->id }}" class="nav-btn nav-btn-back">
-                <i class="ph ph-arrow-left"></i>
-                <span>Back</span>
-            </a>
-        </div>
     </div>
 </x-app-layout>

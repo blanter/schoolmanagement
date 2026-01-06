@@ -3,6 +3,9 @@
         <!-- Header Section matching Teacher Planner theme but with Project features -->
         <header class="page-header-unified center">
             <div class="header-top">
+                <a href="/my-tasks/{{ $user->id }}" class="nav-header-back">
+                    <i class="ph ph-arrow-left"></i>
+                </a>
                 <div class="header-title" id="display-month">Januari 2026</div>
                 <div class="calendar-filter-trigger" id="calendar-trigger">
                     <i class="ph-fill ph-calendar"></i>
@@ -90,13 +93,7 @@
             </div>
         </main>
 
-        <!-- Bottom Navigation -->
-        <div class="bottom-navigation">
-            <a href="/my-tasks/{{ $user->id }}" class="nav-btn nav-btn-back">
-                <i class="ph ph-arrow-left"></i>
-                <span>Back</span>
-            </a>
-        </div>
+    </div>
     </div>
 
     <script>

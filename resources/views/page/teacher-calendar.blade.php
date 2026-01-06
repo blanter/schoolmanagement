@@ -3,7 +3,13 @@
         <!-- Header Section matching Teacher Planner theme -->
         <header class="page-header-unified center">
             <div class="header-top">
-                <div class="header-title" id="display-month">Januari 2026</div>
+                <a href="/teacher-planner/{{ $userguru->id }}" class="nav-header-back">
+                    <i class="ph ph-arrow-left"></i>
+                </a>
+                <div class="header-title-container">
+                    <div class="header-main-title">Calendar Note</div>
+                    <div class="header-subtitle" id="display-month">Januari 2026</div>
+                </div>
                 <div class="calendar-filter-trigger" id="calendar-trigger">
                     <i class="ph-fill ph-calendar"></i>
                 </div>
@@ -75,14 +81,6 @@
                 </div>
             </div>
         </main>
-
-        <!-- Bottom Navigation -->
-        <div class="bottom-navigation">
-            <a href="/teacher-planner/{{ $userguru->id }}" class="nav-btn nav-btn-back">
-                <i class="ph ph-arrow-left"></i>
-                <span>Back to Planner</span>
-            </a>
-        </div>
     </div>
 
     <!-- Toast Container -->
