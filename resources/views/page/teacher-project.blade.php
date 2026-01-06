@@ -6,7 +6,10 @@
                 <a href="/my-tasks/{{ $user->id }}" class="nav-header-back">
                     <i class="ph ph-arrow-left"></i>
                 </a>
-                <div class="header-title" id="display-month">Januari 2026</div>
+                <div class="header-title-container">
+                    <div class="header-main-title">Teacher Project</div>
+                    <div class="header-subtitle" id="display-month">Januari 2026</div>
+                </div>
                 <div class="calendar-filter-trigger" id="calendar-trigger">
                     <i class="ph-fill ph-calendar"></i>
                 </div>
@@ -14,7 +17,7 @@
                 <input type="month" id="date-picker" class="date-hidden-input">
             </div>
 
-            <div class="calendar-strip" id="calendar-container">
+            <div class="cal-strip" id="calendar-container">
                 <!-- Populated by JS -->
             </div>
         </header>
@@ -43,21 +46,24 @@
                             <i class="ph-bold ph-file-text"></i>
                         </div>
                         <div class="project-task-label">Rumusan Masalah</div>
-                        <div class="project-check-box {{ auth()->id() == $user->id ? '' : 'disabled-check' }}" @if(auth()->id() == $user->id) onclick="toggleTaskCheck(this)" @endif></div>
+                        <div class="project-check-box {{ auth()->id() == $user->id ? '' : 'disabled-check' }}"
+                            @if(auth()->id() == $user->id) onclick="toggleTaskCheck(this)" @endif></div>
                     </div>
                     <div class="task-item project-task-item">
                         <div class="project-task-icon" style="background: #A0C4FF;">
                             <i class="ph-bold ph-microscope"></i>
                         </div>
                         <div class="project-task-label">Penelitian</div>
-                        <div class="project-check-box {{ auth()->id() == $user->id ? '' : 'disabled-check' }}" @if(auth()->id() == $user->id) onclick="toggleTaskCheck(this)" @endif></div>
+                        <div class="project-check-box {{ auth()->id() == $user->id ? '' : 'disabled-check' }}"
+                            @if(auth()->id() == $user->id) onclick="toggleTaskCheck(this)" @endif></div>
                     </div>
                     <div class="task-item project-task-item">
                         <div class="project-task-icon" style="background: #B9FBC0;">
                             <i class="ph-bold ph-check-square"></i>
                         </div>
                         <div class="project-task-label">Kesimpulan</div>
-                        <div class="project-check-box {{ auth()->id() == $user->id ? '' : 'disabled-check' }}" @if(auth()->id() == $user->id) onclick="toggleTaskCheck(this)" @endif></div>
+                        <div class="project-check-box {{ auth()->id() == $user->id ? '' : 'disabled-check' }}"
+                            @if(auth()->id() == $user->id) onclick="toggleTaskCheck(this)" @endif></div>
                     </div>
                 </div>
             </div>
@@ -97,170 +103,113 @@
         </main>
 
     </div>
+
+    <div class="cal-modal-overlay" id="full-calendar-modal">
+        <div class="cal-modal">
+            <div class="cal-modal-header">
+                <h3><i class="ph-fill ph-calendar"></i> Pilih Tanggal</h3>
+                <button class="cal-close-modal" id="close-calendar-modal"><i class="ph ph-x"></i></button>
+            </div>
+            <div class="cal-modal-body">
+                <div class="cal-month-nav">
+                    <button class="cal-nav-btn" id="prev-month-modal"><i class="ph-bold ph-caret-left"></i></button>
+                    <div class="cal-month-display" id="modal-month-title">Januari 2026</div>
+                    <button class="cal-nav-btn" id="next-month-modal"><i class="ph-bold ph-caret-right"></i></button>
+                </div>
+                <div class="cal-grid" id="modal-calendar-grid"></div>
+            </div>
+        </div>
     </div>
 
     <script>
         $(document).ready(function () {
-            // 1. Initialize Calendar with today
             let currentSelectedDate = new Date();
+            let datesWithPlans = []; // Teacher Project doesn't have dots yet
+
+            // Initialize
             updateCalendarUI(currentSelectedDate);
 
-            // Set initial value for month picker
-            const year = currentSelectedDate.getFullYear();
-            const month = String(currentSelectedDate.getMonth() + 1).padStart(2, '0');
-            $('#date-picker').val(`${year}-${month}`);
-
-            // 2. Tab Switching
+            // Tab Switching
             $('.tab-trigger').on('click', function () {
                 const target = $(this).data('tab');
-
                 $('.tab-trigger').removeClass('active');
                 $(this).addClass('active');
-
                 $('.tab-content-panel').hide();
                 $('#content-' + target).fadeIn(300);
             });
 
-            // 3. Calendar icon click handler - improved for better compatibility
-            $('#calendar-trigger').on('click', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
+            // Events
+            $('#calendar-trigger').on('click', function () { openCalendarModal(currentSelectedDate); });
+            $('#close-calendar-modal, .cal-modal-overlay').on('click', function (e) {
+                if (e.target === this || e.target.closest('#close-calendar-modal')) $('#full-calendar-modal').fadeOut(200);
+            });
+            $('#prev-month-modal').on('click', function () { renderModalCalendar(new Date(parseInt($('#modal-month-title').data('year')), parseInt($('#modal-month-title').data('month')) - 1, 1)); });
+            $('#next-month-modal').on('click', function () { renderModalCalendar(new Date(parseInt($('#modal-month-title').data('year')), parseInt($('#modal-month-title').data('month')) + 1, 1)); });
 
-                const datePicker = document.getElementById('date-picker');
-
-                // Try modern showPicker() method first (Chrome, Edge, Safari 16+)
-                if (datePicker && typeof datePicker.showPicker === 'function') {
-                    try {
-                        datePicker.showPicker();
-                    } catch (error) {
-                        // Fallback if showPicker fails
-                        datePicker.focus();
-                        datePicker.click();
-                    }
-                } else {
-                    // Fallback for older browsers
-                    datePicker.focus();
-                    datePicker.click();
+            function renderModalCalendar(date) {
+                const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+                const dayNames = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+                const year = date.getFullYear();
+                const month = date.getMonth();
+                $('#modal-month-title').text(months[month] + " " + year).data('month', month).data('year', year);
+                const firstDay = new Date(year, month, 1).getDay();
+                const lastDate = new Date(year, month + 1, 0).getDate();
+                const prevLastDate = new Date(year, month, 0).getDate();
+                const today = formatDate(new Date());
+                const sel = formatDate(currentSelectedDate);
+                let html = '';
+                dayNames.forEach(d => html += `<div class="cal-day-name">${d}</div>`);
+                for (let i = firstDay; i > 0; i--) html += `<div class="cal-day other-month">${prevLastDate - i + 1}</div>`;
+                for (let i = 1; i <= lastDate; i++) {
+                    const d = new Date(year, month, i);
+                    const ds = formatDate(d);
+                    const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+                    html += `<div class="cal-day ${ds === today ? 'today-highlight' : ''} ${ds === sel ? 'selected-day' : ''} ${isWeekend ? 'cal-is-weekend' : ''}" onclick="window.navigateFromModal('${ds}')">${i}</div>`;
                 }
-            });
-
-            // 4. Date Picker Filter Logic - using month picker
-            $('#date-picker').on('change', function () {
-                const selectedValue = $(this).val(); // Format: YYYY-MM
-                if (selectedValue) {
-                    const [year, month] = selectedValue.split('-');
-                    const newDate = new Date(year, month - 1, 1);
-                    currentSelectedDate = newDate;
-                    updateCalendarUI(currentSelectedDate);
-                }
-            });
-
-            // 5. Drag to scroll functionality for calendar strip
-            const calendarStrip = document.getElementById('calendar-container');
-            let isDown = false;
-            let startX;
-            let scrollLeft;
-
-            calendarStrip.addEventListener('mousedown', (e) => {
-                isDown = true;
-                calendarStrip.style.cursor = 'grabbing';
-                startX = e.pageX - calendarStrip.offsetLeft;
-                scrollLeft = calendarStrip.scrollLeft;
-            });
-
-            calendarStrip.addEventListener('mouseleave', () => {
-                isDown = false;
-                calendarStrip.style.cursor = 'grab';
-            });
-
-            calendarStrip.addEventListener('mouseup', () => {
-                isDown = false;
-                calendarStrip.style.cursor = 'grab';
-            });
-
-            calendarStrip.addEventListener('mousemove', (e) => {
-                if (!isDown) return;
-                e.preventDefault();
-                const x = e.pageX - calendarStrip.offsetLeft;
-                const walk = (x - startX) * 2; // Scroll speed multiplier
-                calendarStrip.scrollLeft = scrollLeft - walk;
-            });
-
-            // Touch support for mobile
-            let touchStartX = 0;
-            let touchScrollLeft = 0;
-
-            calendarStrip.addEventListener('touchstart', (e) => {
-                touchStartX = e.touches[0].pageX - calendarStrip.offsetLeft;
-                touchScrollLeft = calendarStrip.scrollLeft;
-            }, { passive: true });
-
-            calendarStrip.addEventListener('touchmove', (e) => {
-                const x = e.touches[0].pageX - calendarStrip.offsetLeft;
-                const walk = (x - touchStartX) * 2;
-                calendarStrip.scrollLeft = touchScrollLeft - walk;
-            }, { passive: true });
-        });
-
-        function updateCalendarUI(baseDate) {
-            const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-            const realDays = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
-
-            const year = baseDate.getFullYear();
-            const month = baseDate.getMonth();
-            $('#display-month').text(months[month] + " " + year);
-
-            // Get number of days in the month
-            const lastDay = new Date(year, month + 1, 0).getDate();
-
-            let calendarHtml = '';
-            // Show all days of the selected month
-            for (let i = 1; i <= lastDay; i++) {
-                let d = new Date(year, month, i);
-
-                // Active state: if it matches the baseDate's day
-                let isTarget = i === baseDate.getDate() ? 'active' : '';
-
-                calendarHtml += `
-                    <div class="strip-day" onclick="selectStripDay(this, '${d.toISOString()}')">
-                        <span class="strip-day-name">${realDays[d.getDay()]}</span>
-                        <div class="strip-day-number ${isTarget}">${d.getDate()}</div>
-                    </div>
-                `;
+                $('#modal-calendar-grid').html(html);
             }
-            $('#calendar-container').html(calendarHtml);
 
-            // Auto-scroll to center the active day
-            setTimeout(() => {
-                const container = document.getElementById('calendar-container');
-                const activeDay = container.querySelector('.strip-day-number.active');
-                if (activeDay && activeDay.parentElement) {
-                    const dayElement = activeDay.parentElement;
-                    const containerWidth = container.offsetWidth;
-                    const dayLeft = dayElement.offsetLeft;
-                    const dayWidth = dayElement.offsetWidth;
-                    const scrollPosition = dayLeft - (containerWidth / 2) + (dayWidth / 2);
-                    container.scrollTo({
-                        left: scrollPosition,
-                        behavior: 'smooth'
-                    });
+            function openCalendarModal(baseDate) { $('#full-calendar-modal').css('display', 'flex').hide().fadeIn(200); renderModalCalendar(baseDate); }
+            window.navigateFromModal = function (ds) { currentSelectedDate = new Date(ds); updateCalendarUI(currentSelectedDate); $('#full-calendar-modal').fadeOut(200); };
+
+            function updateCalendarUI(baseDate) {
+                const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+                const days = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+                const y = baseDate.getFullYear(), m = baseDate.getMonth(), today = formatDate(new Date());
+                $('#display-month').text(months[m] + " " + y);
+                const last = new Date(y, m + 1, 0).getDate();
+                let html = '';
+                for (let i = 1; i <= last; i++) {
+                    const d = new Date(y, m, i), ds = formatDate(d), isA = i === baseDate.getDate() ? 'active' : '', hasP = datesWithPlans.includes(ds);
+                    const showW = (d.getDay() === 1 || i === 1), wN = Math.ceil((i + new Date(y, m, 1).getDay() - 1) / 7);
+                    const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+                    html += `
+                        <div class="cal-strip-day ${d.getDay() === 1 ? 'week-start' : ''} ${isWeekend ? 'cal-is-weekend' : ''}" onclick="window.selectDay(this, '${ds}')">
+                            ${showW ? `<span class="cal-week-marker">W${wN}</span>` : ''}
+                            <span class="strip-day-name">${days[d.getDay()]}</span>
+                            <div class="strip-day-number ${isA} ${ds === today ? 'today' : ''}">${i}</div>
+                            ${hasP ? '<div class="cal-note-dot"></div>' : ''}
+                        </div>`;
                 }
-            }, 100);
-        }
+                $('#calendar-container').html(html);
+                setTimeout(() => {
+                    const active = document.querySelector('.strip-day-number.active');
+                    if (active) {
+                        const container = document.getElementById('calendar-container');
+                        container.scrollTo({ left: active.parentElement.offsetLeft - (container.offsetWidth / 2) + 20, behavior: 'smooth' });
+                    }
+                }, 100);
+            }
 
-        function selectStripDay(el, dateStr) {
-            $('.strip-day-number').removeClass('active');
-            $(el).find('.strip-day-number').addClass('active');
+            window.selectDay = function (el, ds) {
+                currentSelectedDate = new Date(ds);
+                $('.strip-day-number').removeClass('active');
+                $(el).find('.strip-day-number').addClass('active');
+                console.log("Selected date:", ds);
+            };
 
-            // Pulse effect
-            $(el).find('.strip-day-number').css('transform', 'scale(1.1)');
-            setTimeout(() => {
-                $(el).find('.strip-day-number').css('transform', 'scale(1)');
-            }, 200);
-
-            // Here you would typically load data for this specific date
-            console.log("Selected date:", new Date(dateStr).toLocaleDateString('id-ID'));
-        }
+            function formatDate(date) { return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`; }
+        });
 
         function toggleTaskCheck(el) {
             $(el).toggleClass('checked');
