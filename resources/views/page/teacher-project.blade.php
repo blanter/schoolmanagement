@@ -8,17 +8,8 @@
                 </a>
                 <div class="header-title-container">
                     <div class="header-main-title">Teacher Project</div>
-                    <div class="header-subtitle" id="display-month">Januari 2026</div>
+                    <div class="header-subtitle">{{ $user->name }}</div>
                 </div>
-                <div class="calendar-filter-trigger" id="calendar-trigger">
-                    <i class="ph-fill ph-calendar"></i>
-                </div>
-                <!-- Hidden date picker for filter -->
-                <input type="month" id="date-picker" class="date-hidden-input">
-            </div>
-
-            <div class="cal-strip" id="calendar-container">
-                <!-- Populated by JS -->
             </div>
         </header>
 
@@ -32,39 +23,79 @@
 
             <!-- Tab Content: Penelitian -->
             <div id="content-penelitian" class="tab-content-panel">
+                <div
+                    style="margin-bottom: 20px; padding: 15px; background: rgba(125, 82, 222, 0.05); border-radius: 15px; border-left: 4px solid #7D52DE;">
+                    <div style="font-weight: 700; color: #7D52DE; font-size: 14px;">Periode Penelitian</div>
+                    <div style="color: #4B5563; font-size: 12px; margin-top: 2px;">
+                        @if($semester == 1)
+                            Juli - Desember {{ $baseYear }} (Semester 1)
+                        @else
+                            Januari - Juni {{ $baseYear + 1 }} (Semester 2)
+                        @endif
+                    </div>
+                </div>
+
                 <div class="task-list">
                     <div class="task-item project-task-item">
                         <div class="project-task-icon" style="background: #FEB2D3;">
                             <i class="ph-bold ph-book-open"></i>
                         </div>
                         <div class="project-task-label">Judul Pendahuluan</div>
-                        <div class="project-check-box {{ auth()->id() == $user->id ? '' : 'disabled-check' }}"
-                            @if(auth()->id() == $user->id) onclick="toggleTaskCheck(this)" @endif></div>
+                        <div class="project-check-box {{ auth()->id() == $user->id ? '' : 'disabled-check' }} {{ $project->judul_check ? 'checked' : '' }}"
+                            @if(auth()->id() == $user->id) onclick="toggleResearchCheck(this, 'judul_check')" @endif>
+                            {!! $project->judul_check ? '<i class="ph-bold ph-check"></i>' : '' !!}
+                        </div>
                     </div>
                     <div class="task-item project-task-item">
                         <div class="project-task-icon" style="background: #FFE7A0;">
                             <i class="ph-bold ph-file-text"></i>
                         </div>
                         <div class="project-task-label">Rumusan Masalah</div>
-                        <div class="project-check-box {{ auth()->id() == $user->id ? '' : 'disabled-check' }}"
-                            @if(auth()->id() == $user->id) onclick="toggleTaskCheck(this)" @endif></div>
+                        <div class="project-check-box {{ auth()->id() == $user->id ? '' : 'disabled-check' }} {{ $project->rumusan_check ? 'checked' : '' }}"
+                            @if(auth()->id() == $user->id) onclick="toggleResearchCheck(this, 'rumusan_check')" @endif>
+                            {!! $project->rumusan_check ? '<i class="ph-bold ph-check"></i>' : '' !!}
+                        </div>
                     </div>
                     <div class="task-item project-task-item">
                         <div class="project-task-icon" style="background: #A0C4FF;">
                             <i class="ph-bold ph-microscope"></i>
                         </div>
                         <div class="project-task-label">Penelitian</div>
-                        <div class="project-check-box {{ auth()->id() == $user->id ? '' : 'disabled-check' }}"
-                            @if(auth()->id() == $user->id) onclick="toggleTaskCheck(this)" @endif></div>
+                        <div class="project-check-box {{ auth()->id() == $user->id ? '' : 'disabled-check' }} {{ $project->penelitian_check ? 'checked' : '' }}"
+                            @if(auth()->id() == $user->id) onclick="toggleResearchCheck(this, 'penelitian_check')" @endif>
+                            {!! $project->penelitian_check ? '<i class="ph-bold ph-check"></i>' : '' !!}
+                        </div>
                     </div>
                     <div class="task-item project-task-item">
                         <div class="project-task-icon" style="background: #B9FBC0;">
                             <i class="ph-bold ph-check-square"></i>
                         </div>
                         <div class="project-task-label">Kesimpulan</div>
-                        <div class="project-check-box {{ auth()->id() == $user->id ? '' : 'disabled-check' }}"
-                            @if(auth()->id() == $user->id) onclick="toggleTaskCheck(this)" @endif></div>
+                        <div class="project-check-box {{ auth()->id() == $user->id ? '' : 'disabled-check' }} {{ $project->kesimpulan_check ? 'checked' : '' }}"
+                            @if(auth()->id() == $user->id) onclick="toggleResearchCheck(this, 'kesimpulan_check')" @endif>
+                            {!! $project->kesimpulan_check ? '<i class="ph-bold ph-check"></i>' : '' !!}
+                        </div>
                     </div>
+                </div>
+
+                <div
+                    style="margin-top: 25px; padding: 18px; background: #fff; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #F3F4F6;">
+                    <label class="field-label"
+                        style="font-weight: 700; font-size: 14px; color: #4B5563; display: block; margin-bottom: 10px;">
+                        <i class="ph-bold ph-link"
+                            style="color: #7D52DE; font-size: 18px; vertical-align: middle; margin-right: 5px;"></i>
+                        Lembar Link Penelitian
+                    </label>
+                    <input type="text" id="research_link" class="project-input"
+                        placeholder="Masukkan link google drive / dokumen penelitian..."
+                        value="{{ $project->research_link }}"
+                        style="width: 100%; border: 1.5px solid #F3F4F6; border-radius: 12px; padding: 12px 15px; font-size: 14px;"
+                        @if(auth()->id() == $user->id) onchange="saveResearchField('research_link', this.value)" @endif
+                        @if(auth()->id() != $user->id) disabled @endif>
+                    <p
+                        style="font-size: 11px; color: #9CA3AF; margin-top: 10px; display: flex; align-items: center; gap: 5px;">
+                        <i class="ph ph-info"></i> Link akan tersimpan secara otomatis setelah Anda selesai mengetik.
+                    </p>
                 </div>
             </div>
 
@@ -104,31 +135,14 @@
 
     </div>
 
-    <div class="cal-modal-overlay" id="full-calendar-modal">
-        <div class="cal-modal">
-            <div class="cal-modal-header">
-                <h3><i class="ph-fill ph-calendar"></i> Pilih Tanggal</h3>
-                <button class="cal-close-modal" id="close-calendar-modal"><i class="ph ph-x"></i></button>
-            </div>
-            <div class="cal-modal-body">
-                <div class="cal-month-nav">
-                    <button class="cal-nav-btn" id="prev-month-modal"><i class="ph-bold ph-caret-left"></i></button>
-                    <div class="cal-month-display" id="modal-month-title">Januari 2026</div>
-                    <button class="cal-nav-btn" id="next-month-modal"><i class="ph-bold ph-caret-right"></i></button>
-                </div>
-                <div class="cal-grid" id="modal-calendar-grid"></div>
-            </div>
-        </div>
-    </div>
+    <div id="toast-container" style="position: fixed; bottom: 85px; right: 20px; z-index: 9999;"></div>
 
     <script>
+        $.ajaxSetup({
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+        });
+
         $(document).ready(function () {
-            let currentSelectedDate = new Date();
-            let datesWithPlans = []; // Teacher Project doesn't have dots yet
-
-            // Initialize
-            updateCalendarUI(currentSelectedDate);
-
             // Tab Switching
             $('.tab-trigger').on('click', function () {
                 const target = $(this).data('tab');
@@ -137,87 +151,55 @@
                 $('.tab-content-panel').hide();
                 $('#content-' + target).fadeIn(300);
             });
-
-            // Events
-            $('#calendar-trigger').on('click', function () { openCalendarModal(currentSelectedDate); });
-            $('#close-calendar-modal, .cal-modal-overlay').on('click', function (e) {
-                if (e.target === this || e.target.closest('#close-calendar-modal')) $('#full-calendar-modal').fadeOut(200);
-            });
-            $('#prev-month-modal').on('click', function () { renderModalCalendar(new Date(parseInt($('#modal-month-title').data('year')), parseInt($('#modal-month-title').data('month')) - 1, 1)); });
-            $('#next-month-modal').on('click', function () { renderModalCalendar(new Date(parseInt($('#modal-month-title').data('year')), parseInt($('#modal-month-title').data('month')) + 1, 1)); });
-
-            function renderModalCalendar(date) {
-                const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-                const dayNames = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
-                const year = date.getFullYear();
-                const month = date.getMonth();
-                $('#modal-month-title').text(months[month] + " " + year).data('month', month).data('year', year);
-                const firstDay = new Date(year, month, 1).getDay();
-                const lastDate = new Date(year, month + 1, 0).getDate();
-                const prevLastDate = new Date(year, month, 0).getDate();
-                const today = formatDate(new Date());
-                const sel = formatDate(currentSelectedDate);
-                let html = '';
-                dayNames.forEach(d => html += `<div class="cal-day-name">${d}</div>`);
-                for (let i = firstDay; i > 0; i--) html += `<div class="cal-day other-month">${prevLastDate - i + 1}</div>`;
-                for (let i = 1; i <= lastDate; i++) {
-                    const d = new Date(year, month, i);
-                    const ds = formatDate(d);
-                    const isWeekend = d.getDay() === 0 || d.getDay() === 6;
-                    html += `<div class="cal-day ${ds === today ? 'today-highlight' : ''} ${ds === sel ? 'selected-day' : ''} ${isWeekend ? 'cal-is-weekend' : ''}" onclick="window.navigateFromModal('${ds}')">${i}</div>`;
-                }
-                $('#modal-calendar-grid').html(html);
-            }
-
-            function openCalendarModal(baseDate) { $('#full-calendar-modal').css('display', 'flex').hide().fadeIn(200); renderModalCalendar(baseDate); }
-            window.navigateFromModal = function (ds) { currentSelectedDate = new Date(ds); updateCalendarUI(currentSelectedDate); $('#full-calendar-modal').fadeOut(200); };
-
-            function updateCalendarUI(baseDate) {
-                const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-                const days = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
-                const y = baseDate.getFullYear(), m = baseDate.getMonth(), today = formatDate(new Date());
-                $('#display-month').text(months[m] + " " + y);
-                const last = new Date(y, m + 1, 0).getDate();
-                let html = '';
-                for (let i = 1; i <= last; i++) {
-                    const d = new Date(y, m, i), ds = formatDate(d), isA = i === baseDate.getDate() ? 'active' : '', hasP = datesWithPlans.includes(ds);
-                    const showW = (d.getDay() === 1 || i === 1), wN = Math.ceil((i + new Date(y, m, 1).getDay() - 1) / 7);
-                    const isWeekend = d.getDay() === 0 || d.getDay() === 6;
-                    html += `
-                        <div class="cal-strip-day ${d.getDay() === 1 ? 'week-start' : ''} ${isWeekend ? 'cal-is-weekend' : ''}" onclick="window.selectDay(this, '${ds}')">
-                            ${showW ? `<span class="cal-week-marker">W${wN}</span>` : ''}
-                            <span class="strip-day-name">${days[d.getDay()]}</span>
-                            <div class="strip-day-number ${isA} ${ds === today ? 'today' : ''}">${i}</div>
-                            ${hasP ? '<div class="cal-note-dot"></div>' : ''}
-                        </div>`;
-                }
-                $('#calendar-container').html(html);
-                setTimeout(() => {
-                    const active = document.querySelector('.strip-day-number.active');
-                    if (active) {
-                        const container = document.getElementById('calendar-container');
-                        container.scrollTo({ left: active.parentElement.offsetLeft - (container.offsetWidth / 2) + 20, behavior: 'smooth' });
-                    }
-                }, 100);
-            }
-
-            window.selectDay = function (el, ds) {
-                currentSelectedDate = new Date(ds);
-                $('.strip-day-number').removeClass('active');
-                $(el).find('.strip-day-number').addClass('active');
-                console.log("Selected date:", ds);
-            };
-
-            function formatDate(date) { return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`; }
         });
 
-        function toggleTaskCheck(el) {
+        // Research Project Functions
+        window.toggleResearchCheck = function (el, field) {
+            const isChecked = !$(el).hasClass('checked');
             $(el).toggleClass('checked');
-            if ($(el).hasClass('checked')) {
+
+            if (isChecked) {
                 $(el).html('<i class="ph-bold ph-check"></i>');
             } else {
                 $(el).empty();
             }
+
+            saveResearchField(field, isChecked ? 1 : 0);
+        }
+
+        window.saveResearchField = function (field, value) {
+            $.ajax({
+                url: '{{ route("teacher.research.save") }}',
+                method: 'POST',
+                data: {
+                    user_id: {{ $user->id }},
+                    field: field,
+                    value: value
+                },
+                success: function (res) {
+                    if (res.success) {
+                        showToast('Data diperbarui', 'success');
+                    }
+                },
+                error: function () {
+                    showToast('Gagal menyimpan data', 'error');
+                }
+            });
+        }
+
+        function showToast(msg, type) {
+            const id = 'toast-' + Date.now();
+            const bg = type === 'success' ? '#ECFDF5' : '#FEF2F2';
+            const color = type === 'success' ? '#065F46' : '#991B1B';
+            const borderColor = type === 'success' ? '#10B981' : '#EF4444';
+
+            $('#toast-container').append(`
+                <div id="${id}" style="margin-bottom:10px; background:${bg}; color:${color}; padding:14px 22px; border-radius:16px; box-shadow:0 10px 15px -3px rgba(0,0,0,0.1); font-weight:700; font-size: 13px; border-left: 5px solid ${borderColor}; display: flex; align-items: center; gap: 10px; animation: slideIn 0.3s ease-out;">
+                    <i class="ph-fill ph-${type === 'success' ? 'check-circle' : 'warning-circle'}" style="font-size: 18px;"></i>
+                    ${msg}
+                </div>
+            `);
+            setTimeout(() => { $(`#${id}`).fadeOut(300, function () { $(this).remove(); }); }, 2500);
         }
     </script>
 </x-app-layout>

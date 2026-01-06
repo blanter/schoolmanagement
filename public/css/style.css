@@ -4326,7 +4326,7 @@ a.user-lapor {
 
     .header-title-container {
         width: 100%;
-        padding: 0 80px 0 45px;
+        padding: 0 45px;
         /* Give space for absolute positioned buttons */
         box-sizing: border-box;
         overflow: hidden;

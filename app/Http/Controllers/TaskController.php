@@ -443,7 +443,7 @@ class TaskController extends Controller
 
         $plannerItems = [
             [
-                'name' => 'Calendar',
+                'name' => 'Calendar Note',
                 'icon' => 'ph-bold ph-calendar',
                 'color' => '#FEB2D3', // Light Pink
                 'route' => '/teacher-calendar/' . $userguru->id
@@ -481,6 +481,62 @@ class TaskController extends Controller
     public function teacherProject($id)
     {
         $user = User::findOrFail($id);
-        return view('page.teacher-project', compact('user'));
+
+        $month = now()->month;
+        $currentYear = now()->year;
+
+        if ($month <= 6) {
+            $semester = 2; // Semester 2: Jan - Jun
+            $baseYear = $currentYear - 1;
+            $academicYearLabel = ($currentYear - 1) . '/' . $currentYear;
+        } else {
+            $semester = 1; // Semester 1: Jul - Des
+            $baseYear = $currentYear;
+            $academicYearLabel = $currentYear . '/' . ($currentYear + 1);
+        }
+
+        $project = \App\Models\TeacherResearchProject::firstOrCreate(
+            ['user_id' => $user->id, 'year' => $baseYear, 'semester' => $semester],
+            []
+        );
+
+        return view('page.teacher-project', compact('user', 'project', 'baseYear', 'semester', 'academicYearLabel'));
+    }
+
+    public function saveResearchProject(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'user_id' => 'required|integer',
+                'field' => 'required|string',
+                'value' => 'required'
+            ]);
+
+            // Map field names if they come from the UI differently, but I'll use DB names directly in JS
+
+            $month = now()->month;
+            $currentYear = now()->year;
+
+            if ($month <= 6) {
+                $semester = 2;
+                $baseYear = $currentYear - 1;
+            } else {
+                $semester = 1;
+                $baseYear = $currentYear;
+            }
+
+            if (Auth::id() != $validated['user_id']) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            }
+
+            $project = \App\Models\TeacherResearchProject::updateOrCreate(
+                ['user_id' => $validated['user_id'], 'year' => $baseYear, 'semester' => $semester],
+                [$validated['field'] => $validated['value']]
+            );
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
     }
 }

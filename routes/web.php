@@ -31,6 +31,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/user-tasks/{task}/update', [TaskController::class, 'updateUserTask'])->name('tasks.update');
     Route::get('/teacher-planner/{id}', [TaskController::class, 'teacherPlanner'])->name('tasks.planner');
     Route::get('/teacher-project/{id}', [TaskController::class, 'teacherProject'])->name('tasks.project');
+    Route::post('/teacher-research/save', [TaskController::class, 'saveResearchProject'])->name('teacher.research.save');
     Route::post('/task-skip', [TaskController::class, 'toggleSkip'])->name('task.skip');
 
     // Teacher Calendar & Notes
