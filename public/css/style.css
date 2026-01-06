@@ -3933,3 +3933,17 @@ a.user-lapor {
         left: 5px;
     }
 }
+
+/* Weekend Styling */
+.cal-is-weekend {
+    opacity: 0.5;
+    background: rgb(255 255 255 / 20%) !important;
+}
+
+.cal-strip-day.cal-is-weekend {
+    border-radius: 12px;
+}
+
+.cal-day.cal-is-weekend {
+    background: #F9FAFB !important;
+}

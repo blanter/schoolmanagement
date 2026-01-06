@@ -188,9 +188,12 @@
                 dayNames.forEach(d => html += `<div class="cal-day-name">${d}</div>`);
                 for (let i = firstDay; i > 0; i--) html += `<div class="cal-day other-month">${prevLastDate - i + 1}</div>`;
                 for (let i = 1; i <= lastDate; i++) {
-                    const ds = formatDate(new Date(year, month, i));
+                    const d = new Date(year, month, i);
+                    const ds = formatDate(d);
                     const hasP = datesWithPlans.includes(ds);
-                    html += `<div class="cal-day ${ds === today ? 'today-highlight' : ''} ${ds === sel ? 'selected-day' : ''} ${hasP ? 'has-note-marker' : ''}" onclick="window.navigateFromModal('${ds}')">${i}</div>`;
+                    const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+
+                    html += `<div class="cal-day ${ds === today ? 'today-highlight' : ''} ${ds === sel ? 'selected-day' : ''} ${hasP ? 'has-note-marker' : ''} ${isWeekend ? 'cal-is-weekend' : ''}" onclick="window.navigateFromModal('${ds}')">${i}</div>`;
                 }
                 $('#modal-calendar-grid').html(html);
             }
@@ -307,7 +310,8 @@
                 for (let i = 1; i <= last; i++) {
                     const d = new Date(y, m, i), ds = formatDate(d), isA = i === baseDate.getDate() ? 'active' : '', hasP = datesWithPlans.includes(ds);
                     const showW = (d.getDay() === 1 || i === 1), wN = Math.ceil((i + new Date(y, m, 1).getDay() - 1) / 7);
-                    html += `<div class="cal-strip-day ${d.getDay() === 1 ? 'week-start' : ''}" onclick="window.selectDay(this, '${ds}')">${showW ? `<span class="cal-week-marker">W${wN}</span>` : ''}<span class="strip-day-name">${days[d.getDay()]}</span><div class="strip-day-number ${isA} ${ds === today ? 'today' : ''}">${i}</div>${hasP ? '<div class="cal-note-dot"></div>' : ''}</div>`;
+                    const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+                    html += `<div class="cal-strip-day ${d.getDay() === 1 ? 'week-start' : ''} ${isWeekend ? 'cal-is-weekend' : ''}" onclick="window.selectDay(this, '${ds}')">${showW ? `<span class="cal-week-marker">W${wN}</span>` : ''}<span class="strip-day-name">${days[d.getDay()]}</span><div class="strip-day-number ${isA} ${ds === today ? 'today' : ''}">${i}</div>${hasP ? '<div class="cal-note-dot"></div>' : ''}</div>`;
                 }
                 $('#calendar-container').html(html);
                 setTimeout(() => { const active = document.querySelector('.strip-day-number.active'); if (active) document.getElementById('calendar-container').scrollTo({ left: active.parentElement.offsetLeft - (document.getElementById('calendar-container').offsetWidth / 2) + 20, behavior: 'smooth' }); }, 100);
