@@ -3996,6 +3996,7 @@ a.user-lapor {
 .month-nav-btn:active {
     transform: translateY(0);
 }
+
 /* Responsive Month Navigator */
 @media (max-width: 768px) {
     .month-navigator-bar {
@@ -4039,4 +4040,202 @@ a.user-lapor {
 
 .custom-dropdown::-webkit-scrollbar-track {
     background: transparent;
+}
+
+/* Monthly Evaluation Styles */
+.eval-container {
+    padding: 0 20px 40px;
+}
+
+.eval-card {
+    background: white;
+    border-radius: 25px;
+    border: 1.5px solid #F3F4F6;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.eval-card-nonguru {
+    background: #F9FAFB !important;
+    position: sticky;
+    top: 100px;
+}
+
+.eval-section-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #1F2937;
+    margin-bottom: 8px !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.eval-section-title i {
+    color: #7F56D9;
+}
+
+.eval-section-desc {
+    font-size: 13px;
+    color: #6B7280;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    white-space: pre-line;
+}
+
+.eval-field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #4B5563;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.eval-guru-editor {
+    background: #F9FAFB;
+    border: 1.5px solid #F3F4F6;
+    padding: 15px;
+    transition: all 0.2s;
+    min-height: 120px;
+    border-radius: 16px;
+}
+
+.eval-guru-editor:focus {
+    background: #fff;
+    border-color: #7F56D9;
+    box-shadow: 0 0 0 4px rgba(127, 86, 217, 0.1);
+    outline: none;
+}
+
+.eval-sticky-actions {
+    position: sticky;
+    bottom: 85px;
+    display: flex;
+    justify-content: flex-end;
+    z-index: 10;
+}
+
+.eval-btn-save-main-shadow {
+    box-shadow: 0 10px 25px rgba(127, 86, 217, 0.3);
+}
+
+.eval-nonguru-list {
+    max-height: calc(100vh - 350px);
+    overflow-y: auto;
+}
+
+.eval-card-nonguru .eval-section-title i {
+    color: #10B981;
+}
+
+.eval-nonguru-item {
+    padding: 15px;
+    background: white;
+    border-radius: 16px;
+    margin-bottom: 12px;
+    border: 1px solid #F3F4F6;
+}
+
+.eval-nonguru-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 5px;
+}
+
+.eval-nonguru-item-title {
+    font-weight: 800;
+    color: #1F2937;
+    font-size: 14px;
+}
+
+.eval-nonguru-item-desc {
+    font-size: 13px;
+    color: #6B7280;
+    line-height: 1.4;
+}
+
+.eval-modal-field {
+    margin-bottom: 20px;
+}
+
+.eval-modal-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #4B5563;
+    margin-bottom: 8px;
+}
+
+@media (max-width: 1024px) {
+    .eval-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .eval-card-nonguru {
+        position: static !important;
+    }
+}
+
+/* Modal & Utility Styles for Evaluation Page */
+.eval-modal-content {
+    width: 500px;
+    max-width: 95%;
+}
+
+.eval-modal-body-pad {
+    padding: 20px;
+}
+
+.eval-input-full {
+    width: 100%;
+}
+
+.eval-btn-small {
+    padding: 6px 12px;
+    font-size: 11px;
+    border-radius: 8px;
+    margin-top: -10px;
+}
+
+.eval-nonguru-item-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.eval-btn-icon-edit {
+    border: none;
+    background: #F3F4F6;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #7F56D9;
+}
+
+.eval-btn-icon-delete {
+    border: none;
+    background: #FEE2E2;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #EF4444;
+}
+
+/* Common utility classes */
+.flex-center-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.margin-top-25 {
+    margin-top: 25px;
 }

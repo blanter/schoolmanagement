@@ -12,6 +12,10 @@ use App\Models\TaskCheck;
 use App\Models\TaskSkip;
 use App\Models\Point;
 use App\Models\Laporan;
+use App\Models\TeacherWeeklyPlan;
+use App\Models\TeacherDailyDetail;
+use App\Models\TeacherStudentProgress;
+use App\Models\TeacherMonthlyEvaluation;
 
 class TaskController extends Controller
 {
@@ -390,27 +394,52 @@ class TaskController extends Controller
     {
         $userguru = User::findOrFail($id);
         $user = Auth::user();
+        // --- Calculation for Teacher Planner Progress ---
+        // We calculate each module out of 100%, then average them (total / 4).
 
-        // Hitung persentase seluruh tugas (Daily, Weekly, Monthly) untuk periode saat ini
-        $dailyTasksCount = Task::where('user_id', $userguru->id)->where('jenis', 'days')->count();
-        $weeklyTasksCount = Task::where('user_id', $userguru->id)->where('jenis', 'week')->count();
-        $monthlyTasksCount = Task::where('user_id', $userguru->id)->where('jenis', 'month')->count();
+        // 1. Weekly Planner (Days filled in current month vs total weekdays in current month)
+        $startOfMonth = now()->startOfMonth();
+        $endOfMonth = now()->endOfMonth();
+        $totalWeekdays = 0;
+        $filledWeekdays = 0;
 
-        $doneDaily = TaskCheck::where('user_id', $userguru->id)->where('jenis', 'days')
-            ->whereDate('tanggal', now()->toDateString())->count();
+        for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay()) {
+            if ($date->isWeekday()) {
+                $totalWeekdays++;
+                $hasPlan = TeacherWeeklyPlan::where('user_id', $userguru->id)
+                    ->whereDate('tanggal', $date->toDateString())
+                    ->exists();
+                if ($hasPlan)
+                    $filledWeekdays++;
+            }
+        }
+        $weeklyProgress = $totalWeekdays > 0 ? ($filledWeekdays / $totalWeekdays) * 100 : 0;
 
-        $doneWeekly = TaskCheck::where('user_id', $userguru->id)->where('jenis', 'week')
-            ->whereBetween('tanggal', [now()->startOfWeek(), now()->endOfWeek()])->count();
+        // 2. Daily Details (Current Month - Boolean 0 or 100)
+        $hasDaily = TeacherDailyDetail::where('user_id', $userguru->id)
+            ->where('year', now()->year)
+            ->where('month', now()->month)
+            ->whereNotNull('note')
+            ->where('note', '!=', '')
+            ->exists();
+        $dailyProgress = $hasDaily ? 100 : 0;
 
-        $doneMonthly = TaskCheck::where('user_id', $userguru->id)->where('jenis', 'month')
-            ->whereYear('tanggal', now()->year)->whereMonth('tanggal', now()->month)->count();
+        // 3. Student Progress (Current Month - Boolean 0 or 100)
+        $hasStudentProgress = TeacherStudentProgress::where('user_id', $userguru->id)
+            ->where('year', now()->year)
+            ->where('month', now()->month)
+            ->exists();
+        $studentProgressValue = $hasStudentProgress ? 100 : 0;
 
-        $totalPossible = $dailyTasksCount + $weeklyTasksCount + $monthlyTasksCount;
-        $totalDone = $doneDaily + $doneWeekly + $doneMonthly;
+        // 4. Monthly Evaluation (Current Month - Boolean 0 or 100)
+        $hasEvaluation = TeacherMonthlyEvaluation::where('user_id', $userguru->id)
+            ->where('year', now()->year)
+            ->where('month', now()->month)
+            ->exists();
+        $evaluationProgress = $hasEvaluation ? 100 : 0;
 
-        $completionPercentage = $totalPossible > 0
-            ? round(($totalDone / $totalPossible) * 100)
-            : 0;
+        // Final Average
+        $completionPercentage = round(($weeklyProgress + $dailyProgress + $studentProgressValue + $evaluationProgress) / 4);
 
         $plannerItems = [
             [

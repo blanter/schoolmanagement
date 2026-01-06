@@ -38,42 +38,43 @@
 
                     <div class="note-form-card">
                         @if(auth()->id() == $userguru->id)
-                        <!-- WYSIWYG Toolbar -->
-                        <div class="note-toolbar">
-                            <button type="button" class="note-format-btn" data-cmd="bold" title="Bold"><i
-                                    class="ph-bold ph-text-b"></i></button>
-                            <button type="button" class="note-format-btn" data-cmd="italic" title="Italic"><i
-                                    class="ph-bold ph-text-italic"></i></button>
-                            <button type="button" class="note-format-btn" data-cmd="underline" title="Underline"><i
-                                    class="ph-bold ph-text-underline"></i></button>
-                            <div class="note-toolbar-divider"></div>
-                            <button type="button" class="note-format-btn" data-cmd="insertUnorderedList"
-                                title="Bullet List"><i class="ph-bold ph-list-bullets"></i></button>
-                            <button type="button" class="note-format-btn" data-cmd="insertOrderedList"
-                                title="Numbered List"><i class="ph-bold ph-list-numbers"></i></button>
-                            <div class="note-toolbar-divider"></div>
-                            <button type="button" class="note-format-btn" data-cmd="createLink" title="Insert Link"><i
-                                    class="ph-bold ph-link"></i></button>
-                            <button type="button" class="note-format-btn" data-cmd="unlink" title="Remove Link"><i
-                                    class="ph-bold ph-link-break"></i></button>
-                        </div>
+                            <!-- WYSIWYG Toolbar -->
+                            <div class="note-toolbar">
+                                <button type="button" class="note-format-btn" data-cmd="bold" title="Bold"><i
+                                        class="ph-bold ph-text-b"></i></button>
+                                <button type="button" class="note-format-btn" data-cmd="italic" title="Italic"><i
+                                        class="ph-bold ph-text-italic"></i></button>
+                                <button type="button" class="note-format-btn" data-cmd="underline" title="Underline"><i
+                                        class="ph-bold ph-text-underline"></i></button>
+                                <div class="note-toolbar-divider"></div>
+                                <button type="button" class="note-format-btn" data-cmd="insertUnorderedList"
+                                    title="Bullet List"><i class="ph-bold ph-list-bullets"></i></button>
+                                <button type="button" class="note-format-btn" data-cmd="insertOrderedList"
+                                    title="Numbered List"><i class="ph-bold ph-list-numbers"></i></button>
+                                <div class="note-toolbar-divider"></div>
+                                <button type="button" class="note-format-btn" data-cmd="createLink" title="Insert Link"><i
+                                        class="ph-bold ph-link"></i></button>
+                                <button type="button" class="note-format-btn" data-cmd="unlink" title="Remove Link"><i
+                                        class="ph-bold ph-link-break"></i></button>
+                            </div>
                         @endif
 
                         <!-- Content Editable div -->
-                        <div id="daily-detail-editor" class="note-editor" 
+                        <div id="daily-detail-editor" class="note-editor"
                             contenteditable="{{ auth()->id() == $userguru->id ? 'true' : 'false' }}"
                             style="min-height: 400px;"
-                            data-placeholder="{{ auth()->id() == $userguru->id ? 'Tuliskan detail atau rencana bulanan di sini...' : 'Belum ada detail untuk bulan ini.' }}"></div>
+                            data-placeholder="{{ auth()->id() == $userguru->id ? 'Tuliskan detail atau rencana bulanan di sini...' : 'Belum ada detail untuk bulan ini.' }}">
+                        </div>
 
                         @if(auth()->id() == $userguru->id)
-                        <div class="cal-form-actions">
-                            <button id="clear-detail-btn" class="btn-cal-secondary">
-                                <i class="ph-bold ph-trash"></i> Hapus
-                            </button>
-                            <button id="save-detail-btn" class="btn-cal-primary">
-                                <i class="ph-bold ph-floppy-disk"></i> Simpan Detail
-                            </button>
-                        </div>
+                            <div class="cal-form-actions">
+                                <button id="clear-detail-btn" class="btn-cal-secondary">
+                                    <i class="ph-bold ph-trash"></i> Hapus
+                                </button>
+                                <button id="save-detail-btn" class="btn-cal-primary">
+                                    <i class="ph-bold ph-floppy-disk"></i> Simpan Detail
+                                </button>
+                            </div>
                         @endif
                     </div>
                 </div>

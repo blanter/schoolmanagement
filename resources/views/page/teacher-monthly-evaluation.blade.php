@@ -25,39 +25,49 @@
         </header>
 
         <main class="project-main-content">
-            <div class="evaluation-container" style="padding: 0 20px 40px;">
-                <div class="evaluation-grid">
+            <div class="eval-container">
+                <div class="eval-grid">
                     <!-- LEFT COLUMN: GURU EVALUATION (FIXED) -->
                     <div class="evaluation-guru-section">
                         @php
                             $sections = [
                                 'Monthly Evaluation' => [
-                                    ['label' => 'Evaluasi', 'id' => 'evaluasi'],
-                                    ['label' => 'Student Progress', 'id' => 'student_progress'],
+                                    'desc' => 'Fokus: Penilaian terhadap keberhasilan atau efektivitas suatu hal berdasarkan kriteria tertentu. Tujuan: Menentukan apakah sesuatu berjalan sesuai harapan dan bagaimana perbaikannya. Contoh: Guru mengevaluasi hasil ujian siswa untuk melihat apakah metode pengajaran yang digunakan efektif / sejauh apa budi pekerti anak-anak berkembang dengan media pembelajaran operasi semut, mencintai teman, menghormati guru, dst. ',
+                                    'fields' => [
+                                        ['label' => 'Evaluasi', 'id' => 'evaluasi'],
+                                        ['label' => 'Student Progress', 'id' => 'student_progress'],
+                                    ]
                                 ],
                                 'Monthly Review' => [
-                                    ['label' => 'Review', 'id' => 'review'],
+                                    'desc' => 'Fokus: Analisis atau tinjauan terhadap suatu karya, produk, atau pengalaman.
+Tujuan: Memberikan gambaran objektif mengenai kelebihan dan kekurangan suatu hal.
+Contoh: Bulan ini mengadakan fieldtrip ke museum nasional, anak-anak sangat antusias karena banyak fasilitas yang luar biasa di dalamnya (sertakan foto kegiatan) / Bulan ini ada satu karya yang sangat unik / dapat the best dari penilaian gallery offline, dst',
+                                    'fields' => [
+                                        ['label' => 'Review', 'id' => 'review'],
+                                    ]
                                 ],
                                 'Monthly Reflection' => [
-                                    ['label' => 'Apa yang berhasil?', 'id' => 'berhasil'],
-                                    ['label' => 'Apa yang belum berhasil?', 'id' => 'belum_berhasil'],
-                                    ['label' => 'Contoh Tauladan', 'id' => 'tauladan'],
+                                    'desc' => 'Fokus: Penilaian terhadap pribadi teacher. 
+Tujuan: Belajar memperbaiki dan menjadi lebih baik lagi.',
+                                    'fields' => [
+                                        ['label' => 'Apa yang berhasil?', 'id' => 'berhasil'],
+                                        ['label' => 'Apa yang belum berhasil?', 'id' => 'belum_berhasil'],
+                                        ['label' => 'Contoh Tauladan', 'id' => 'tauladan'],
+                                    ]
                                 ]
                             ];
                         @endphp
 
-                        @foreach($sections as $title => $fields)
-                            <div class="evaluation-card"
-                                style="background: white; border-radius: 25px; border: 1.5px solid #F3F4F6; padding: 25px; margin-bottom: 25px;">
-                                <h3
-                                    style="font-size: 18px; font-weight: 800; color: #1F2937; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-                                    <i class="ph-bold ph-newspaper" style="color: #7F56D9;"></i> {{ $title }}
+                        @foreach($sections as $title => $data)
+                            <div class="eval-card">
+                                <h3 class="eval-section-title">
+                                    <i class="ph-bold ph-newspaper"></i> {{ $title }}
                                 </h3>
+                                <p class="eval-section-desc">{{ $data['desc'] }}</p>
 
-                                @foreach($fields as $field)
-                                    <div class="form-field" style="margin-bottom: 20px;">
-                                        <label
-                                            style="display: block; font-size: 13px; font-weight: 700; color: #4B5563; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">{{ $field['label'] }}</label>
+                                @foreach($data['fields'] as $field)
+                                    <div class="eval-modal-field">
+                                        <label class="eval-field-label">{{ $field['label'] }}</label>
 
                                         @if(auth()->id() == $userguru->id)
                                             <div class="note-toolbar" data-for="{{ $field['id'] }}">
@@ -71,20 +81,18 @@
                                             </div>
                                         @endif
 
-                                        <div id="guru-{{ $field['id'] }}" class="note-editor guru-field"
+                                        <div id="guru-{{ $field['id'] }}" class="note-editor guru-field eval-guru-editor"
                                             contenteditable="{{ auth()->id() == $userguru->id ? 'true' : 'false' }}"
-                                            data-field="{{ $field['id'] }}" style="min-height: 120px; border-radius: 16px;"
-                                            data-placeholder="Tuliskan di sini..."></div>
+                                            data-field="{{ $field['id'] }}" data-placeholder="Tuliskan di sini..."></div>
                                     </div>
                                 @endforeach
                             </div>
                         @endforeach
 
                         @if(auth()->id() == $userguru->id)
-                            <div
-                                style="position: sticky; bottom: 85px; display: flex; justify-content: flex-end; z-index: 10;">
-                                <button id="save-guru-btn" class="btn-cal-primary"
-                                    style="box-shadow: 0 10px 25px rgba(127, 86, 217, 0.3);">
+                            <div class="eval-sticky-actions" style="display: flex; align-items: center; gap: 15px;">
+                                <span id="auto-save-status" style="font-size: 11px; color: #9CA3AF; font-style: italic;"></span>
+                                <button id="save-guru-btn" class="btn-cal-primary eval-btn-save-main-shadow">
                                     <i class="ph-bold ph-floppy-disk"></i> Simpan Semua Evaluasi
                                 </button>
                             </div>
@@ -94,22 +102,18 @@
                     <!-- RIGHT COLUMN: NON GURU (DYNAMIC) -->
                     <br />
                     <div class="evaluation-nonguru-section">
-                        <div class="evaluation-card"
-                            style="background: #F9FAFB; border-radius: 25px; border: 1.5px solid #F3F4F6; padding: 25px; position: sticky; top: 100px;">
+                        <div class="eval-card eval-card-nonguru">
                             <div class="note-section-header" style="margin-bottom: 20px;">
-                                <h3 style="font-size: 16px; font-weight: 800; color: #1F2937; margin: 0;">
-                                    <i class="ph-bold ph-briefcase" style="color: #10B981;"></i> Non Guru Eval
+                                <h3 class="eval-section-title">
+                                    <i class="ph-bold ph-briefcase"></i> Non Guru Eval
                                 </h3>
                                 @if(auth()->id() == $userguru->id)
-                                    <button id="add-nonguru-btn" class="btn-cal-primary"
-                                        style="padding: 6px 12px; font-size: 11px; border-radius: 8px;">
+                                    <button id="add-nonguru-btn" class="btn-cal-primary eval-btn-small">
                                         <i class="ph-bold ph-plus"></i> Tambah
                                     </button>
                                 @endif
                             </div>
-
-                            <div id="nonguru-list" class="note-list-scroll"
-                                style="max-height: calc(100vh - 350px); overflow-y: auto;">
+                            <div id="nonguru-list" class="eval-nonguru-list note-list-scroll">
                                 <!-- Dynamic List -->
                             </div>
                         </div>
@@ -120,34 +124,31 @@
     </div>
 
     <!-- Modal for Non Guru Entry -->
-    <div id="nonguru-modal" class="cal-modal-overlay"
-        style="display: none; align-items: center; justify-content: center;">
-        <div class="cal-modal" style="width: 500px; max-width: 95%;">
+    <div id="nonguru-modal" class="cal-modal-overlay flex-center-center" style="display: none;">
+        <div class="cal-modal eval-modal-content">
             <div class="cal-modal-header">
                 <h3 id="nonguru-modal-title">Tambah Non Guru Eval</h3>
                 <button class="cal-close-modal" onclick="$('#nonguru-modal').fadeOut()"><i class="ph ph-x"></i></button>
             </div>
-            <div class="cal-modal-body" style="padding: 20px;">
+            <div class="cal-modal-body eval-modal-body-pad">
                 <input type="hidden" id="nonguru-id">
-                <div class="form-field" style="margin-bottom: 20px;">
-                    <label
-                        style="display: block; font-size: 12px; font-weight: 700; color: #4B5563; margin-bottom: 8px;">JUDUL</label>
-                    <input type="text" id="nonguru-title" class="project-input" placeholder="Masukkan judul..."
-                        style="width: 100%;">
+                <div class="eval-modal-field">
+                    <label class="eval-modal-label">JUDUL</label>
+                    <input type="text" id="nonguru-title" class="project-input eval-input-full"
+                        placeholder="Masukkan judul...">
                 </div>
-                <div class="form-field">
-                    <label
-                        style="display: block; font-size: 12px; font-weight: 700; color: #4B5563; margin-bottom: 8px;">DESKRIPSI</label>
+                <div class="eval-modal-field">
+                    <label class="eval-modal-label">DESKRIPSI</label>
                     <div class="note-toolbar">
                         <button type="button" class="note-format-btn" data-cmd="bold"><i
                                 class="ph-bold ph-text-b"></i></button>
                         <button type="button" class="note-format-btn" data-cmd="italic"><i
                                 class="ph-bold ph-text-italic"></i></button>
                     </div>
-                    <div id="nonguru-description" class="note-editor" contenteditable="true"
-                        style="min-height: 200px; border-radius: 16px;" data-placeholder="Tuliskan deskripsi..."></div>
+                    <div id="nonguru-description" class="note-editor eval-guru-editor" contenteditable="true"
+                        data-placeholder="Tuliskan deskripsi..."></div>
                 </div>
-                <div class="cal-form-actions" style="margin-top: 25px;">
+                <div class="cal-form-actions margin-top-25">
                     <button class="btn-cal-secondary" onclick="$('#nonguru-modal').fadeOut()">Batal</button>
                     <button id="save-nonguru-btn" class="btn-cal-primary">Simpan Data</button>
                 </div>
@@ -177,7 +178,7 @@
             $('.note-format-btn').on('click', function (e) {
                 e.preventDefault();
                 const cmd = $(this).data('cmd');
-                const $editor = $(this).closest('.form-field').find('.note-editor');
+                const $editor = $(this).closest('.eval-modal-field').find('.note-editor');
                 document.execCommand(cmd, false, null);
                 $editor.focus();
             });
@@ -200,16 +201,22 @@
             });
 
             // Auto Save Guru
+            // Auto Save Guru (Every 1 minute if changed)
             if (isOwner) {
                 setInterval(() => {
                     if (isSaving) return;
                     let changed = false;
                     $('.guru-field').each(function () {
                         const field = $(this).data('field');
-                        if ($(this).html() !== (lastSavedGuru[field] || '')) changed = true;
+                        const currentVal = $(this).html().trim();
+                        const lastVal = (lastSavedGuru[field] || '').trim();
+                        if (currentVal !== lastVal) changed = true;
                     });
-                    if (changed) saveGuru(true);
-                }, 45000);
+                    if (changed) {
+                        console.log('Auto saving evaluation...');
+                        saveGuru(true);
+                    }
+                }, 60000); 
             }
 
             // Non Guru Actions
@@ -266,17 +273,17 @@
                 let html = '';
                 currentNonGuru.forEach(item => {
                     html += `
-                        <div class="note-item" style="padding: 15px; background: white; border-radius: 16px; margin-bottom: 12px; border: 1px solid #F3F4F6;">
-                            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:5px;">
-                                <div style="font-weight:800; color:#1F2937; font-size:14px;">${item.title}</div>
+                        <div class="eval-nonguru-item">
+                            <div class="eval-nonguru-item-header">
+                                <div class="eval-nonguru-item-title">${item.title}</div>
                                 ${isOwner ? `
-                                <div style="display:flex; gap:5px;">
-                                    <button onclick="editNonGuru(${item.id})" style="border:none; background:#F3F4F6; width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#7F56D9;"><i class="ph ph-pencil"></i></button>
-                                    <button onclick="deleteNonGuru(${item.id})" style="border:none; background:#FEE2E2; width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#EF4444;"><i class="ph ph-trash"></i></button>
+                                <div class="eval-nonguru-item-actions">
+                                    <button onclick="editNonGuru(${item.id})" class="eval-btn-icon-edit"><i class="ph ph-pencil"></i></button>
+                                    <button onclick="deleteNonGuru(${item.id})" class="eval-btn-icon-edit eval-btn-icon-delete"><i class="ph ph-trash"></i></button>
                                 </div>
                                 ` : ''}
                             </div>
-                            <div style="font-size:13px; color:#6B7280; line-height:1.4;">${item.description || ''}</div>
+                            <div class="eval-nonguru-item-desc">${item.description || ''}</div>
                         </div>
                     `;
                 });
@@ -329,7 +336,14 @@
                     method: 'POST',
                     data: data,
                     success: function () {
-                        if (!isAuto) showToast('Eveluasi disimpan!', 'success');
+                        const now = new Date();
+                        const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+                        
+                        if (!isAuto) {
+                            showToast('Evaluasi disimpan!', 'success');
+                        }
+                        $('#auto-save-status').text('Draft disimpan otomatis ' + timeStr);
+
                         // Update local last saved
                         $('.guru-field').each(function () {
                             lastSavedGuru[$(this).data('field')] = $(this).html();
@@ -377,32 +391,6 @@
     </script>
 
     <style>
-        .evaluation-guru-section .note-editor {
-            background: #F9FAFB;
-            border: 1.5px solid #F3F4F6;
-            padding: 15px;
-            transition: all 0.2s;
-        }
-
-        .evaluation-guru-section .note-editor:focus {
-            background: #fff;
-            border-color: #7F56D9;
-            box-shadow: 0 0 0 4px rgba(127, 86, 217, 0.1);
-            outline: none;
-        }
-
-        @media (max-width: 1024px) {
-            .evaluation-grid {
-                grid-template-columns: 1fr !important;
-            }
-
-            .evaluation-nonguru-section {
-                position: static !important;
-            }
-
-            .evaluation-nonguru-section .evaluation-card {
-                position: static !important;
-            }
-        }
+        /* Small local overrides if needed */
     </style>
 </x-app-layout>
