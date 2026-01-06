@@ -500,7 +500,12 @@ class TaskController extends Controller
             []
         );
 
-        return view('page.teacher-project', compact('user', 'project', 'baseYear', 'semester', 'academicYearLabel'));
+        $videoProjects = \App\Models\TeacherVideoProject::where('user_id', $user->id)
+            ->where('year', $baseYear)
+            ->where('semester', $semester)
+            ->get();
+
+        return view('page.teacher-project', compact('user', 'project', 'videoProjects', 'baseYear', 'semester', 'academicYearLabel'));
     }
 
     public function saveResearchProject(Request $request)
@@ -533,6 +538,65 @@ class TaskController extends Controller
                 ['user_id' => $validated['user_id'], 'year' => $baseYear, 'semester' => $semester],
                 [$validated['field'] => $validated['value']]
             );
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function saveVideoProject(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'user_id' => 'required|integer',
+                'name' => 'required|string',
+                'link' => 'nullable|string'
+            ]);
+
+            $month = now()->month;
+            $currentYear = now()->year;
+
+            if ($month <= 6) {
+                $semester = 2;
+                $baseYear = $currentYear - 1;
+            } else {
+                $semester = 1;
+                $baseYear = $currentYear;
+            }
+
+            if (Auth::id() != $validated['user_id']) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            }
+
+            $project = \App\Models\TeacherVideoProject::create([
+                'user_id' => $validated['user_id'],
+                'year' => $baseYear,
+                'semester' => $semester,
+                'name' => $validated['name'],
+                'link' => $validated['link']
+            ]);
+
+            return response()->json(['success' => true, 'data' => $project]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function deleteVideoProject(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'id' => 'required|integer',
+                'user_id' => 'required|integer'
+            ]);
+
+            if (Auth::id() != $validated['user_id']) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            }
+
+            $project = \App\Models\TeacherVideoProject::findOrFail($validated['id']);
+            $project->delete();
 
             return response()->json(['success' => true]);
         } catch (\Exception $e) {

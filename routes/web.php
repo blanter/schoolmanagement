@@ -32,6 +32,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/teacher-planner/{id}', [TaskController::class, 'teacherPlanner'])->name('tasks.planner');
     Route::get('/teacher-project/{id}', [TaskController::class, 'teacherProject'])->name('tasks.project');
     Route::post('/teacher-research/save', [TaskController::class, 'saveResearchProject'])->name('teacher.research.save');
+    Route::post('/teacher-video/save', [TaskController::class, 'saveVideoProject'])->name('teacher.video.save');
+    Route::post('/teacher-video/delete', [TaskController::class, 'deleteVideoProject'])->name('teacher.video.delete');
     Route::post('/task-skip', [TaskController::class, 'toggleSkip'])->name('task.skip');
 
     // Teacher Calendar & Notes

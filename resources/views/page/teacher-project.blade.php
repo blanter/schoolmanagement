@@ -23,10 +23,9 @@
 
             <!-- Tab Content: Penelitian -->
             <div id="content-penelitian" class="tab-content-panel">
-                <div
-                    style="margin-bottom: 20px; padding: 15px; background: rgba(125, 82, 222, 0.05); border-radius: 15px; border-left: 4px solid #7D52DE;">
-                    <div style="font-weight: 700; color: #7D52DE; font-size: 14px;">Periode Penelitian</div>
-                    <div style="color: #4B5563; font-size: 12px; margin-top: 2px;">
+                <div class="project-period-banner">
+                    <div class="project-banner-title">Periode Penelitian</div>
+                    <div class="project-banner-subtitle">
                         @if($semester == 1)
                             Juli - Desember {{ $baseYear }} (Semester 1)
                         @else
@@ -78,22 +77,17 @@
                     </div>
                 </div>
 
-                <div
-                    style="margin-top: 25px; padding: 18px; background: #fff; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #F3F4F6;">
-                    <label class="field-label"
-                        style="font-weight: 700; font-size: 14px; color: #4B5563; display: block; margin-bottom: 10px;">
-                        <i class="ph-bold ph-link"
-                            style="color: #7D52DE; font-size: 18px; vertical-align: middle; margin-right: 5px;"></i>
+                <div class="project-info-card">
+                    <label class="project-label-premium">
+                        <i class="ph-bold ph-link"></i>
                         Lembar Link Penelitian
                     </label>
-                    <input type="text" id="research_link" class="project-input"
+                    <input type="text" id="research_link" class="project-input project-input-premium"
                         placeholder="Masukkan link google drive / dokumen penelitian..."
                         value="{{ $project->research_link }}"
-                        style="width: 100%; border: 1.5px solid #F3F4F6; border-radius: 12px; padding: 12px 15px; font-size: 14px;"
                         @if(auth()->id() == $user->id) onchange="saveResearchField('research_link', this.value)" @endif
                         @if(auth()->id() != $user->id) disabled @endif>
-                    <p
-                        style="font-size: 11px; color: #9CA3AF; margin-top: 10px; display: flex; align-items: center; gap: 5px;">
+                    <p class="project-footer-info">
                         <i class="ph ph-info"></i> Link akan tersimpan secara otomatis setelah Anda selesai mengetik.
                     </p>
                 </div>
@@ -101,34 +95,71 @@
 
             <!-- Tab Content: Video -->
             <div id="content-video" class="tab-content-panel" style="display: none;">
-                <div class="project-form-card">
-                    <div class="form-field">
-                        <label class="field-label" style="font-weight: 700; font-size: 14px;">Nama Karya</label>
-                        <input type="text" class="project-input" placeholder="Masukkan nama karya...">
-                    </div>
-                    <div class="form-field" style="margin-top: 15px;">
-                        <label class="field-label" style="font-weight: 700; font-size: 14px;">Link Karya</label>
-                        <input type="text" class="project-input" placeholder="https://youtube.com/...">
+                <div class="project-period-banner video">
+                    <div class="project-banner-title">Periode Karya Video / DIY</div>
+                    <div class="project-banner-subtitle">
+                        @if ($semester == 1)
+                            Juli - Desember {{ $baseYear }} (Semester 1)
+                        @else
+                            Januari - Juni {{ $baseYear + 1 }} (Semester 2)
+                        @endif
                     </div>
                 </div>
-                @if(auth()->id() == $user->id)
-                    <div class="project-actions">
-                        <button class="btn-teacher-project btn-teacher-project-grey">
-                            <i class="ph-bold ph-plus"></i> Tambah Data
-                        </button>
-                        <button class="btn-teacher-project">
-                            <i class="ph-bold ph-floppy-disk"></i> Simpan Data
-                        </button>
+
+                @if (auth()->id() == $user->id)
+                    <div class="project-form-card project-info-card video-form">
+                        <div class="form-field">
+                            <label class="project-label-premium">Nama Karya Video / DIY</label>
+                            <input type="text" id="video_name" class="project-input project-input-premium" placeholder="Masukkan nama karya...">
+                        </div>
+                        <div class="form-field" style="margin-top: 15px;">
+                            <label class="project-label-premium">Link Karya (YouTube/Drive)</label>
+                            <input type="text" id="video_link" class="project-input project-input-premium" placeholder="https://youtube.com/...">
+                        </div>
+                        <div class="project-actions" style="margin-top: 20px; justify-content: flex-end;">
+                            <button onclick="saveVideoProject()" class="btn-teacher-project" style="width: auto; padding: 10px 25px;">
+                                <i class="ph-bold ph-plus"></i> Tambah Karya
+                            </button>
+                        </div>
                     </div>
                 @endif
+
+                <div id="video-list-container" class="task-list">
+                    @forelse ($videoProjects as $video)
+                        <div class="task-item project-task-item project-video-item-card" id="video-item-{{ $video->id }}">
+                            <div class="project-video-item-header">
+                                <div class="project-video-title-wrapper">
+                                    <div class="project-video-icon-box">
+                                        <i class="ph-bold ph-video-camera"></i>
+                                    </div>
+                                    <div class="project-video-name-text">{{ $video->name }}</div>
+                                </div>
+                                @if (auth()->id() == $user->id)
+                                    <button onclick="deleteVideo({{ $video->id }})" class="project-delete-trigger">
+                                        <i class="ph-bold ph-trash"></i>
+                                    </button>
+                                @endif
+                            </div>
+                            @if ($video->link)
+                                <a href="{{ $video->link }}" target="_blank" class="project-video-link-anchor">
+                                    <i class="ph ph-link"></i> {{ Str::limit($video->link, 40) }}
+                                </a>
+                            @endif
+                        </div>
+                    @empty
+                        <div id="no-video-placeholder" class="project-empty-state-placeholder">
+                            <i class="ph-bold ph-video project-empty-state-icon"></i>
+                            <p class="project-empty-state-text">Belum ada karya video yang ditambahkan.</p>
+                        </div>
+                    @endforelse
+                </div>
             </div>
 
             <!-- Tab Content: Barang -->
             <div id="content-barang" class="tab-content-panel" style="display: none;">
-                <div
-                    style="text-align: center; padding: 40px; color: #9CA3AF; background: #F9FAFB; border-radius: 25px; border: 1.5px dashed #E5E7EB;">
-                    <i class="ph-bold ph-package" style="font-size: 48px; margin-bottom: 10px; display: block;"></i>
-                    <p style="font-weight: 600;">Belum ada pengadaan barang.</p>
+                <div class="project-empty-state-placeholder large">
+                    <i class="ph-bold ph-package project-empty-state-icon"></i>
+                    <p class="project-empty-state-text">Belum ada pengadaan barang.</p>
                 </div>
             </div>
         </main>
@@ -183,6 +214,91 @@
                 },
                 error: function () {
                     showToast('Gagal menyimpan data', 'error');
+                }
+            });
+        }
+
+        // Video Project Functions
+        window.saveVideoProject = function () {
+            const name = $('#video_name').val();
+            const link = $('#video_link').val();
+
+            if (!name) {
+                showToast('Nama karya harus diisi', 'error');
+                return;
+            }
+
+            $.ajax({
+                url: '{{ route("teacher.video.save") }}',
+                method: 'POST',
+                data: {
+                    user_id: {{ $user->id }},
+                    name: name,
+                    link: link
+                },
+                success: function (res) {
+                    if (res.success) {
+                        showToast('Karya berhasil ditambahkan', 'success');
+                        $('#video_name').val('');
+                        $('#video_link').val('');
+                        $('#no-video-placeholder').remove();
+
+                        const video = res.data;
+                        const linkHtml = video.link ? `
+                            <a href="${video.link}" target="_blank" class="project-video-link-anchor">
+                                <i class="ph ph-link"></i> ${video.link.length > 40 ? video.link.substring(0, 40) + '...' : video.link}
+                            </a>
+                        ` : '';
+
+                        $('#video-list-container').append(`
+                            <div class="task-item project-task-item project-video-item-card" id="video-item-${video.id}">
+                                <div class="project-video-item-header">
+                                    <div class="project-video-title-wrapper">
+                                        <div class="project-video-icon-box">
+                                            <i class="ph-bold ph-video-camera"></i>
+                                        </div>
+                                        <div class="project-video-name-text">${video.name}</div>
+                                    </div>
+                                    <button onclick="deleteVideo(${video.id})" class="project-delete-trigger">
+                                        <i class="ph-bold ph-trash"></i>
+                                    </button>
+                                </div>
+                                ${linkHtml}
+                            </div>
+                        `);
+                    }
+                },
+                error: function () {
+                    showToast('Gagal menambahkan karya', 'error');
+                }
+            });
+        }
+
+        window.deleteVideo = function (id) {
+            if (!confirm('Hapus karya ini?')) return;
+
+            $.ajax({
+                url: '{{ route("teacher.video.delete") }}',
+                method: 'POST',
+                data: {
+                    id: id,
+                    user_id: {{ $user->id }}
+                },
+                success: function (res) {
+                    if (res.success) {
+                        showToast('Karya dihapus', 'success');
+                        $(`#video-item-${id}`).fadeOut(300, function () {
+                            $(this).remove();
+                            if ($('#video-list-container').children().length === 0) {
+                                $('#video-list-container').html(`
+                                    <div id="no-video-placeholder" class="project-empty-state-placeholder">
+                                        <i class="ph-bold ph-video project-empty-state-icon"></i>
+                                        <p class="project-empty-state-text">Belum ada karya video yang ditambahkan.</p>
+                                    </div>
+                                `);
+                            }
+                        });
+                    }
                 }
             });
         }
