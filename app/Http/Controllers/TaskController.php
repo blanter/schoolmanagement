@@ -69,6 +69,13 @@ class TaskController extends Controller
                 'color' => '#B9FBC0', // Light Green
                 'route' => '/teacher-planner-pemakmuran/' . $user->id
             ],
+            [
+                'id' => 5,
+                'name' => 'Student Controlling My Lifebook',
+                'icon' => 'ph-bold ph-user-focus',
+                'color' => '#FFD6A5', // Light Orange
+                'route' => '/student-lifebook/' . $user->id
+            ],
         ];
 
         return view('page.my-tasks', compact('user', 'completionPercentage', 'taskCategories'));

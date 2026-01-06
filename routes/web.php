@@ -79,6 +79,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/teacher-pemakmuran-detail/get', [\App\Http\Controllers\TeacherPemakmuranController::class, 'getContent'])->name('teacher.pemakmuran.get');
     Route::post('/teacher-pemakmuran-detail/save', [\App\Http\Controllers\TeacherPemakmuranController::class, 'saveContent'])->name('teacher.pemakmuran.save');
 
+    // Student Lifebook
+    Route::get('/student-lifebook/{id}', [\App\Http\Controllers\StudentLifebookController::class, 'index'])->name('student.lifebook');
+    Route::get('/student-lifebook-get', [\App\Http\Controllers\StudentLifebookController::class, 'getData'])->name('student.lifebook.get');
+    Route::post('/student-lifebook-save', [\App\Http\Controllers\StudentLifebookController::class, 'saveData'])->name('student.lifebook.save');
+
     // Task Statistik
     Route::get('/statistik/{user_id}', [TaskController::class, 'statistik'])->name('tasks.statistik');
     Route::get('/statistik/{year}/{month}/{user_id}', [TaskController::class, 'statistikdata'])->name('tasks.statistikdata');

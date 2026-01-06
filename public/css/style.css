@@ -4067,7 +4067,7 @@ a.user-lapor {
 
 /* Monthly Evaluation Styles */
 .eval-container {
-    padding: 0 20px 40px;
+    padding: 0 10px 40px;
 }
 
 .eval-card {
@@ -4085,7 +4085,7 @@ a.user-lapor {
 }
 
 .eval-section-title {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 800;
     color: #1F2937;
     margin-bottom: 8px !important;
@@ -4870,5 +4870,11 @@ a.user-lapor {
 
     .laporan-card-admin {
         padding: 16px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .eval-section-title {
+        font-size: 14px;
     }
 }

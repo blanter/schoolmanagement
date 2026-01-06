@@ -46,7 +46,7 @@
         <!-- Bottom Navigation -->
         <div class="bottom-navigation" style="justify-content: flex-end;">
             <a href="/teacher-calendar/{{ $user->id }}" class="nav-btn-square nav-btn-calendar">
-                <i class="ph ph-calendar-blank"></i>
+                <i class="ph-bold ph-calendar"></i>
             </a>
         </div>
     </div>
