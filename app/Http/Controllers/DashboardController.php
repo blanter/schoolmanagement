@@ -49,8 +49,24 @@ class DashboardController extends Controller
             ];
 
             $taskTypes = ['days', 'week', 'month'];
+            if ($tipe === 'guru') {
+                $taskTypes[] = 'planner';
+            }
 
             foreach ($taskTypes as $jenis) {
+                if ($jenis === 'planner') {
+                    $planner = $user->getPlannerProgress();
+                    $result[$jenis] = [
+                        'total_tasks' => 1,
+                        'expected' => 1,
+                        'checked' => $planner['total'],
+                        'skipped' => 0,
+                        'percent' => $planner['total'],
+                        'details' => $planner['details']
+                    ];
+                    continue;
+                }
+
                 $tasks = Task::where('user_id', $user->id)
                     ->where('tipe', $tipe)
                     ->where('jenis', $jenis)
@@ -94,7 +110,7 @@ class DashboardController extends Controller
             }
 
             // Hitung rata-rata dari yang punya expected > 0
-            $percents = collect($result)->pluck('percent')->filter()->all();
+            $percents = collect($result)->pluck('percent')->filter(fn($p) => !is_null($p))->all();
             $result['overall_percent'] = count($percents)
                 ? round(array_sum($percents) / count($percents), 2)
                 : 0;

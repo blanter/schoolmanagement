@@ -9,12 +9,12 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    
+
     protected $connection = 'users_db'; // Tambahkan ini
     protected $table = 'users'; // Optional, jika nama table berbeda
-    
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, \App\Traits\HasTaskProgress;
 
     /**
      * The attributes that are mass assignable.

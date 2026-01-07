@@ -18,7 +18,8 @@
                     <div class="completion-badge {{ $completionPercentage >= 80 ? 'badge-success' : '' }}">
                         {{ $completionPercentage }}%
                         <div class="badge-tooltip">
-                            <div class="tooltip-title">Detail Progress (Bulan Lalu)</div>
+                            <div class="tooltip-title">Detail Progress
+                                {{ \Carbon\Carbon::now()->subMonth()->translatedFormat('F Y') }}</div>
                             @foreach($completionDetails as $label => $val)
                                 <div class="tooltip-item">
                                     <span>{{ $label }}</span>

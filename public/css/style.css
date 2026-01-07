@@ -662,7 +662,17 @@ button.custom-button {
     margin-bottom: 10px;
     padding: 4px 12px;
     border-radius: 15px;
-    backdrop-filter: blur(5px)
+    backdrop-filter: blur(5px);
+    position: relative;
+    cursor: help;
+    width: fit-content;
+    margin: 0 auto 10px;
+}
+
+.podium-points:hover .badge-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
 }
 
 .podium-base {
@@ -757,8 +767,18 @@ button.custom-button {
 }
 
 .player-points {
-    color: #6B7280;
-    font-size: 14px
+    color: #7D52DE;
+    font-size: 14px;
+    font-weight: 700;
+    position: relative;
+    cursor: help;
+    width: fit-content;
+}
+
+.player-points:hover .badge-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
 }
 
 .tab-content {
@@ -2444,7 +2464,7 @@ a.user-lapor {
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 1000;
+    z-index: 9999;
     pointer-events: none;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }

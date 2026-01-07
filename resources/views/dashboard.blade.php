@@ -46,7 +46,25 @@
                             <a href="/my-tasks/{{ $userguru[1]['id'] }}">{{ $userguru[1]['name'] }}</a>
                         </div>
                         @if(Auth::user()->role != "murid")
-                            <div class="podium-points">{{ number_format($userguru[1]['total_amount'], 2, ',', '.') }}%</div>
+                            <div class="podium-points">
+                                {{ number_format($userguru[1]['total_amount'], 2, ',', '.') }}%
+                                <div class="badge-tooltip">
+                                    <div class="tooltip-title">Detail Breakdown</div>
+                                    <div class="tooltip-item"><span>Daily Tasks</span>
+                                        <span>{{ $userguru[1]->task_stats['days']['percent'] ?? 0 }}%</span></div>
+                                    <div class="tooltip-item"><span>Weekly Tasks</span>
+                                        <span>{{ $userguru[1]->task_stats['week']['percent'] ?? 0 }}%</span></div>
+                                    <div class="tooltip-item"><span>Monthly Tasks</span>
+                                        <span>{{ $userguru[1]->task_stats['month']['percent'] ?? 0 }}%</span></div>
+                                    @if(isset($userguru[1]->task_stats['planner']))
+                                        <div class="tooltip-item"
+                                            style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px; margin-top: 5px;">
+                                            <span>Planner Progress</span>
+                                            <span>{{ $userguru[1]->task_stats['planner']['percent'] }}%</span>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
                         @endif
                         <div class="podium-base">2</div>
                     </div>
@@ -63,7 +81,25 @@
                             <a href="/my-tasks/{{ $userguru[0]['id'] }}">{{ $userguru[0]['name'] }}</a>
                         </div>
                         @if(Auth::user()->role != "murid")
-                            <div class="podium-points">{{ number_format($userguru[0]['total_amount'], 2, ',', '.') }}%</div>
+                            <div class="podium-points">
+                                {{ number_format($userguru[0]['total_amount'], 2, ',', '.') }}%
+                                <div class="badge-tooltip">
+                                    <div class="tooltip-title">Detail Breakdown</div>
+                                    <div class="tooltip-item"><span>Daily Tasks</span>
+                                        <span>{{ $userguru[0]->task_stats['days']['percent'] ?? 0 }}%</span></div>
+                                    <div class="tooltip-item"><span>Weekly Tasks</span>
+                                        <span>{{ $userguru[0]->task_stats['week']['percent'] ?? 0 }}%</span></div>
+                                    <div class="tooltip-item"><span>Monthly Tasks</span>
+                                        <span>{{ $userguru[0]->task_stats['month']['percent'] ?? 0 }}%</span></div>
+                                    @if(isset($userguru[0]->task_stats['planner']))
+                                        <div class="tooltip-item"
+                                            style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px; margin-top: 5px;">
+                                            <span>Planner Progress</span>
+                                            <span>{{ $userguru[0]->task_stats['planner']['percent'] }}%</span>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
                         @endif
                         <div class="podium-base">1</div>
                     </div>
@@ -79,7 +115,25 @@
                             <a href="/my-tasks/{{ $userguru[2]['id'] }}">{{ $userguru[2]['name'] }}</a>
                         </div>
                         @if(Auth::user()->role != "murid")
-                            <div class="podium-points">{{ number_format($userguru[2]['total_amount'], 2, ',', '.') }}%</div>
+                            <div class="podium-points">
+                                {{ number_format($userguru[2]['total_amount'], 2, ',', '.') }}%
+                                <div class="badge-tooltip">
+                                    <div class="tooltip-title">Detail Breakdown</div>
+                                    <div class="tooltip-item"><span>Daily Tasks</span>
+                                        <span>{{ $userguru[2]->task_stats['days']['percent'] ?? 0 }}%</span></div>
+                                    <div class="tooltip-item"><span>Weekly Tasks</span>
+                                        <span>{{ $userguru[2]->task_stats['week']['percent'] ?? 0 }}%</span></div>
+                                    <div class="tooltip-item"><span>Monthly Tasks</span>
+                                        <span>{{ $userguru[2]->task_stats['month']['percent'] ?? 0 }}%</span></div>
+                                    @if(isset($userguru[2]->task_stats['planner']))
+                                        <div class="tooltip-item"
+                                            style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px; margin-top: 5px;">
+                                            <span>Planner Progress</span>
+                                            <span>{{ $userguru[2]->task_stats['planner']['percent'] }}%</span>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
                         @endif
                         <div class="podium-base">3</div>
                     </div>
@@ -98,7 +152,24 @@
                                 <a href="/my-tasks/{{ $user['id'] }}">{{ $user['name'] }}</a>
                             </div>
                             @if(Auth::user()->role != "murid")
-                                <div class="player-points">{{ number_format($user->total_amount, 2, ',', '.') }}%</div>
+                                <div class="player-points">
+                                    {{ number_format($user->total_amount, 2, ',', '.') }}%
+                                    <div class="badge-tooltip">
+                                        <div class="tooltip-title">Detail Breakdown</div>
+                                        <div class="tooltip-item"><span>Daily</span>
+                                            <span>{{ $user->task_stats['days']['percent'] ?? 0 }}%</span></div>
+                                        <div class="tooltip-item"><span>Weekly</span>
+                                            <span>{{ $user->task_stats['week']['percent'] ?? 0 }}%</span></div>
+                                        <div class="tooltip-item"><span>Monthly</span>
+                                            <span>{{ $user->task_stats['month']['percent'] ?? 0 }}%</span></div>
+                                        @if(isset($user->task_stats['planner']))
+                                            <div class="tooltip-item"
+                                                style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px; margin-top: 5px;">
+                                                <span>Planner</span> <span>{{ $user->task_stats['planner']['percent'] }}%</span>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
                             @endif
                         </div>
                     </div>
@@ -134,7 +205,18 @@
                             <a href="/my-tasks/{{ $usernonguru[1]['id'] }}">{{ $usernonguru[1]['name'] }}</a>
                         </div>
                         @if(Auth::user()->role != "murid")
-                            <div class="podium-points">{{ number_format($usernonguru[1]['total_amount'], 2, ',', '.') }}%</div>
+                            <div class="podium-points">
+                                {{ number_format($usernonguru[1]['total_amount'], 2, ',', '.') }}%
+                                <div class="badge-tooltip">
+                                    <div class="tooltip-title">Detail Breakdown</div>
+                                    <div class="tooltip-item"><span>Daily Tasks</span>
+                                        <span>{{ $usernonguru[1]->task_stats['days']['percent'] ?? 0 }}%</span></div>
+                                    <div class="tooltip-item"><span>Weekly Tasks</span>
+                                        <span>{{ $usernonguru[1]->task_stats['week']['percent'] ?? 0 }}%</span></div>
+                                    <div class="tooltip-item"><span>Monthly Tasks</span>
+                                        <span>{{ $usernonguru[1]->task_stats['month']['percent'] ?? 0 }}%</span></div>
+                                </div>
+                            </div>
                         @endif
                         <div class="podium-base">2</div>
                     </div>
@@ -152,7 +234,18 @@
                             <a href="/my-tasks/{{ $usernonguru[0]['id'] }}">{{ $usernonguru[0]['name'] }}</a>
                         </div>
                         @if(Auth::user()->role != "murid")
-                            <div class="podium-points">{{ number_format($usernonguru[0]['total_amount'], 2, ',', '.') }}%</div>
+                            <div class="podium-points">
+                                {{ number_format($usernonguru[0]['total_amount'], 2, ',', '.') }}%
+                                <div class="badge-tooltip">
+                                    <div class="tooltip-title">Detail Breakdown</div>
+                                    <div class="tooltip-item"><span>Daily Tasks</span>
+                                        <span>{{ $usernonguru[0]->task_stats['days']['percent'] ?? 0 }}%</span></div>
+                                    <div class="tooltip-item"><span>Weekly Tasks</span>
+                                        <span>{{ $usernonguru[0]->task_stats['week']['percent'] ?? 0 }}%</span></div>
+                                    <div class="tooltip-item"><span>Monthly Tasks</span>
+                                        <span>{{ $usernonguru[0]->task_stats['month']['percent'] ?? 0 }}%</span></div>
+                                </div>
+                            </div>
                         @endif
                         <div class="podium-base">1</div>
                     </div>
@@ -173,7 +266,18 @@
                             @endif
                         </div>
                         @if(Auth::user()->role != "murid")
-                            <div class="podium-points">{{ number_format($usernonguru[2]['total_amount'], 2, ',', '.') }}%</div>
+                            <div class="podium-points">
+                                {{ number_format($usernonguru[2]['total_amount'], 2, ',', '.') }}%
+                                <div class="badge-tooltip">
+                                    <div class="tooltip-title">Detail Breakdown</div>
+                                    <div class="tooltip-item"><span>Daily Tasks</span>
+                                        <span>{{ $usernonguru[2]->task_stats['days']['percent'] ?? 0 }}%</span></div>
+                                    <div class="tooltip-item"><span>Weekly Tasks</span>
+                                        <span>{{ $usernonguru[2]->task_stats['week']['percent'] ?? 0 }}%</span></div>
+                                    <div class="tooltip-item"><span>Monthly Tasks</span>
+                                        <span>{{ $usernonguru[2]->task_stats['month']['percent'] ?? 0 }}%</span></div>
+                                </div>
+                            </div>
                         @endif
                         <div class="podium-base">3</div>
                     </div>
@@ -193,7 +297,18 @@
                                     <a href="/my-tasks/{{ $user['id'] }}">{{ $user['name'] }}</a>
                                 </div>
                                 @if(Auth::user()->role != "murid")
-                                    <div class="player-points">{{ number_format($user->total_amount, 2, ',', '.') }}%</div>
+                                    <div class="player-points">
+                                        {{ number_format($user->total_amount, 2, ',', '.') }}%
+                                        <div class="badge-tooltip">
+                                            <div class="tooltip-title">Detail Breakdown</div>
+                                            <div class="tooltip-item"><span>Daily</span>
+                                                <span>{{ $user->task_stats['days']['percent'] ?? 0 }}%</span></div>
+                                            <div class="tooltip-item"><span>Weekly</span>
+                                                <span>{{ $user->task_stats['week']['percent'] ?? 0 }}%</span></div>
+                                            <div class="tooltip-item"><span>Monthly</span>
+                                                <span>{{ $user->task_stats['month']['percent'] ?? 0 }}%</span></div>
+                                        </div>
+                                    </div>
                                 @endif
                             </div>
                         </div>
