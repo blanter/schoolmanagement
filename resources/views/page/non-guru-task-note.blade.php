@@ -14,7 +14,7 @@
         </header>
 
         <main class="project-main-content">
-            <div class="note-sticky-container">
+            <div class="note-sticky-container margin-top-25">
                 <div id="notes-stack-container" class="note-stack">
                     <!-- Notes will be loaded here via JS -->
                     <div class="note-empty-state">
@@ -109,7 +109,7 @@
             let html = '';
             categories.forEach((cat, index) => {
                 const total = cat.items.length;
-                const checked = cat.items.filter(i => i.is_checked).length;
+                const checked = cat.items.filter(i => i.is_checked == 1 || i.is_checked === true).length;
                 const isExpanded = cat.id == expandedCategoryId;
 
                 // Calculate rotation and Y offset for stacked effect
@@ -161,13 +161,14 @@
         }
 
         function renderItem(item) {
+            const isChecked = item.is_checked == 1 || item.is_checked === true;
             return `
                 <div class="note-check-item" id="note-item-${item.id}" 
-                     onclick="event.stopPropagation(); toggleCheck(${item.id}, ${item.is_checked ? 0 : 1})">
-                    <div class="note-item-check ${item.is_checked ? 'checked' : ''}">
-                        ${item.is_checked ? '<i class="ph-bold ph-check"></i>' : ''}
+                     onclick="event.stopPropagation(); toggleCheck(${item.id}, ${isChecked ? 0 : 1})">
+                    <div class="note-item-check ${isChecked ? 'checked' : ''}">
+                        ${isChecked ? '<i class="ph-bold ph-check"></i>' : ''}
                     </div>
-                    <div class="note-item-text ${item.is_checked ? 'checked' : ''}">${item.content}</div>
+                    <div class="note-item-text ${isChecked ? 'checked' : ''}">${item.content}</div>
                     @if(auth()->id() == $userguru->id)
                         <button class="btn-note-action delete" style="width: 24px; height: 24px; font-size: 12px;" onclick="event.stopPropagation(); deleteItem(${item.id})">
                             <i class="ph ph-x"></i>
@@ -261,8 +262,6 @@
                 success: function (res) {
                     if (res.success) {
                         input.val('');
-                        $(`#items-list-${catId}`).append(renderItem(res.item));
-                        // Update counter
                         loadNotes();
                     }
                 }

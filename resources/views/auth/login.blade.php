@@ -1,4 +1,6 @@
-@section('title', 'Login - Management App')
+@section('title', 'Login | Lifebook Academy School Management')
+@section('meta_description', 'Login to Lifebook Academy School Management System. Manage your classes, students, and tasks efficiently.')
+@section('meta_keywords', 'login lifebook academy, school management login, teacher login')
 <x-guest-layout>
     <div class="login-container">
         <div class="image-section">
