@@ -21,6 +21,7 @@ class TeacherStudentProgressController extends Controller
                 return $item->year . '-' . str_pad($item->month, 2, '0', STR_PAD_LEFT);
             })
             ->unique()
+            ->values()
             ->toArray();
 
         // Get all students for the dropdown search

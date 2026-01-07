@@ -137,6 +137,7 @@
         $(document).ready(function () {
             let currentSelectedDate = new Date();
             let datesWithPlans = @json($datesWithPlans);
+            if (!Array.isArray(datesWithPlans)) datesWithPlans = Object.values(datesWithPlans || {});
             let currentPlans = [];
             let isSaving = false;
             let isOwner = {{ auth()->id() == $userguru->id ? 'true' : 'false' }};
@@ -205,6 +206,7 @@
                 for (let i = 1; i <= lastDate; i++) {
                     const d = new Date(year, month, i);
                     const ds = formatDate(d);
+                    if (!Array.isArray(datesWithPlans)) datesWithPlans = Object.values(datesWithPlans || {});
                     const hasP = datesWithPlans.includes(ds);
                     const isWeekend = d.getDay() === 0 || d.getDay() === 6;
 
@@ -283,6 +285,7 @@
                     success: function (res) {
                         showToast('Agenda dihapus', 'success');
                         datesWithPlans = res.datesWithPlans;
+                        if (!Array.isArray(datesWithPlans)) datesWithPlans = Object.values(datesWithPlans || {});
                         updateCalendarUI(currentSelectedDate);
                         loadPlans(formatDate(currentSelectedDate));
                         if ($('#plan-id').val() == id) resetForm();
@@ -301,6 +304,7 @@
                     success: function (res) {
                         showToast(data.id ? 'Agenda diperbarui' : 'Agenda ditambahkan', 'success');
                         datesWithPlans = res.datesWithPlans;
+                        if (!Array.isArray(datesWithPlans)) datesWithPlans = Object.values(datesWithPlans || {});
                         updateCalendarUI(currentSelectedDate);
                         loadPlans(data.tanggal);
                         $('#plan-form-section').fadeOut();
@@ -318,6 +322,7 @@
             }
 
             function updateCalendarUI(baseDate) {
+                if (!Array.isArray(datesWithPlans)) datesWithPlans = Object.values(datesWithPlans || {});
                 const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
                 const days = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
                 const y = baseDate.getFullYear(), m = baseDate.getMonth(), today = formatDate(new Date());

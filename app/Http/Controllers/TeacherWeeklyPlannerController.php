@@ -84,6 +84,7 @@ class TeacherWeeklyPlannerController extends Controller
                 ->map(function ($date) {
                     return is_string($date) ? $date : $date->format('Y-m-d');
                 })
+                ->values()
                 ->toArray();
 
             return response()->json([
@@ -127,6 +128,7 @@ class TeacherWeeklyPlannerController extends Controller
                 ->map(function ($date) {
                     return is_string($date) ? $date : $date->format('Y-m-d');
                 })
+                ->values()
                 ->toArray();
 
             return response()->json([
