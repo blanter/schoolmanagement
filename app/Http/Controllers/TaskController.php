@@ -30,8 +30,9 @@ class TaskController extends Controller
 {
     private function calculateCompletionPercentage($userId)
     {
-        $month = now()->month;
-        $year = now()->year;
+        $p = now()->subMonth();
+        $month = $p->month;
+        $year = $p->year;
 
         // --- 1. Teacher Planner (50%) ---
         // Includes: Weekly Planner, Daily Details, Student Progress, Monthly Evaluation
@@ -510,8 +511,9 @@ class TaskController extends Controller
         $userguru = User::findOrFail($id);
         $user = Auth::user();
 
-        $month = (int) $request->input('month', now()->month);
-        $year = (int) $request->input('year', now()->year);
+        $p = now()->subMonth();
+        $month = (int) $request->input('month', $p->month);
+        $year = (int) $request->input('year', $p->year);
 
         // --- Calculation for Teacher Planner Progress ---
         // We calculate each module out of 100%, then average them (total / 4).
@@ -605,8 +607,9 @@ class TaskController extends Controller
         $userguru = User::findOrFail($id);
         $user = Auth::user();
 
-        $month = (int) $request->input('month', now()->month);
-        $year = (int) $request->input('year', now()->year);
+        $p = now()->subMonth();
+        $month = (int) $request->input('month', $p->month);
+        $year = (int) $request->input('year', $p->year);
 
         // --- Calculation for Pemakmuran Progress ---
         $models = [

@@ -62,15 +62,9 @@ class LaporanController extends Controller
     public function laporanall(Request $request)
     {
         $now = now();
-        $defaultMonth = $now->month;
-        $defaultYear = $now->year;
-
-        // Jika tanggal 1-7, tampilkan bulan sebelumnya
-        if ($now->day <= 7) {
-            $prevDate = $now->copy()->subMonth();
-            $defaultMonth = $prevDate->month;
-            $defaultYear = $prevDate->year;
-        }
+        $p = now()->subMonth();
+        $defaultMonth = $p->month;
+        $defaultYear = $p->year;
 
         $month = (int) $request->input('month', $defaultMonth);
         $year = (int) $request->input('year', $defaultYear);

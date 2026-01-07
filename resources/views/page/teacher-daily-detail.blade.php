@@ -90,7 +90,16 @@
         });
 
         $(document).ready(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlMonth = urlParams.get('month');
+            const urlYear = urlParams.get('year');
+
             let currentDate = new Date();
+            if (urlMonth && urlYear) {
+                currentDate = new Date(urlYear, urlMonth - 1, 1);
+            } else {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+            }
             let isSaving = false;
             const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
