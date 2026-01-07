@@ -55,10 +55,25 @@ class TeacherMonthlyEvaluationController extends Controller
                 'berhasil' => 'nullable|string',
                 'belum_berhasil' => 'nullable|string',
                 'tauladan' => 'nullable|string',
+                'new_images.*' => 'nullable|image|max:10240', // 10MB max per image
+                'existing_images' => 'nullable|string',
             ]);
 
             if (Auth::id() != $validated['user_id']) {
                 return response()->json(['success' => false, 'message' => 'Forbidden'], 403);
+            }
+
+            // Handle Images
+            $images = [];
+            if ($request->filled('existing_images')) {
+                $images = json_decode($request->existing_images, true) ?: [];
+            }
+
+            if ($request->hasFile('new_images')) {
+                foreach ($request->file('new_images') as $file) {
+                    $path = $file->store('evaluations', 'public');
+                    $images[] = $path;
+                }
             }
 
             TeacherMonthlyEvaluation::updateOrCreate(
@@ -67,7 +82,10 @@ class TeacherMonthlyEvaluationController extends Controller
                     'year' => $validated['year'],
                     'month' => $validated['month']
                 ],
-                $request->only(['evaluasi', 'student_progress', 'review', 'berhasil', 'belum_berhasil', 'tauladan'])
+                array_merge(
+                    $request->only(['evaluasi', 'student_progress', 'review', 'berhasil', 'belum_berhasil', 'tauladan']),
+                    ['images' => json_encode($images)]
+                )
             );
 
             return response()->json(['success' => true]);

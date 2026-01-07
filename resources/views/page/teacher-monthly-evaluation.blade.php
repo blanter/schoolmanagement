@@ -40,15 +40,15 @@
                                 ],
                                 'Monthly Review' => [
                                     'desc' => 'Fokus: Analisis atau tinjauan terhadap suatu karya, produk, atau pengalaman.
-Tujuan: Memberikan gambaran objektif mengenai kelebihan dan kekurangan suatu hal.
-Contoh: Bulan ini mengadakan fieldtrip ke museum nasional, anak-anak sangat antusias karena banyak fasilitas yang luar biasa di dalamnya (sertakan foto kegiatan) / Bulan ini ada satu karya yang sangat unik / dapat the best dari penilaian gallery offline, dst',
+                            Tujuan: Memberikan gambaran objektif mengenai kelebihan dan kekurangan suatu hal.
+                            Contoh: Bulan ini mengadakan fieldtrip ke museum nasional, anak-anak sangat antusias karena banyak fasilitas yang luar biasa di dalamnya (sertakan foto kegiatan) / Bulan ini ada satu karya yang sangat unik / dapat the best dari penilaian gallery offline, dst',
                                     'fields' => [
                                         ['label' => 'Review', 'id' => 'review'],
                                     ]
                                 ],
                                 'Monthly Reflection' => [
                                     'desc' => 'Fokus: Penilaian terhadap pribadi teacher. 
-Tujuan: Belajar memperbaiki dan menjadi lebih baik lagi.',
+                            Tujuan: Belajar memperbaiki dan menjadi lebih baik lagi.',
                                     'fields' => [
                                         ['label' => 'Apa yang berhasil?', 'id' => 'berhasil'],
                                         ['label' => 'Apa yang belum berhasil?', 'id' => 'belum_berhasil'],
@@ -89,9 +89,28 @@ Tujuan: Belajar memperbaiki dan menjadi lebih baik lagi.',
                             </div>
                         @endforeach
 
+                        <!-- Image Upload Section -->
+                        <div class="eval-card eval-image-upload-card" style="margin-top: 20px;">
+                            <h3 class="eval-section-title">
+                                <i class="ph-bold ph-images"></i> Dokumentasi Laporan
+                            </h3>
+                            <p class="eval-section-desc">Dokumentasi foto kegiatan atau checklist bulan ini.</p>
+                            
+                            <div id="image-preview-container" class="eval-image-grid">
+                                @if(auth()->id() == $userguru->id)
+                                    <div class="eval-image-upload-trigger" onclick="document.getElementById('eval-image-input').click()">
+                                        <i class="ph ph-plus" style="font-size: 24px;"></i>
+                                        <span>Tambah Foto</span>
+                                    </div>
+                                @endif
+                            </div>
+                            <input type="file" id="eval-image-input" multiple accept="image/*" style="display: none;">
+                        </div>
+
                         @if(auth()->id() == $userguru->id)
                             <div class="eval-sticky-actions" style="display: flex; align-items: center; gap: 15px;">
-                                <span id="auto-save-status" style="font-size: 11px; color: #9CA3AF; font-style: italic;"></span>
+                                <span id="auto-save-status"
+                                    style="font-size: 11px; color: #9CA3AF; font-style: italic;"></span>
                                 <button id="save-guru-btn" class="btn-cal-primary eval-btn-save-main-shadow">
                                     <i class="ph-bold ph-floppy-disk"></i> Simpan Semua Evaluasi
                                 </button>
@@ -167,6 +186,7 @@ Tujuan: Belajar memperbaiki dan menjadi lebih baik lagi.',
             let currentData = null;
             let currentNonGuru = [];
             let lastSavedGuru = {};
+            let selectedImages = []; // Stores either File objects or string URLs
             const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
             const isOwner = {{ auth()->id() == $userguru->id ? 'true' : 'false' }};
 
@@ -216,7 +236,7 @@ Tujuan: Belajar memperbaiki dan menjadi lebih baik lagi.',
                         console.log('Auto saving evaluation...');
                         saveGuru(true);
                     }
-                }, 60000); 
+                }, 60000);
             }
 
             // Non Guru Actions
@@ -231,6 +251,79 @@ Tujuan: Belajar memperbaiki dan menjadi lebih baik lagi.',
             $('#save-nonguru-btn').on('click', function () {
                 saveNonGuru();
             });
+
+            // Image Upload Logic
+            $('#eval-image-input').on('change', async function(e) {
+                const files = e.target.files;
+                if (!files.length) return;
+
+                showToast('Mengompresi gambar...', 'info');
+                
+                for (let i = 0; i < files.length; i++) {
+                    const compressed = await compressImage(files[i]);
+                    selectedImages.push(compressed);
+                }
+                
+                renderImagePreviews();
+                $(this).val(''); // Reset input
+            });
+
+            window.removeImage = function(index) {
+                selectedImages.splice(index, 1);
+                renderImagePreviews();
+            };
+
+            function renderImagePreviews() {
+                const container = $('#image-preview-container');
+                const trigger = container.find('.eval-image-upload-trigger').detach();
+                container.empty();
+                
+                selectedImages.forEach((img, index) => {
+                    const src = typeof img === 'string' ? `/storage/${img}` : URL.createObjectURL(img);
+                    container.append(`
+                        <div class="eval-preview-wrapper">
+                            <img src="${src}" class="eval-preview-img">
+                            ${isOwner ? `<button type="button" onclick="removeImage(${index})" class="eval-remove-img"><i class="ph ph-x"></i></button>` : ''}
+                        </div>
+                    `);
+                });
+                
+                if (isOwner) container.append(trigger);
+            }
+
+            async function compressImage(file) {
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = (event) => {
+                        const img = new Image();
+                        img.src = event.target.result;
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            const MAX_WIDTH = 1200;
+                            let width = img.width;
+                            let height = img.height;
+
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+                            
+                            canvas.toBlob((blob) => {
+                                resolve(new File([blob], file.name, {
+                                    type: 'image/jpeg',
+                                    lastModified: Date.now()
+                                }));
+                            }, 'image/jpeg', 0.3); // 30% quality
+                        };
+                    };
+                });
+            }
 
             function updateUI() {
                 $('#current-month-label').text(months[currentDate.getMonth()] + " " + currentDate.getFullYear());
@@ -255,6 +348,17 @@ Tujuan: Belajar memperbaiki dan menjadi lebih baik lagi.',
                             const field = $(this).data('field');
                             $(this).html(lastSavedGuru[field] || '');
                         });
+
+                        // Populate Images
+                        selectedImages = [];
+                        if (lastSavedGuru.images) {
+                            try {
+                                selectedImages = JSON.parse(lastSavedGuru.images);
+                            } catch(e) {
+                                selectedImages = [];
+                            }
+                        }
+                        renderImagePreviews();
 
                         // Populate Non Guru List
                         currentNonGuru = res.nonGuruEvaluations || [];
@@ -333,14 +437,25 @@ Tujuan: Belajar memperbaiki dan menjadi lebih baik lagi.',
 
                 isSaving = true;
 
-                const data = {
-                    user_id: {{ $userguru->id }},
-                    year: currentDate.getFullYear(),
-                    month: currentDate.getMonth() + 1
-                };
+                const formData = new FormData();
+                formData.append('user_id', {{ $userguru->id }});
+                formData.append('year', currentDate.getFullYear());
+                formData.append('month', currentDate.getMonth() + 1);
+
                 $('.guru-field').each(function () {
-                    data[$(this).data('field')] = $(this).html();
+                    formData.append($(this).data('field'), $(this).html());
                 });
+
+                // Handle images
+                const existingImages = [];
+                selectedImages.forEach((img, idx) => {
+                    if (typeof img === 'string') {
+                        existingImages.push(img);
+                    } else {
+                        formData.append('new_images[]', img);
+                    }
+                });
+                formData.append('existing_images', JSON.stringify(existingImages));
 
                 if (!isAuto) {
                     $('#save-guru-btn').prop('disabled', true).html('<i class="ph-bold ph-spinner ph-spin"></i> Menyimpan...');
@@ -349,11 +464,13 @@ Tujuan: Belajar memperbaiki dan menjadi lebih baik lagi.',
                 $.ajax({
                     url: '{{ route("teacher.evaluation.saveGuru") }}',
                     method: 'POST',
-                    data: data,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
                     success: function () {
                         const now = new Date();
                         const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-                        
+
                         if (!isAuto) {
                             showToast('Evaluasi disimpan!', 'success');
                         }
@@ -406,6 +523,73 @@ Tujuan: Belajar memperbaiki dan menjadi lebih baik lagi.',
     </script>
 
     <style>
-        /* Small local overrides if needed */
+        .eval-image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .eval-image-upload-trigger {
+            aspect-ratio: 1/1;
+            border: 2px dashed #D1D5DB;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #9CA3AF;
+            transition: all 0.2s;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .eval-image-upload-trigger:hover {
+            border-color: #7F56D9;
+            color: #7F56D9;
+            background: #F9FAFB;
+        }
+
+        .eval-preview-wrapper {
+            position: relative;
+            aspect-ratio: 1/1;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .eval-preview-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .eval-remove-img {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 24px;
+            height: 24px;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.2s;
+        }
+
+        .eval-remove-img:hover {
+            transform: scale(1.1);
+        }
+
+        .eval-image-upload-card {
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </x-app-layout>

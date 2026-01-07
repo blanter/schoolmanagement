@@ -19,5 +19,6 @@ class TeacherMonthlyEvaluation extends Model
         'berhasil',
         'belum_berhasil',
         'tauladan',
+        'images',
     ];
 }
