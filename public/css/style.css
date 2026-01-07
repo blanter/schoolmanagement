@@ -768,8 +768,8 @@ button.custom-button {
 
 .player-points {
     color: #7D52DE;
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 13px;
+    font-weight: 600;
     position: relative;
     cursor: help;
     width: fit-content;
@@ -2514,6 +2514,10 @@ a.user-lapor {
     color: #34D399;
 }
 
+h3.eval-section-title span {
+    margin-left: -5px;
+}
+
 .profile-name {
     font-size: 20px;
     font-weight: 700;
@@ -4161,7 +4165,7 @@ a.user-lapor {
 
 /* Monthly Evaluation Styles */
 .eval-container {
-    padding: 0 10px 40px;
+    padding: 0 5px 30px;
 }
 
 .eval-card {
