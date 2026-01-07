@@ -101,10 +101,7 @@ class LaporanController extends Controller
             $query->where('teacher_monthly_evaluations.user_id', $userId);
         }
 
-        // Jika role guru, hanya bisa lihat laporannya sendiri
-        if (auth()->user()->role == 'guru') {
-            $query->where('teacher_monthly_evaluations.user_id', auth()->id());
-        }
+
 
         if ($request->filled('search')) {
             $query->where($userDb . '.users.name', 'LIKE', '%' . $request->search . '%');

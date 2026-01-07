@@ -52,7 +52,7 @@
                                     'fields' => [
                                         ['label' => 'Apa yang berhasil?', 'id' => 'berhasil'],
                                         ['label' => 'Apa yang belum berhasil?', 'id' => 'belum_berhasil'],
-                                        ['label' => 'Contoh Tauladan', 'id' => 'tauladan'],
+                                        ['label' => 'Sejauh Apa Menjadi Contoh dan Tauladan?', 'id' => 'tauladan'],
                                     ]
                                 ]
                             ];
@@ -175,6 +175,14 @@
         </div>
     </div>
 
+    <!-- Image Zoom Modal -->
+    <div id="image-zoom-modal" class="cal-modal-overlay flex-center-center" style="display: none; background: rgba(0,0,0,0.9); z-index: 10000;">
+        <div class="zoom-modal-container">
+            <button class="zoom-close-btn"><i class="ph ph-x"></i></button>
+            <img id="zoomed-image" src="" alt="Zoomed documentation">
+        </div>
+    </div>
+
     <div id="toast-container" style="position: fixed; bottom: 85px; right: 20px; z-index: 9999;"></div>
 
     <script>
@@ -281,9 +289,9 @@
                 selectedImages.forEach((img, index) => {
                     const src = typeof img === 'string' ? `/storage/${img}` : URL.createObjectURL(img);
                     container.append(`
-                        <div class="eval-preview-wrapper">
+                        <div class="eval-preview-wrapper" onclick="window.zoomImage('${src}')">
                             <img src="${src}" class="eval-preview-img">
-                            ${isOwner ? `<button type="button" onclick="removeImage(${index})" class="eval-remove-img"><i class="ph ph-x"></i></button>` : ''}
+                            ${isOwner ? `<button type="button" onclick="event.stopPropagation(); removeImage(${index})" class="eval-remove-img"><i class="ph ph-x"></i></button>` : ''}
                         </div>
                     `);
                 });
@@ -324,6 +332,18 @@
                     };
                 });
             }
+
+            // Zoom Image Logic
+            window.zoomImage = function(src) {
+                $('#zoomed-image').attr('src', src);
+                $('#image-zoom-modal').fadeIn(200);
+            };
+
+            $('#image-zoom-modal, .zoom-close-btn').on('click', function(e) {
+                if (e.target !== $('#zoomed-image')[0]) {
+                    $('#image-zoom-modal').fadeOut(200);
+                }
+            });
 
             function updateUI() {
                 $('#current-month-label').text(months[currentDate.getMonth()] + " " + currentDate.getFullYear());
@@ -590,6 +610,46 @@
         .eval-image-upload-card {
             border: 1px solid #E5E7EB;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Zoom Modal Styles */
+        .zoom-modal-container {
+            position: relative;
+            max-width: 95%;
+            max-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #zoomed-image {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .zoom-close-btn {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: white;
+            color: #1F2937;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        @media (max-width: 768px) {
+            .zoom-close-btn {
+                top: -50px;
+                right: 10px;
+            }
         }
     </style>
 </x-app-layout>

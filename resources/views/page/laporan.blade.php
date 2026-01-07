@@ -9,7 +9,7 @@
                 </a>
                 <div class="header-title-container">
                     <div class="header-main-title">Laporan Bulanan</div>
-                    <div class="header-subtitle">{{ auth()->user()->role == 'admin' ? 'Admin Panel' : 'Status Evaluasi' }}</div>
+                    <div class="header-subtitle">{{ auth()->user()->role == 'admin' ? 'Semua Laporan' : 'Status Evaluasi' }}</div>
                 </div>
             </div>
 
@@ -48,7 +48,7 @@
                                 </div>
                             </div>
 
-                            @if(auth()->user()->role == 'admin')
+                            @if(auth()->user()->role == 'admin' || auth()->id() == $laporan->user_id)
                                 <div class="laporan-status-badge"
                                     style="background: {{ $laporan->point ? '#ECFDF5' : '#FEF2F2' }}; color: {{ $laporan->point ? '#059669' : '#EF4444' }};">
                                     {{ $laporan->point ? 'Skor: ' . $laporan->point : 'Belum Dinilai' }}
@@ -60,12 +60,12 @@
                             @endif
                         </div>
 
-                        @if(auth()->user()->role == 'admin')
+                        @if(auth()->user()->role == 'admin' || auth()->id() == $laporan->user_id)
                             @if($laporan->comment)
                                 <div class="laporan-comment-preview">
                                     <i class="ph-bold ph-quotes"></i> "{{ Str::limit($laporan->comment, 120) }}"
                                 </div>
-                            @else
+                            @elseif(auth()->id() == $laporan->user_id)
                                 <div class="laporan-comment-preview"
                                     style="border-left-color: #F3F4F6; color: #9CA3AF; font-style: italic;">
                                     Belum ada komentar atau feedback dari admin.
@@ -74,7 +74,7 @@
                         @endif
 
                         <div class="laporan-card-actions-grid" style="{{ auth()->user()->role != 'admin' ? 'grid-template-columns: 1fr;' : '' }}">
-                            <a href="/teacher-planner/{{ $laporan->user_id }}?month={{ $laporan->month }}&year={{ $laporan->year }}"
+                            <a href="/my-tasks/{{ $laporan->user_id }}?month={{ $laporan->month }}&year={{ $laporan->year }}"
                                 class="btn-teacher-project btn-admin-v2 btn-admin-primary">
                                 <i class="ph-bold ph-eye"></i> Lihat Laporan
                             </a>

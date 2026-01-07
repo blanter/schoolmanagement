@@ -50,6 +50,9 @@
 
         <!-- Bottom Navigation -->
         <div class="bottom-navigation" style="justify-content: flex-end;">
+            <a href="/semua-laporan" class="nav-btn-square" style="background: #10B981; color: white;">
+                <i class="ph-bold ph-scroll"></i>
+            </a>
             <a href="/teacher-calendar/{{ $user->id }}" class="nav-btn-square nav-btn-calendar">
                 <i class="ph-bold ph-calendar"></i>
             </a>

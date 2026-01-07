@@ -21,9 +21,12 @@
                     <div class="laporan-banner-flex">
                         <div>
                             <div class="project-banner-title">Halaman Penilaian Laporan</div>
-                            <div class="project-banner-subtitle">Periode: {{ \Carbon\Carbon::create(null, $month)->translatedFormat('F') }} {{ $year }}</div>
+                            <div class="project-banner-subtitle">Periode:
+                                {{ \Carbon\Carbon::create(null, $month)->translatedFormat('F') }} {{ $year }}
+                            </div>
                         </div>
-                        <a href="/teacher-planner/{{ $users->id }}?month={{ $month }}&year={{ $year }}" target="_blank" class="btn-teacher-project btn-admin-action" style="background: #7D52DE; min-width: 180px;">
+                        <a href="/teacher-planner/{{ $users->id }}?month={{ $month }}&year={{ $year }}" target="_blank"
+                            class="btn-teacher-project btn-admin-action">
                             <i class="ph-bold ph-arrow-square-out"></i> Lihat Laporan Guru
                         </a>
                     </div>
