@@ -15,7 +15,18 @@
                     @else
                         <div class="avatar-placeholder">{{ substr($user->name, 0, 1) }}</div>
                     @endif
-                    <div class="completion-badge">{{ $completionPercentage }}%</div>
+                    <div class="completion-badge {{ $completionPercentage >= 80 ? 'badge-success' : '' }}">
+                        {{ $completionPercentage }}%
+                        <div class="badge-tooltip">
+                            <div class="tooltip-title">Detail Progress (Bulan Lalu)</div>
+                            @foreach($completionDetails as $label => $val)
+                                <div class="tooltip-item">
+                                    <span>{{ $label }}</span>
+                                    <span>{{ $val }}%</span>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
                 <div class="profile-info">
                     <h1 class="profile-name">{{ $user->name }}</h1>

@@ -120,7 +120,15 @@ class TaskController extends Controller
         $researchWeighted = $researchAvg * 0.1; // 10% weight
 
 
-        return round($teacherPlannerWeighted + $pemakmuranWeighted + $lifebookWeighted + $researchWeighted);
+        return [
+            'total' => round($teacherPlannerWeighted + $pemakmuranWeighted + $lifebookWeighted + $researchWeighted),
+            'details' => [
+                'Teacher Planner (50%)' => round($teacherPlannerAvg),
+                'Pemakmuran (20%)' => round($pemakmuranAvg),
+                'Student Lifebook (20%)' => round($lifebookAvg),
+                'Research (10%)' => round($researchAvg),
+            ]
+        ];
     }
     // MY TASKS PAGE (GURU)
     public function myTasks($id)
@@ -128,7 +136,9 @@ class TaskController extends Controller
         $user = User::findOrFail($id);
 
         // Hitung persentase completion untuk user
-        $completionPercentage = $this->calculateCompletionPercentage($user->id);
+        $calc = $this->calculateCompletionPercentage($user->id);
+        $completionPercentage = $calc['total'];
+        $completionDetails = $calc['details'];
 
         // Kategori task dengan icon Phosphor dan warna
         $taskCategories = [
@@ -182,7 +192,7 @@ class TaskController extends Controller
             ],
         ];
 
-        return view('page.my-tasks', compact('user', 'completionPercentage', 'taskCategories'));
+        return view('page.my-tasks', compact('user', 'completionPercentage', 'completionDetails', 'taskCategories'));
     }
 
     // TASKS (ADMIN & GURU)
