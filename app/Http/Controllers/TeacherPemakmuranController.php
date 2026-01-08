@@ -37,7 +37,7 @@ class TeacherPemakmuranController extends Controller
             case 'teori':
                 return 'Teori Dipelajari';
             case 'case':
-                return 'Teori by Case';
+                return 'Theory by Case';
             case 'proyek':
                 return 'Proyek';
             case 'problem':

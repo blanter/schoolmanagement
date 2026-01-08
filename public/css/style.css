@@ -667,6 +667,7 @@ button.custom-button {
     cursor: help;
     width: fit-content;
     margin: 0 auto 10px;
+    z-index: 9;
 }
 
 .podium-points:hover .badge-tooltip {
@@ -860,6 +861,52 @@ button.custom-button {
     .filter-btn {
         padding: 10px 20px;
         font-size: 14px
+    }
+
+    .badge-tooltip {
+        width: 180px;
+        padding: 12px;
+    }
+
+    .podium-second .badge-tooltip {
+        transform: translateX(-30%) translateY(-8px);
+    }
+
+    .podium-second .podium-points:hover .badge-tooltip {
+        transform: translateX(-30%) translateY(0);
+    }
+
+    .podium-second .badge-tooltip::after {
+        left: 30%;
+    }
+
+    .podium-third .badge-tooltip {
+        transform: translateX(-70%) translateY(-8px);
+    }
+
+    .podium-third .podium-points:hover .badge-tooltip {
+        transform: translateX(-70%) translateY(0);
+    }
+
+    .podium-third .badge-tooltip::after {
+        left: 70%;
+    }
+
+    .note-section-header {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .note-section-header h3 {
+        font-size: 14px !important;
+        flex: 1;
+    }
+
+    .note-section-header .btn-cal-primary {
+        padding: 6px 12px !important;
+        font-size: 11px !important;
     }
 }
 
@@ -2460,6 +2507,7 @@ a.user-lapor {
     border-radius: 18px;
     font-size: 12px;
     width: 220px;
+    max-width: 90vw;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
     opacity: 0;
     visibility: hidden;
@@ -2641,6 +2689,10 @@ h3.eval-section-title span {
 }
 
 @media (max-width: 500px) {
+    .category-description {
+        font-size: 11px;
+    }
+
     .my-tasks-container {
         margin: -10px -10px 0;
         border-radius: 0;

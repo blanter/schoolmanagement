@@ -551,7 +551,7 @@ class TaskController extends Controller
                 'route' => '/teacher-pemakmuran-detail/' . $userguru->id . '/teori'
             ],
             [
-                'name' => 'Teori by Case',
+                'name' => 'Theory by Case',
                 'icon' => 'ph-bold ph-briefcase-metal',
                 'color' => '#FFE7A0', // Light Yellow
                 'route' => '/teacher-pemakmuran-detail/' . $userguru->id . '/case'
