@@ -16,8 +16,16 @@
                 <input type="month" id="date-picker" class="date-hidden-input">
             </div>
 
-            <div class="cal-strip" id="calendar-container">
-                <!-- Populated by JS -->
+            <div class="calendar-navigation-wrapper">
+                <button type="button" class="cal-nav-arrow prev" id="cal-prev">
+                    <i class="ph ph-caret-left"></i>
+                </button>
+                <div class="cal-strip" id="calendar-container">
+                    <!-- Populated by JS -->
+                </div>
+                <button type="button" class="cal-nav-arrow next" id="cal-next">
+                    <i class="ph ph-caret-right"></i>
+                </button>
             </div>
         </header>
 
@@ -180,6 +188,17 @@
             });
 
             $('#cancel-plan-btn').on('click', function () { $('#plan-form-section').fadeOut(); });
+
+            // Navigation scroll events
+            $('#cal-prev').on('click', function () {
+                const container = document.getElementById('calendar-container');
+                if (container) container.scrollBy({ left: -300, behavior: 'smooth' });
+            });
+
+            $('#cal-next').on('click', function () {
+                const container = document.getElementById('calendar-container');
+                if (container) container.scrollBy({ left: 300, behavior: 'smooth' });
+            });
 
             $('#save-plan-btn').on('click', function () {
                 if (isSaving) return;

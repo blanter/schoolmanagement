@@ -3530,6 +3530,14 @@ h3.eval-section-title span {
 }
 
 /* Teacher Calendar & Note System Styles */
+.calendar-navigation-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+}
+
 .cal-strip {
     display: flex;
     gap: 15px;
@@ -3537,6 +3545,58 @@ h3.eval-section-title span {
     overflow-x: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    flex: 1;
+    scroll-behavior: smooth;
+    border-radius: 25px;
+}
+
+.cal-nav-arrow {
+    display: none;
+}
+
+@media screen and (min-width: 1024px) {
+    .calendar-navigation-wrapper {
+        padding: 0 40px;
+        box-sizing: border-box;
+    }
+
+    .cal-nav-arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 36px;
+        height: 36px;
+        background: #fff;
+        border: 1px solid #E5E7EB;
+        border-radius: 50%;
+        color: #7F56D9;
+        cursor: pointer;
+        z-index: 10;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        transition: all 0.2s ease;
+    }
+
+    .cal-nav-arrow:hover {
+        background: #7F56D9;
+        color: #fff;
+        border-color: #7F56D9;
+        transform: translateY(-50%) scale(1.1);
+    }
+
+    .cal-nav-arrow:active {
+        transform: translateY(-50%) scale(0.95);
+    }
+
+    .cal-nav-arrow.prev {
+        left: 0;
+    }
+
+    .cal-nav-arrow.next {
+        right: 0;
+    }
 }
 
 .cal-strip-day {
@@ -3591,6 +3651,28 @@ h3.eval-section-title span {
         transform: translateX(-50%) scale(1.5);
         opacity: 0.5;
     }
+}
+
+.cal-dot {
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    z-index: 2;
+    animation: cal-pulse-dot 2s infinite;
+}
+
+.cal-dot-filled {
+    background: #10B981;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.cal-dot-empty {
+    background: #EF4444;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
 }
 
 /* Full Calendar Modal */

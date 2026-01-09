@@ -147,13 +147,35 @@ class TaskController extends Controller
             ->whereMonth('tanggal', $selectedDate->month)
             ->get()
             ->keyBy(fn($item) => 'month|' . $item->tipe . '|' . $item->judul_task);
+        // Calculate indicators for the calendar strip
+        $monthStart = $selectedDate->copy()->startOfMonth();
+        $monthEnd = $selectedDate->copy()->endOfMonth();
+
+        // Get all checks and skips for the month
+        $monthChecks = TaskCheck::where('user_id', $id)
+            ->whereBetween('tanggal', [$monthStart, $monthEnd])
+            ->pluck('tanggal')
+            ->map(fn($d) => $d instanceof \Carbon\Carbon ? $d->toDateString() : \Carbon\Carbon::parse($d)->toDateString())
+            ->unique()
+            ->toArray();
+
+        $monthSkips = TaskSkip::where('user_id', $id)
+            ->whereBetween('tanggal', [$monthStart, $monthEnd])
+            ->pluck('tanggal')
+            ->map(fn($d) => $d instanceof \Carbon\Carbon ? $d->toDateString() : \Carbon\Carbon::parse($d)->toDateString())
+            ->unique()
+            ->toArray();
+
+        $doneDates = array_unique(array_merge($monthChecks, $monthSkips));
+
         // If custom date
-        $customDate = \Carbon\Carbon::createFromDate($year, $month, $day)->startOfDay();
+        $customDate = $selectedDate->copy()->startOfDay()->toDateString();
         // Monthly Report
         $laporanBulanIni = Laporan::where('user_id', $userguru->id)
             ->where('month', $selectedDate->month)
             ->where('year', $selectedDate->year)
             ->first();
+
         return view('page.tasks', compact(
             'userguru',
             'dailyTasks',
@@ -167,7 +189,8 @@ class TaskController extends Controller
             'taskSkipsThisMonth',
             'selectedDate',
             'customDate',
-            'laporanBulanIni'
+            'laporanBulanIni',
+            'doneDates'
         ));
     }
 
