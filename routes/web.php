@@ -49,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/teacher-weekly-planner/get', [TeacherWeeklyPlannerController::class, 'getPlans'])->name('teacher.weekly.get');
     Route::post('/teacher-weekly-planner/save', [TeacherWeeklyPlannerController::class, 'savePlan'])->name('teacher.weekly.save');
     Route::post('/teacher-weekly-planner/delete', [TeacherWeeklyPlannerController::class, 'deletePlan'])->name('teacher.weekly.delete');
+    Route::post('/teacher-weekly-planner/copy-all-weeks', [TeacherWeeklyPlannerController::class, 'copyToAllWeeks'])->name('teacher.weekly.copyAll');
     Route::get('/teacher-weekly-planner/{id}', [TeacherWeeklyPlannerController::class, 'index'])->name('teacher.weekly');
 
     // Teacher Daily Details (Monthly)

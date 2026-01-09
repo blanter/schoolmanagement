@@ -142,4 +142,90 @@ class TeacherWeeklyPlannerController extends Controller
             ], 500);
         }
     }
+
+    public function copyToAllWeeks(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'user_id' => 'required|integer',
+                'tanggal' => 'required|date',
+            ]);
+
+            // Security: Only owner can copy
+            if (Auth::id() != $validated['user_id']) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda tidak memiliki hak akses untuk menduplikasi data ini.'
+                ], 403);
+            }
+
+            $sourceDate = \Carbon\Carbon::parse($validated['tanggal']);
+            $sourcePlans = TeacherWeeklyPlan::where('user_id', $validated['user_id'])
+                ->where('tanggal', $validated['tanggal'])
+                ->get();
+
+            if ($sourcePlans->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tidak ada agenda untuk disalin pada tanggal ini.'
+                ], 422);
+            }
+
+            // Get all target dates (same day of week in the same month)
+            $startOfMonth = $sourceDate->copy()->startOfMonth();
+            $endOfMonth = $sourceDate->copy()->endOfMonth();
+            $dayOfWeek = $sourceDate->dayOfWeek;
+
+            $targetDates = [];
+            for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay()) {
+                if ($date->dayOfWeek === $dayOfWeek && !$date->isSameDay($sourceDate)) {
+                    $targetDates[] = $date->toDateString();
+                }
+            }
+
+            // Copy plans to each target date
+            foreach ($targetDates as $targetDate) {
+                // Optional: Clear existing plans for the target date if you want a clean override
+                // TeacherWeeklyPlan::where('user_id', $validated['user_id'])->where('tanggal', $targetDate)->delete();
+
+                foreach ($sourcePlans as $sPlan) {
+                    // Check if identical plan already exists to avoid exact duplicates
+                    $exists = TeacherWeeklyPlan::where('user_id', $validated['user_id'])
+                        ->where('tanggal', $targetDate)
+                        ->where('subject', $sPlan->subject)
+                        ->where('note', $sPlan->note)
+                        ->exists();
+
+                    if (!$exists) {
+                        TeacherWeeklyPlan::create([
+                            'user_id' => $validated['user_id'],
+                            'tanggal' => $targetDate,
+                            'subject' => $sPlan->subject,
+                            'note' => $sPlan->note
+                        ]);
+                    }
+                }
+            }
+
+            $datesWithPlans = TeacherWeeklyPlan::where('user_id', $validated['user_id'])
+                ->pluck('tanggal')
+                ->unique()
+                ->map(function ($date) {
+                    return is_string($date) ? $date : $date->format('Y-m-d');
+                })
+                ->values()
+                ->toArray();
+
+            return response()->json([
+                'success' => true,
+                'datesWithPlans' => $datesWithPlans,
+                'message' => 'Agenda berhasil disalin ke semua minggu di bulan ini.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

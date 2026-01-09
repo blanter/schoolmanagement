@@ -51,11 +51,14 @@
                                 <div class="badge-tooltip">
                                     <div class="tooltip-title">Detail Breakdown</div>
                                     <div class="tooltip-item"><span>Daily Tasks</span>
-                                        <span>{{ $userguru[1]->task_stats['days']['percent'] ?? 0 }}%</span></div>
+                                        <span>{{ $userguru[1]->task_stats['days']['percent'] ?? 0 }}%</span>
+                                    </div>
                                     <div class="tooltip-item"><span>Weekly Tasks</span>
-                                        <span>{{ $userguru[1]->task_stats['week']['percent'] ?? 0 }}%</span></div>
+                                        <span>{{ $userguru[1]->task_stats['week']['percent'] ?? 0 }}%</span>
+                                    </div>
                                     <div class="tooltip-item"><span>Monthly Tasks</span>
-                                        <span>{{ $userguru[1]->task_stats['month']['percent'] ?? 0 }}%</span></div>
+                                        <span>{{ $userguru[1]->task_stats['month']['percent'] ?? 0 }}%</span>
+                                    </div>
                                     @if(isset($userguru[1]->task_stats['planner']))
                                         <div class="tooltip-item"
                                             style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px; margin-top: 5px;">
@@ -86,11 +89,14 @@
                                 <div class="badge-tooltip">
                                     <div class="tooltip-title">Detail Breakdown</div>
                                     <div class="tooltip-item"><span>Daily Tasks</span>
-                                        <span>{{ $userguru[0]->task_stats['days']['percent'] ?? 0 }}%</span></div>
+                                        <span>{{ $userguru[0]->task_stats['days']['percent'] ?? 0 }}%</span>
+                                    </div>
                                     <div class="tooltip-item"><span>Weekly Tasks</span>
-                                        <span>{{ $userguru[0]->task_stats['week']['percent'] ?? 0 }}%</span></div>
+                                        <span>{{ $userguru[0]->task_stats['week']['percent'] ?? 0 }}%</span>
+                                    </div>
                                     <div class="tooltip-item"><span>Monthly Tasks</span>
-                                        <span>{{ $userguru[0]->task_stats['month']['percent'] ?? 0 }}%</span></div>
+                                        <span>{{ $userguru[0]->task_stats['month']['percent'] ?? 0 }}%</span>
+                                    </div>
                                     @if(isset($userguru[0]->task_stats['planner']))
                                         <div class="tooltip-item"
                                             style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px; margin-top: 5px;">
@@ -120,11 +126,14 @@
                                 <div class="badge-tooltip">
                                     <div class="tooltip-title">Detail Breakdown</div>
                                     <div class="tooltip-item"><span>Daily Tasks</span>
-                                        <span>{{ $userguru[2]->task_stats['days']['percent'] ?? 0 }}%</span></div>
+                                        <span>{{ $userguru[2]->task_stats['days']['percent'] ?? 0 }}%</span>
+                                    </div>
                                     <div class="tooltip-item"><span>Weekly Tasks</span>
-                                        <span>{{ $userguru[2]->task_stats['week']['percent'] ?? 0 }}%</span></div>
+                                        <span>{{ $userguru[2]->task_stats['week']['percent'] ?? 0 }}%</span>
+                                    </div>
                                     <div class="tooltip-item"><span>Monthly Tasks</span>
-                                        <span>{{ $userguru[2]->task_stats['month']['percent'] ?? 0 }}%</span></div>
+                                        <span>{{ $userguru[2]->task_stats['month']['percent'] ?? 0 }}%</span>
+                                    </div>
                                     @if(isset($userguru[2]->task_stats['planner']))
                                         <div class="tooltip-item"
                                             style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px; margin-top: 5px;">
@@ -157,11 +166,14 @@
                                     <div class="badge-tooltip">
                                         <div class="tooltip-title">Detail Breakdown</div>
                                         <div class="tooltip-item"><span>Daily</span>
-                                            <span>{{ $user->task_stats['days']['percent'] ?? 0 }}%</span></div>
+                                            <span>{{ $user->task_stats['days']['percent'] ?? 0 }}%</span>
+                                        </div>
                                         <div class="tooltip-item"><span>Weekly</span>
-                                            <span>{{ $user->task_stats['week']['percent'] ?? 0 }}%</span></div>
+                                            <span>{{ $user->task_stats['week']['percent'] ?? 0 }}%</span>
+                                        </div>
                                         <div class="tooltip-item"><span>Monthly</span>
-                                            <span>{{ $user->task_stats['month']['percent'] ?? 0 }}%</span></div>
+                                            <span>{{ $user->task_stats['month']['percent'] ?? 0 }}%</span>
+                                        </div>
                                         @if(isset($user->task_stats['planner']))
                                             <div class="tooltip-item"
                                                 style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px; margin-top: 5px;">
@@ -210,11 +222,14 @@
                                 <div class="badge-tooltip">
                                     <div class="tooltip-title">Detail Breakdown</div>
                                     <div class="tooltip-item"><span>Daily Tasks</span>
-                                        <span>{{ $usernonguru[1]->task_stats['days']['percent'] ?? 0 }}%</span></div>
+                                        <span>{{ $usernonguru[1]->task_stats['days']['percent'] ?? 0 }}%</span>
+                                    </div>
                                     <div class="tooltip-item"><span>Weekly Tasks</span>
-                                        <span>{{ $usernonguru[1]->task_stats['week']['percent'] ?? 0 }}%</span></div>
+                                        <span>{{ $usernonguru[1]->task_stats['week']['percent'] ?? 0 }}%</span>
+                                    </div>
                                     <div class="tooltip-item"><span>Monthly Tasks</span>
-                                        <span>{{ $usernonguru[1]->task_stats['month']['percent'] ?? 0 }}%</span></div>
+                                        <span>{{ $usernonguru[1]->task_stats['month']['percent'] ?? 0 }}%</span>
+                                    </div>
                                 </div>
                             </div>
                         @endif
@@ -239,11 +254,14 @@
                                 <div class="badge-tooltip">
                                     <div class="tooltip-title">Detail Breakdown</div>
                                     <div class="tooltip-item"><span>Daily Tasks</span>
-                                        <span>{{ $usernonguru[0]->task_stats['days']['percent'] ?? 0 }}%</span></div>
+                                        <span>{{ $usernonguru[0]->task_stats['days']['percent'] ?? 0 }}%</span>
+                                    </div>
                                     <div class="tooltip-item"><span>Weekly Tasks</span>
-                                        <span>{{ $usernonguru[0]->task_stats['week']['percent'] ?? 0 }}%</span></div>
+                                        <span>{{ $usernonguru[0]->task_stats['week']['percent'] ?? 0 }}%</span>
+                                    </div>
                                     <div class="tooltip-item"><span>Monthly Tasks</span>
-                                        <span>{{ $usernonguru[0]->task_stats['month']['percent'] ?? 0 }}%</span></div>
+                                        <span>{{ $usernonguru[0]->task_stats['month']['percent'] ?? 0 }}%</span>
+                                    </div>
                                 </div>
                             </div>
                         @endif
@@ -271,11 +289,14 @@
                                 <div class="badge-tooltip">
                                     <div class="tooltip-title">Detail Breakdown</div>
                                     <div class="tooltip-item"><span>Daily Tasks</span>
-                                        <span>{{ $usernonguru[2]->task_stats['days']['percent'] ?? 0 }}%</span></div>
+                                        <span>{{ $usernonguru[2]->task_stats['days']['percent'] ?? 0 }}%</span>
+                                    </div>
                                     <div class="tooltip-item"><span>Weekly Tasks</span>
-                                        <span>{{ $usernonguru[2]->task_stats['week']['percent'] ?? 0 }}%</span></div>
+                                        <span>{{ $usernonguru[2]->task_stats['week']['percent'] ?? 0 }}%</span>
+                                    </div>
                                     <div class="tooltip-item"><span>Monthly Tasks</span>
-                                        <span>{{ $usernonguru[2]->task_stats['month']['percent'] ?? 0 }}%</span></div>
+                                        <span>{{ $usernonguru[2]->task_stats['month']['percent'] ?? 0 }}%</span>
+                                    </div>
                                 </div>
                             </div>
                         @endif
@@ -302,11 +323,14 @@
                                         <div class="badge-tooltip">
                                             <div class="tooltip-title">Detail Breakdown</div>
                                             <div class="tooltip-item"><span>Daily</span>
-                                                <span>{{ $user->task_stats['days']['percent'] ?? 0 }}%</span></div>
+                                                <span>{{ $user->task_stats['days']['percent'] ?? 0 }}%</span>
+                                            </div>
                                             <div class="tooltip-item"><span>Weekly</span>
-                                                <span>{{ $user->task_stats['week']['percent'] ?? 0 }}%</span></div>
+                                                <span>{{ $user->task_stats['week']['percent'] ?? 0 }}%</span>
+                                            </div>
                                             <div class="tooltip-item"><span>Monthly</span>
-                                                <span>{{ $user->task_stats['month']['percent'] ?? 0 }}%</span></div>
+                                                <span>{{ $user->task_stats['month']['percent'] ?? 0 }}%</span>
+                                            </div>
                                         </div>
                                     </div>
                                 @endif
@@ -333,7 +357,7 @@
         </a>
     @endif
 
-    <div class="app-version">Management App v2.06</div>
+    <div class="app-version">Management App v2.09</div>
 
     <!-- SCRIPT -->
     <script>

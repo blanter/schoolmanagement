@@ -38,10 +38,16 @@
                             <i class="ph-bold ph-calendar-check" style="color: #7F56D9;"></i> Agenda Tanggal Ini
                         </h3>
                         @if(auth()->id() == $userguru->id)
-                            <button id="add-new-plan-btn" class="btn-cal-primary"
-                                style="padding: 8px 16px; font-size: 12px; border-radius: 10px;">
-                                <i class="ph-bold ph-plus"></i> Tambah Agenda
-                            </button>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <button id="copy-to-all-weeks-btn" class="btn-cal-secondary"
+                                    style="padding: 8px 16px; font-size: 11px; border-radius: 10px; display: none; background: #EEF2FF; color: #4F46E5; border: 1px solid #C7D2FE;">
+                                    <i class="ph-bold ph-copy"></i> Copy to All
+                                </button>
+                                <button id="add-new-plan-btn" class="btn-cal-primary"
+                                    style="padding: 8px 16px; font-size: 12px; border-radius: 10px;">
+                                    <i class="ph-bold ph-plus"></i> Tambah Agenda
+                                </button>
+                            </div>
                         @endif
                     </div>
 
@@ -200,6 +206,40 @@
                 if (container) container.scrollBy({ left: 300, behavior: 'smooth' });
             });
 
+            $('#copy-to-all-weeks-btn').on('click', function () {
+                const ds = formatDate(currentSelectedDate);
+                if (!confirm(`Duplikasi semua agenda hari ini ke semua tanggal yang sama di bulan ini?`)) return;
+
+                const btn = $(this);
+                const originalHtml = btn.html();
+                btn.prop('disabled', true).html('<i class="ph-bold ph-spinner ph-spin"></i> Menyalin...');
+
+                $.ajax({
+                    url: '{{ route('teacher.weekly.copyAll') }}',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        user_id: '{{ $userguru->id }}',
+                        tanggal: ds
+                    },
+                    success: function (res) {
+                        if (res.success) {
+                            showToast(res.message, 'success');
+                            datesWithPlans = res.datesWithPlans;
+                            updateCalendarUI(currentSelectedDate);
+                        } else {
+                            showToast(res.message, 'error');
+                        }
+                    },
+                    error: function (xhr) {
+                        showToast(xhr.responseJSON?.message || 'Gagal menyalin agenda', 'error');
+                    },
+                    complete: function () {
+                        btn.prop('disabled', false).html(originalHtml);
+                    }
+                });
+            });
+
             $('#save-plan-btn').on('click', function () {
                 if (isSaving) return;
                 const subject = $('#plan-subject').val();
@@ -270,9 +310,11 @@
             function renderPlans(plans) {
                 const container = $('#plans-list-container');
                 if (!plans || plans.length === 0) {
+                    $('#copy-to-all-weeks-btn').hide();
                     container.html('<div class="note-empty-state"><i class="ph-bold ph-calendar-blank" style="font-size: 48px; color: #E5E7EB; margin-bottom: 10px;"></i><p style="color: #9CA3AF; font-size: 14px;">Belum ada agenda untuk hari ini.</p></div>');
                     return;
                 }
+                if (isOwner) $('#copy-to-all-weeks-btn').fadeIn();
                 let html = '';
                 plans.forEach(plan => {
                     html += `
